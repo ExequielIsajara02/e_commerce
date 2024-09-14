@@ -10,14 +10,16 @@ export async function GET() {
 }
 
 export async function POST(request : any) {
-    const {nombre, descripcion, imagen, precio, cantidad} = await request.json();
+    const {nombre, descripcion, imagen, precio, cantidad, metodo_pago, estado, precio_final} = await request.json();
     const guardarProducto = await prisma.producto.create({
         data: {
             nombre,
             descripcion,
             imagen,
             precio,
-            cantidad
+            cantidad,
+            estado,
+            precio_final,
         }
     });
     console.log(guardarProducto);
