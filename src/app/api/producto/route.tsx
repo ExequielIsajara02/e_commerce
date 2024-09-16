@@ -9,7 +9,7 @@ export async function GET() {
     return NextResponse.json(productos);
 }
 
-export async function POST(request : any) {
+export async function POST(request: Request) {
     const {nombre, descripcion, imagen, precio, cantidad} = await request.json();
     const guardarProducto = await prisma.producto.create({
         data: {
@@ -17,7 +17,7 @@ export async function POST(request : any) {
             descripcion,
             imagen,
             precio,
-            cantidad
+            cantidad,
         }
     });
     console.log(guardarProducto);
