@@ -6,7 +6,7 @@ export async function GET() {
     const usuario = await prisma.usuario.findMany()
     console.log(usuario);
     
-    return NextResponse.json("Getting usuario");
+    return NextResponse.json(usuario);
 }
 
 export async function POST(request : any) {
