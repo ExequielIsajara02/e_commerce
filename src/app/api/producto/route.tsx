@@ -17,7 +17,7 @@ export async function POST(request: Request) {
             descripcion,
             imagen,
             precio,
-            cantidad
+            cantidad,
         }
     });
     console.log(guardarProducto);
