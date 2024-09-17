@@ -9,7 +9,7 @@ export async function GET() {
     return NextResponse.json(usuario);
 }
 
-export async function POST(request : any) {
+export async function POST(request : Request) {
     const {nombre, apellido, correo, telefono, direccion, localidad} = await request.json();
     const saveUsuario = await prisma.usuario.create({
         data: {
