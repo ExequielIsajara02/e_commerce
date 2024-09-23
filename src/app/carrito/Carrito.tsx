@@ -1,13 +1,8 @@
-"use client";
-
-import React, { useState } from 'react';
-import ProductList from '../../../utils/ProductList';
-import Cart from '../../../utils/Cart';
-
+import React from 'react';
 
 // Definir la interfaz para un producto en el carrito
 interface CartItemType {
-  id_producto: number; 
+  id_producto: number;
   nombre: string;
   descripcion: string; 
   imagen: string; 
@@ -15,34 +10,39 @@ interface CartItemType {
   cantidad: number;
 }
 
-const Carrito: React.FC = () => {
-  const [cart, setCart] = useState<CartItemType[]>([]);
+interface CartProps {
+  cartItems: CartItemType[];
+  removeFromCart: (productId: number) => void;
+}
 
-  const addToCart = (product: { id_producto: number; nombre: string; precio: number; imagen: string; descripcion: string }) => {
-    setCart(prevCart => {
-      const productIndex = prevCart.findIndex(item => item.id_producto === product.id_producto);
-      if (productIndex > -1) {
-        // El producto ya está en el carrito, actualizar la cantidad
-        const newCart = [...prevCart];
-        newCart[productIndex].cantidad += 1;
-        return newCart;
-      } else {
-        // El producto no está en el carrito, añadirlo con cantidad 1
-        return [...prevCart, { ...product, cantidad: 1 }];
-      }
-    });
+const Carrito: React.FC<CartProps> = ({ cartItems, removeFromCart }) => { 
+  const getTotalPrice = () => {
+    return cartItems.reduce((total, item) => total + item.precio * item.cantidad, 0);
   };
 
-  const removeFromCart = (productId: number) => {
-    setCart(prevCart => prevCart.filter(item => item.id_producto !== productId)); // Cambiado a id_producto
-  };
+  if (!cartItems || !cartItems.length) {
+    return <h1>No hay productos en el carrito de compras</h1>
+  }
 
   return (
-    <div className="flex justify-between p-5">
-      <ProductList addToCart={addToCart} className="flex-1 mx-2.5" />
-      <Cart cartItems={cart} removeFromCart={removeFromCart} className="flex-1 mx-2.5" />
+    <div className="w-full max-w-md p-4 border border-gray-300 rounded-md">
+      <h1 className="text-2xl mb-4">Tu Carrito</h1>
+      <ul className="list-none p-0">
+        {cartItems.map(item => (
+          <li key={item.id_producto} className="flex items-center mb-4">
+            <img src={item.imagen} alt={item.nombre} className="w-16 h-16 object-cover mr-4" /> {/* Imagen del producto */}
+            <div className="flex-1">
+              <span>{item.nombre} - ${item.precio.toFixed(2)} x {item.cantidad}</span>
+              <p className="text-sm text-gray-600">{item.descripcion}</p> {/* Descripción del producto */}
+            </div>
+            <button className="text-red-500" onClick={() => removeFromCart(item.id_producto)}>Remove</button>
+          </li>
+        ))}
+      </ul>
+      <h2 className="text-xl mt-4">Total: ${getTotalPrice().toFixed(2)}</h2>
     </div>
   );
 };
 
 export default Carrito;
+
