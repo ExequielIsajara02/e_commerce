@@ -20,24 +20,19 @@ const VistaProductos = () => {
         traerProductos()
     }, [])
   return (
-    <>
-        {productos.map((producto) => {
 
-            return (
                 <div className="grid grid-cols-4">
-                {productos.map((producto: { id: number, nombre: string, descripcion: string, precio: number }) => (
-  <div className="border-black border rounded-lg m-4" key={producto.id}>
-    <p className="mb-1 mx-4 my-1">{producto.nombre}</p>
-    <p className="mb-1 mx-4 my-1">{producto.descripcion}</p>
-    <p className="mb-1 mx-4 my-1">${producto.precio}</p>
-    <button className="bg-blue-500 p-1 rounded-lg text-white border border-black">Agregar al carrito</button>
+                {productos.map((producto: { id_producto: number, nombre: string, descripcion: string, precio: number }) => (
+                  <div className="border-black border rounded-lg m-4" key={producto.id_producto}>
+                    <p>ID: {producto.id_producto}</p>
+                    <p className="mb-1 mx-4 my-1">{producto.nombre}</p>
+                    <p className="mb-1 mx-4 my-1">{producto.descripcion}</p>
+                    <p className="mb-1 mx-4 my-1">${producto.precio}</p>
+                    <button className="bg-blue-500 p-1 rounded-lg text-white border border-black">Agregar al carrito</button>
                   </div>
                 ))}
               </div>
-            )
-        })}
-    </>
-  )
+          )
 }
 
 export default VistaProductos
