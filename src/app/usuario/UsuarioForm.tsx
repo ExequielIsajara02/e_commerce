@@ -27,12 +27,14 @@ const UsuarioForm = () => {
           'Content-Type' : 'application/json'
         }
       })
+
       const data = await res.json()
-      // console.log(data)
+      const userId = data.id_usuario
+      // console.log(userId)
 
       const correoRes = await fetch('/api/enviarMail', {
         method: 'POST',
-        body: JSON.stringify({ bodyReq }),
+        body: JSON.stringify({ correo, userId }),
         headers: {
             'Content-Type': 'application/json',
         },

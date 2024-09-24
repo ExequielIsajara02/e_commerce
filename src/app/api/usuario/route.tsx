@@ -18,7 +18,8 @@ export async function POST(request : Request) {
             correo,
             telefono,
             direccion,
-            localidad
+            localidad,
+            cuentaVerificada : false
         }
     });
     console.log(guardarUsuario);
