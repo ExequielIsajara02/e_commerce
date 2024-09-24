@@ -3,7 +3,8 @@ import React, {
   useState, 
   ReactNode, 
   Dispatch, 
-  SetStateAction 
+  SetStateAction, 
+  useEffect 
 } from 'react';
 import { ProductoData } from '../types/types';
 
@@ -14,11 +15,22 @@ interface CartContextType {
 }
 
 // Crear el contexto
-const CartContext = createContext<CartContextType>({ cartItems: [], setCartItems: ()=> {}});
+const CartContext = createContext<CartContextType>({ cartItems: [], setCartItems: () => {} });
 
 // Proveedor del contexto
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<ProductoData[]>([]);
+  const [cartItems, setCartItems] = useState<ProductoData[]>(() => {
+    // Cargar el carrito del local storage
+    const savedCart = localStorage.getItem('cartItems');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  
+
+  useEffect(() => {
+    // Guardar el carrito en el local storage cada vez que cambie
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   return (
     <CartContext.Provider value={{ cartItems, setCartItems }}>
@@ -27,5 +39,4 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   );
 };
 
-// Exportar el contexto
 export { CartContext };
