@@ -1,28 +1,23 @@
-import React from 'react';
+"use client"
 
-// Definir la interfaz para un producto en el carrito
-interface CartItemType {
-  id_producto: number;
-  nombre: string;
-  descripcion: string; 
-  imagen: string; 
-  precio: number;
-  cantidad: number;
-}
+import React, { useContext, ReactNode } from 'react';
+import { CartContext } from '@/context/CartContext';
 
-interface CartProps {
-  cartItems: CartItemType[];
-  removeFromCart: (productId: number) => void;
-}
+const Carrito: React.FC = () => {
+  const { cartItems, setCartItems } = useContext(CartContext);
 
-const Carrito: React.FC<CartProps> = ({ cartItems, removeFromCart }) => { 
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => total + item.precio * item.cantidad, 0);
   };
 
-  if (!cartItems || !cartItems.length) {
-    return <h1>No hay productos en el carrito de compras</h1>
+  const removeFromCart = (productId: number) => {
+    setCartItems(prevItems => prevItems.filter(item => item.id_producto !== productId));
+  };
+
+  if (!cartItems.length) {
+    return <h1>No hay productos en el carrito de compras</h1>;
   }
+
 
   return (
     <div className="w-full max-w-md p-4 border border-gray-300 rounded-md">
@@ -30,10 +25,10 @@ const Carrito: React.FC<CartProps> = ({ cartItems, removeFromCart }) => {
       <ul className="list-none p-0">
         {cartItems.map(item => (
           <li key={item.id_producto} className="flex items-center mb-4">
-            <img src={item.imagen} alt={item.nombre} className="w-16 h-16 object-cover mr-4" /> {/* Imagen del producto */}
+            <img src={item.imagen} alt={item.nombre} className="w-16 h-16 object-cover mr-4" />
             <div className="flex-1">
               <span>{item.nombre} - ${item.precio.toFixed(2)} x {item.cantidad}</span>
-              <p className="text-sm text-gray-600">{item.descripcion}</p> {/* Descripción del producto */}
+              <p className="text-sm text-gray-600">{item.descripcion}</p>
             </div>
             <button className="text-red-500" onClick={() => removeFromCart(item.id_producto)}>Remove</button>
           </li>

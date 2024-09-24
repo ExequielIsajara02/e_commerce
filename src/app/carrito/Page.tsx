@@ -6,7 +6,7 @@ const Page = () => {
   return (
       <div>
           <h1>Carrito de compra</h1>
-          <Carrito cartItems={[]} removeFromCart={removeFromCart}/>
+          <Carrito/>
       </div>
   );
 };
