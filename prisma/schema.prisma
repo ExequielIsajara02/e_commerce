@@ -37,7 +37,8 @@ model Usuario {
   id_usuario Int @id @default(autoincrement())
   nombre String
   apellido String
-  correo String
+  correo String @unique
+  clave String
   telefono String
   direccion String
   localidad String
