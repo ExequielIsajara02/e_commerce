@@ -1,8 +1,11 @@
+import { Header } from "@/components/Header";
 import VistaProductos from "./VistaProductos";
+
+
 const Page = () => {
     return (
         <div>
-            <h1>Mostrar productos</h1>
+            <h2>Mostrar productos</h2>
             <VistaProductos />
         </div>
     );
