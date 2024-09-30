@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import * as dotenv from 'dotenv';
+// import * as dotenv from 'dotenv';
 import { Producto } from "@prisma/client";
-dotenv.config();
+// dotenv.config();
 
 console.log(process.env.DATABASE_URL);
-//const aux= process.env.STRIPE_SECRET_KEY || "";
-const stripe = new Stripe("sk_test_51Q033n2KFuBrFZaE30DlNHMNn5rlBXyjqLV0PwSJkycIzgkvPlZTPVL3y4jFxzysNjVg1AlgfkL26uqGdDrgfKjZ00JMGaBdCx");
+// const stripe= process.env.STRIPE_SECRET_KEY || "";
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+// const stripe = new Stripe("sk_test_51Q033n2KFuBrFZaE30DlNHMNn5rlBXyjqLV0PwSJkycIzgkvPlZTPVL3y4jFxzysNjVg1AlgfkL26uqGdDrgfKjZ00JMGaBdCx");
 //  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 // console.log()
 
