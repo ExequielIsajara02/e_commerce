@@ -27,12 +27,8 @@ export type UsuarioData = {
     localidad: string
 };
 
-export type CartItemType = {
-    id_producto: number;
-    nombre: string;
-    descripcion: string; 
-    imagen: string; 
-    precio: number;
-    cantidad: number;
+export type CarritoData = {
+    producto: ProductoData,
+    cantidad: number
 }
   
