@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 // import * as dotenv from 'dotenv';
-import { Producto } from "@prisma/client";
+import { CartItemType } from "@/types/types";
 // dotenv.config();
 
-console.log(process.env.DATABASE_URL);
+// console.log(process.env.DATABASE_URL);
 // const stripe= process.env.STRIPE_SECRET_KEY || "";
 // const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
@@ -12,25 +12,24 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 //  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 // console.log()
 
-export async function createStripeSession(producto : Producto) {
+export async function crearSesionStripe(cartItems: CartItemType[]) {
     try {
+        const lineItems = cartItems.map(item => ({
+            price_data: {
+                currency: 'usd',
+                product_data: {
+                    name: item.nombre,
+                },
+                unit_amount: item.precio * 100,  // Stripe maneja precios en centavos
+            },
+            quantity: item.cantidad,
+        }));
         const session = await stripe.checkout.sessions.create({
             success_url: "http://localhost:3000/success",
-            line_items: [
-                {
-                    price_data: {
-                        currency: 'usd',
-                        product_data: {
-                            name: producto.nombre,
-                        },
-                        unit_amount: producto.precio,  // Cantidad en centavos ($20.00 USD)
-                    },
-                    quantity: 1,
-                },
-            ],
-            mode: 'payment',
+            line_items: lineItems,
+            mode: 'payment'
         });
-        console.log(session.url)
+        console.log(session)
 
         return session.url;  // Retorna la sesión creada
 
