@@ -1,12 +1,12 @@
 import React from 'react'
-import FormLogin from '../../../components/FormLogin'
+import SignIn from "../../../components/sign-in"
 
 const LoginPage = () => {
   
   return (
-    <div>
-        <FormLogin />
-    </div>
+    <>
+        <SignIn />
+    </>
   )
 }
 

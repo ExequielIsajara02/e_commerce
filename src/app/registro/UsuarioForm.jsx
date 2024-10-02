@@ -18,11 +18,11 @@ const UsuarioForm = () => {
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
-      },
+      }
     });
 
-    if(res.ok) {
-      router.push("/login")
+    if(res.status == 200) {
+      router.push("/auth/login")
     }
 
     // const jsonRes = await res.json();

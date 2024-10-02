@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { prisma } from "@/libs/prisma"
+import prisma  from "../../../lib/db"
 
 export async function GET() {
 
@@ -10,12 +10,13 @@ export async function GET() {
 }
 
 export async function POST(request : Request) {
-    const {nombre, apellido, correo, telefono, direccion, localidad} = await request.json();
+    const {nombre, apellido, correo, clave, telefono, direccion, localidad} = await request.json();
     const guardarUsuario = await prisma.usuario.create({
         data: {
             nombre,
             apellido,
             correo,
+            clave,
             telefono,
             direccion,
             localidad

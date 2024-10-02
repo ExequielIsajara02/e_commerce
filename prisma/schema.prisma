@@ -8,10 +8,28 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Role {
+  user
+  admin
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Usuario {
+  id_usuario Int @id @default(autoincrement())
+  nombre String?
+  apellido String?
+  correo String? @unique
+  clave String?
+  telefono String?
+  direccion String?
+  localidad String?
+  role Role @default(user)
+}
+
 
 model Producto {
   id_producto Int @id @default(autoincrement())
@@ -33,13 +51,11 @@ model Pedido {
   precio_final Float
 }
 
-model Usuario {
-  id_usuario Int @id @default(autoincrement())
-  nombre String
-  apellido String
-  correo String @unique
-  clave String
-  telefono String
-  direccion String
-  localidad String
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@unique([identifier, token])
 }
+
