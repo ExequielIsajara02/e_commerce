@@ -6,14 +6,14 @@ import React, {
   SetStateAction, 
   useEffect 
 } from 'react';
-import { ProductoData } from '../types/types';
+import { CarritoData } from '../types/types';
 import { Header } from '@/components/Header';
 import { Carrito } from '@/components/Carrito';
 
 // Definir la interfaz del contexto
 interface CartContextType {
-  cartItems: ProductoData[];
-  setCartItems: Dispatch<SetStateAction<ProductoData[]>>;
+  cartItems: CarritoData[];
+  setCartItems: Dispatch<SetStateAction<CarritoData[]>>;
   isCarritoVisible: boolean;
   setCarritoVisible: Dispatch<SetStateAction<boolean>>;
 }
@@ -28,7 +28,7 @@ const CartContext = createContext<CartContextType>({
 
 // Proveedor del contexto
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<ProductoData[]>([]);
+  const [cartItems, setCartItems] = useState<CarritoData[]>([]);
   const [isCarritoVisible, setCarritoVisible] = useState(false); 
 
   useEffect(() => {

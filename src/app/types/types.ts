@@ -26,3 +26,8 @@ export type UsuarioData = {
     direccion: string
     localidad: string
 };
+
+export type CarritoData = {
+    producto: ProductoData
+    cantidad: number
+}
