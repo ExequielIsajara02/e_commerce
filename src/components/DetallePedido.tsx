@@ -1,4 +1,4 @@
-"use client";
+
 import { prisma } from "@/libs/prisma";
 import { Pedido } from "@prisma/client";
 interface DetallePedidoProps {
