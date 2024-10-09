@@ -3,9 +3,7 @@ import { prisma } from "@/libs/prisma"
 
 export async function GET() {
 
-    const productos = await prisma.producto.findMany()
-    console.log(productos);
-    
+    const productos = await prisma.producto.findMany()    
     return NextResponse.json(productos);
 }
 

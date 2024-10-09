@@ -6,7 +6,7 @@ import React, {
   SetStateAction, 
   useEffect 
 } from 'react';
-import { CarritoData } from '../types/types';
+import { CarritoData } from '../../types/types';
 import { Header } from '@/components/Header';
 import { Carrito } from '@/components/Carrito';
 

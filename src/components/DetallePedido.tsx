@@ -2,7 +2,7 @@
 import { prisma } from "@/libs/prisma";
 import { Pedido } from "@prisma/client";
 interface DetallePedidoProps {
-  pedidos: Pedido[];
+  pedidos: Pedido[]
 }
 export default async function DetallePedido({ pedidos }: DetallePedidoProps) {
   

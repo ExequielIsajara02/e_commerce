@@ -1,14 +1,14 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito";
-import { ProductType } from "@/types/ProductType";
+import { ProductType } from "../../../types/ProductType";
 
-const VistaProductos: React.FC = () => {
+const VistaProductos: React.FC = (data: any) => {
   const [productos, setProductos] = useState<ProductType[]>([]);
   const [cantidades, setCantidades] = useState<{ [key: number]: number }>({}); // Objeto para almacenar cantidades
 
   const traerProductos = async () => {
-    const respuesta = await fetch("http://localhost:3000/api/producto");
+    const respuesta = await fetch("http://localhost:3000/api/producto"); //cree un puerto para poder comunicarme con webhook
     const datos = await respuesta.json();
     setProductos(datos);
   };

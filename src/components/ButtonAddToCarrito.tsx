@@ -1,5 +1,5 @@
 import { CartContext } from "@/context/CartContext";
-import { ProductType } from "@/types/ProductType";
+import { ProductType } from "../../types/ProductType";
 import { useContext } from "react";
 
 // Definición de la interfaz para las props

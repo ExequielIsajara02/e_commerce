@@ -1,15 +1,9 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { CarritoData } from "@/types/types";
+import { CarritoData } from "../types/types";
 
-
-// console.log(process.env.DATABASE_URL);
-// const stripe= process.env.STRIPE_SECRET_KEY || "";
-// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
-// const stripe = new Stripe("sk_test_51Q033n2KFuBrFZaE30DlNHMNn5rlBXyjqLV0PwSJkycIzgkvPlZTPVL3y4jFxzysNjVg1AlgfkL26uqGdDrgfKjZ00JMGaBdCx");
-//  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-console.log(process.env.STRIPE_SECRET_KEY)
+
 
 export async function crearSesionStripe(cartItems: CarritoData[]) {
     try {
@@ -28,7 +22,7 @@ export async function crearSesionStripe(cartItems: CarritoData[]) {
             line_items: lineItems,
             mode: 'payment'
         });
-        console.log(session)
+        
 
         return session.url;  // Retorna la sesión creada
 
