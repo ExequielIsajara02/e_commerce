@@ -18,6 +18,7 @@ export type ProductoData = {
   };
 
 export type UsuarioData = {
+<<<<<<< HEAD
     id_usuario: number | null;
     nombre: string | null;
     apellido: string | null;
@@ -25,6 +26,15 @@ export type UsuarioData = {
     telefono: string | null;
     direccion: string | null;
     localidad: string | null;
+=======
+    id_usuario: number
+    nombre: string
+    apellido: string
+    correo: string
+    telefono: string
+    direccion: string
+    localidad: string
+>>>>>>> master
 };
 
 export type CartItemType = {

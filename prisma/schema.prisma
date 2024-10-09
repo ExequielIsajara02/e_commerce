@@ -50,12 +50,3 @@ model Pedido {
   estado String
   precio_final Float
 }
-
-model VerificationToken {
-  identifier String
-  token      String
-  expires    DateTime
- 
-  @@unique([identifier, token])
-}
-

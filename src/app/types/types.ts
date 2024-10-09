@@ -22,7 +22,10 @@ export type UsuarioData = {
     nombre: string
     apellido: string
     correo: string
+<<<<<<< HEAD
     clave: string,
+=======
+>>>>>>> master
     telefono: string
     direccion: string
     localidad: string

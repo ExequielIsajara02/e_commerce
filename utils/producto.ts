@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
 import { prisma } from "@/lib/prisma";
+=======
+import { prisma } from "@/libs/prisma";
+>>>>>>> master
 import { ProductoData } from "../src/app/types/types";
 
 export async function getAllProductos() {

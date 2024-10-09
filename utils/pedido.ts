@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { prisma } from "@/lib/prisma";
+=======
+import { prisma } from "@/libs/prisma";
+>>>>>>> master
 import { PedidoData } from "../src/app/types/types";
 
 // Función para obtener todos los pedidos
