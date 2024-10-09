@@ -35,18 +35,14 @@ function FormLogin() {
   })
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     setError(null);
     startTransition(async () => {
       const res = await loginAction(values);
-      console.log(res)
-      console.log(values)
       if(res.error) {
         setError(res.error);
       }
       else {
-        router.push("/protected/dashboard")
+        router.push("/home")
       }
     });
     

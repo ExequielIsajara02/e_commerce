@@ -10,7 +10,7 @@ const AdminPage = async () => {
     return <div>You are not admin</div>
   }
 
-  console.log(session)
+  // console.log(session)}
 
   return (
     <div>
