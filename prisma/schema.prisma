@@ -42,4 +42,5 @@ model Usuario {
   telefono String
   direccion String
   localidad String
+  cuentaVerificada  Boolean  @default(false)
 }
