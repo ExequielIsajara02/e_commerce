@@ -6,14 +6,13 @@ export default async function DashboardPage() {
   console.log("Session ", session);
   
  
-  // if (!session) {
-  //   return <div>No autenticado</div>
-  // }
+  if (!session) {
+    return <div>No autenticado</div>
+  }
  
   return (
     <div className="container">
       <pre>{JSON.stringify(session, null, 2)}</pre>
-      <LogoutButton/>
     </div>
   )
 }

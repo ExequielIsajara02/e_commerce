@@ -1,16 +1,16 @@
 import Link from "next/link";
-// import { getServerSession } from "next-auth@4";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { auth } from "@/auth";
+import LogoutButton from "./logout-button";
 
 const NavBar = async () => {
-  // const session = await getServerSession(authOptions);
-  // console.log(session);
+  const session = await auth();
+  console.log(session);
 
   return (
     <nav className="flex justify-between bg-gray-950 text-white px-24">
       <h1>E-Commerce</h1>
 
-      {/* <ul className="flex gap-x-2">
+      <ul className="flex gap-x-2 justify-center items-center">
         <li>
           <Link href="/">Home</Link>
         </li>
@@ -26,14 +26,14 @@ const NavBar = async () => {
         ) : (
             <>
                 <li>
-                    <Link href="/dashboard">Dashboard</Link>
+                    <Link href="/protected/dashboard">Dashboard</Link>
                 </li>
                 <li>
-                    <Link href="/api/auth/signout">Logout</Link>
+                  <LogoutButton />
                 </li>
             </>
         )}
-      </ul>*/}
+      </ul>
     </nav>
   );
 };
