@@ -6,9 +6,9 @@ import React, {
     SetStateAction, 
     useEffect 
   } from 'react';
-  import { ProductoData } from '../types/types';
   import { Header } from '@/components/Header';
   import { Carrito } from '@/components/Carrito';
+import { ProductoData } from '../../types/ProductData';
   
   // Definir la interfaz del contexto
   interface CartContextType {

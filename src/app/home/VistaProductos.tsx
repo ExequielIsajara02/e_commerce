@@ -1,20 +1,20 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito";
-import { ProductType } from "@/types/ProductType";
+import { ProductoData } from '../../../types/ProductData';
 
 const VistaProductos: React.FC = () => {
-  const [productos, setProductos] = useState<ProductType[]>([]);
+  const [productos, setProductos] = useState<ProductoData[]>([]);
   const [cantidades, setCantidades] = useState<{ [key: number]: number }>({}); // Objeto para almacenar cantidades
 
-  const traerProductos = async () => {
-    const respuesta = await fetch("http://localhost:3000/api/producto");
-    const datos = await respuesta.json();
-    setProductos(datos);
-  };
+  // const traerProductos = async () => {
+  //   const respuesta = await fetch("http://localhost:3000/api/producto");
+  //   const datos = await respuesta.json();
+  //   setProductos(datos);
+  // };
 
   useEffect(() => {
-    traerProductos();
+    // traerProductos();
   }, []);
 
   const handleChange = (id: number, value: number) => {

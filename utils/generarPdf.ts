@@ -23,7 +23,6 @@ export async function generarComprobantePDF(correo : any, detalles : any) {
   });
 
   page.moveTo(50, 620);
-  // page.drawText(`Cliente: ${detallesCompra.cliente}`, { size: 12 });
   
   page.moveTo(50, 600);
   page.drawText(`Correo: ${correo}`, { size: 12 });
@@ -32,13 +31,6 @@ export async function generarComprobantePDF(correo : any, detalles : any) {
   page.drawText('Productos:', { size: 18 });
 
   let posicionY = 550;
-  // detallesCompra.productos.forEach((producto, index) => {
-  //   page.moveTo(100, posicionY);
-  //   page.drawText(`${index + 1}. ${producto.nombre}`, { size: 12 });
-  //   page.moveTo(400, posicionY);
-  //   page.drawText(`$${producto.precio.toFixed(2)}`, { size: 12 });
-  //   posicionY -= 20;
-  // });
 
   page.drawLine({
     start: { x: 50, y: posicionY - 10 },
@@ -50,7 +42,6 @@ export async function generarComprobantePDF(correo : any, detalles : any) {
   page.drawText('Total', {size: 12 });
 
   page.moveTo(390, posicionY - 30);
-  // page.drawText(`$${detallesCompra.montoTotal}`, {size: 18 });
 
   const pdfBytes = await pdfDoc.save()
   return pdfBytes

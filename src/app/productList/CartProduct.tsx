@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ProductoData } from '@/types/types';
+import { ProductoData } from '../../../types/PedidoData';
 import { CartContext } from '@/context/CartContext';
 
 interface ProductProps {

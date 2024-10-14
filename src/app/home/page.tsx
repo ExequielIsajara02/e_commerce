@@ -1,8 +1,10 @@
-import { Header } from "@/components/Header";
+import { ProductoData } from "../../../types/ProductData";
+import { getAllProductos } from "../../../utils/producto";
 import VistaProductos from "./VistaProductos";
 
-
-const Page = () => {
+const Page = async () => {
+    const productos : ProductoData[] = await getAllProductos();
+    console.log(productos)
     return (
         <div>
             <h2>Mostrar productos</h2>

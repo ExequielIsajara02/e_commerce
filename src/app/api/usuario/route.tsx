@@ -1,5 +1,5 @@
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server"
-import {prisma} from "../../../lib/db"
 
 export async function GET() {
 
@@ -20,7 +20,7 @@ export async function POST(request : Request) {
             telefono,
             direccion,
             localidad,
-            cuentaVerificada : false
+            // cuentaVerificada : false
         }
     });
     console.log(guardarUsuario);

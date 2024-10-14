@@ -1,20 +1,10 @@
 import { NextResponse } from "next/server";
-<<<<<<< HEAD
 import { prisma } from "@/lib/prisma";
-=======
-import { prisma } from "@/libs/prisma";
->>>>>>> master
-import { ProductoData } from "../src/app/types/types";
+import { ProductoData } from "../types/ProductData";
+
 
 export async function getAllProductos() {
-    try {
-        const productos = await prisma.producto.findMany();
-        console.log(productos);
-        return NextResponse.json(productos);
-    } catch (error) {
-        console.error("Error al obtener productos:", error);
-        return NextResponse.json({ error: "Error al obtener productos" }, { status: 500 });
-    }
+        return await prisma.producto.findMany();
 }
 
 export async function getProductById( id: number) {

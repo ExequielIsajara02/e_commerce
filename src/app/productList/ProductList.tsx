@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Product from './CartProduct';
 import { CartContext } from '../../context/CartContext';
-import { ProductoData } from '../../types/types';
+import { ProductoData } from '../../../types/PedidoData';
 
 // Datos de productos simulados
 const mockProducts: ProductoData[] = [
