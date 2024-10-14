@@ -4,19 +4,24 @@ import React, { useState } from 'react';
 const ProductForm = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
-    const [imagen, setImagen] = useState('');
+    const [imagen, setImagen] = useState<File | null>(null);
+    const [imagenPreview, setImagenPreview] = useState<string | null>(null);
     const [precio, setPrecio] = useState('');
     const [cantidad, setCantidad] = useState('');
+    const [marca, setMarca] = useState('');
+    const [tipo, setTipo] = useState('');
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    async function handleSubmit(e: React.FormEvent): Promise<void> {
         e.preventDefault();
 
         const productData = {
             nombre,
             descripcion,
-            imagen,
+            imagen: imagenPreview, // Se puede ajustar según cómo manejes la imagen en el backend
             precio: parseFloat(precio),
             cantidad: parseInt(cantidad, 10),
+            marca,
+            tipo,
         };
 
         try {
@@ -36,11 +41,28 @@ const ProductForm = () => {
             console.log(result);
             setNombre('');
             setDescripcion('');
-            setImagen('');
+            setImagen(null);
+            setImagenPreview(null);
             setPrecio('');
             setCantidad('');
+            setMarca('');
+            setTipo('');
         } catch (error) {
             console.error('Error:', error);
+        }
+    }
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0] || null;
+        setImagen(file);
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagenPreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setImagenPreview(null);
         }
     };
 
@@ -69,15 +91,18 @@ const ProductForm = () => {
                 />
             </div>
             <div className="mb-4">
-                <label htmlFor="imagen" className="block text-sm font-medium text-gray-700">Imagen URL:</label>
+                <label htmlFor="imagen" className="block text-sm font-medium text-gray-700">Cargar Imagen:</label>
                 <input
-                    type="text"
+                    type="file"
                     id="imagen"
-                    value={imagen}
-                    onChange={(e) => setImagen(e.target.value)}
-                    required
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    //required
                     className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                {imagenPreview && (
+                    <img src={imagenPreview} alt="Vista previa" className="mt-2 w-32 h-32 object-cover" />
+                )}
             </div>
             <div className="mb-4">
                 <label htmlFor="precio" className="block text-sm font-medium text-gray-700">Precio:</label>
@@ -97,6 +122,28 @@ const ProductForm = () => {
                     id="cantidad"
                     value={cantidad}
                     onChange={(e) => setCantidad(e.target.value)}
+                    required
+                    className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="marca" className="block text-sm font-medium text-gray-700">Marca:</label>
+                <input
+                    type="text"
+                    id="marca"
+                    value={marca}
+                    onChange={(e) => setMarca(e.target.value)}
+                    required
+                    className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="tipo" className="block text-sm font-medium text-gray-700">Tipo:</label>
+                <input
+                    type="text"
+                    id="tipo"
+                    value={tipo}
+                    onChange={(e) => setTipo(e.target.value)}
                     required
                     className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />

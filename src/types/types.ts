@@ -12,9 +12,11 @@ export type ProductoData = {
     id_producto: number,
     nombre: string
     descripcion: string
-    imagen: string
+    imagen: string | null
     precio: number
     cantidad: number
+    marca: string
+    tipo: string
   };
 
 export type UsuarioData = {

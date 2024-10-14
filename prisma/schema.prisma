@@ -17,9 +17,11 @@ model Producto {
   id_producto Int @id @default(autoincrement())
   nombre String
   descripcion String
-  imagen String
+  imagen String?
   precio Float
   cantidad Int
+  marca String
+  tipo String
 }
 
 model Pedido {
