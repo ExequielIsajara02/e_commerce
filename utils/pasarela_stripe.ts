@@ -11,7 +11,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 //  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 console.log(process.env.STRIPE_SECRET_KEY)
 
-export async function crearSesionStripe(cartItems: CarritoData[]) {
+export async function crearSesionStripe(cartItems: CarritoData[], idPedido: number) {
     try {
         const lineItems = cartItems.map(item => ({
             price_data: {
@@ -26,7 +26,10 @@ export async function crearSesionStripe(cartItems: CarritoData[]) {
         const session = await stripe.checkout.sessions.create({
             success_url: "http://localhost:3000/success",
             line_items: lineItems,
-            mode: 'payment'
+            mode: 'payment',
+            metadata: {
+                idPedido,
+              },
         });
         console.log(session)
 

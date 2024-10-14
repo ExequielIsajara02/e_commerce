@@ -21,10 +21,38 @@ export const Carrito: React.FC = () => {
     return null;
   }
   const handlePay = async () => {
-    const session = await crearSesionStripe(cartItems);
-    window.location.href = session ?? '';
-
-  }
+    try {
+      // 1. Guarda el pedido en tu base de datos antes de crear la sesión de Stripe.
+      const response = await fetch('/api/guardarPedido', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productos: cartItems,
+          id_usuario: 1, // Aquí deberías agregar el ID del usuario
+          metodo_pago: 'tarjeta', // Reemplaza con el método de pago real
+          estado: 'pendiente', // Estado del pedido
+          precio_final: 1200 // El precio total del carrito
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error al guardar el pedido');
+      }
+  
+      const { idPedido } = await response.json(); // Obtén el ID del pedido guardado
+  
+      // 2. Crea la sesión de Stripe usando los productos del carrito
+      const session = await crearSesionStripe(cartItems, idPedido); // Pasa el ID del pedido a Stripe
+  
+      // 3. Redirige a Stripe Checkout
+      window.location.href = session ?? '';
+    } catch (error) {
+      console.error('Error al procesar el pago:', error);
+    }
+  };
+  
 
   return (
     <div
