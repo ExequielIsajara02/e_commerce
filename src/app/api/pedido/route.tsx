@@ -24,5 +24,5 @@ export async function POST(request : Request) {
         }
     });
     console.log(guardarPedido);
-    return NextResponse.json("Creating pedido");
+    return NextResponse.json(guardarPedido); 
 }
