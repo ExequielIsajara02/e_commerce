@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import prisma from "../../../../lib/db"
+import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
 export async function POST(request) {
   try {
     const data = await request.json();
 
-    const usuarioEncontrado = await prisma.usuario.findUnique({
+    const usuarioEncontrado = await db.usuario.findUnique({
       where: {
         correo: data.correo,
       },
@@ -27,7 +27,7 @@ export async function POST(request) {
 
     // Encriptado de clave antes de crear el usuario
     const hashClave = await bcrypt.hash(data.clave, 10);
-    const nuevoUsuario = await prisma.usuario.create({
+    const nuevoUsuario = await db.usuario.create({
       data: {
         nombre: data.nombre,
         apellido: data.apellido,

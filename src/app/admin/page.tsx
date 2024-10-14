@@ -16,7 +16,6 @@ const AdminPage = async () => {
     <div>
       <h1>Welcome Admin</h1>
       <pre>{JSON.stringify(session, null, 2)}</pre>
-      <LogoutButton/>
     </div>
   )
 }

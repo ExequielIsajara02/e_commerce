@@ -12,7 +12,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     // jwt() se ejecuta cada vez que se crea o actualiza un token JWT
     // Aqui puedes agregar informacion adicional al token
     jwt({ token, user }) {
-      if (user) { // User is available during sign-in
+      if (user) { // El usuario estara disponible durante el login
         token.role = user.role;
       }
       return token
