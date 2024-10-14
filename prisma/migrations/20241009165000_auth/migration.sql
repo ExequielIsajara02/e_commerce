@@ -1,4 +1,20 @@
 -- CreateTable
+CREATE TABLE `Usuario` (
+    `id_usuario` INTEGER NOT NULL AUTO_INCREMENT,
+    `nombre` VARCHAR(191) NULL,
+    `apellido` VARCHAR(191) NULL,
+    `correo` VARCHAR(191) NULL,
+    `clave` VARCHAR(191) NULL,
+    `telefono` VARCHAR(191) NULL,
+    `direccion` VARCHAR(191) NULL,
+    `localidad` VARCHAR(191) NULL,
+    `role` ENUM('user', 'admin') NOT NULL DEFAULT 'user',
+
+    UNIQUE INDEX `Usuario_correo_key`(`correo`),
+    PRIMARY KEY (`id_usuario`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Producto` (
     `id_producto` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(191) NOT NULL,
@@ -22,17 +38,4 @@ CREATE TABLE `Pedido` (
     `precio_final` DOUBLE NOT NULL,
 
     PRIMARY KEY (`id_pedido`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `Usuario` (
-    `id_usuario` INTEGER NOT NULL AUTO_INCREMENT,
-    `nombre` VARCHAR(191) NOT NULL,
-    `apellido` VARCHAR(191) NOT NULL,
-    `correo` VARCHAR(191) NOT NULL,
-    `telefono` VARCHAR(191) NOT NULL,
-    `direccion` VARCHAR(191) NOT NULL,
-    `localidad` VARCHAR(191) NOT NULL,
-
-    PRIMARY KEY (`id_usuario`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

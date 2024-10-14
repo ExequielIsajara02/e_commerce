@@ -1,8 +1,19 @@
 import { NextResponse } from "next/server";
+<<<<<<< HEAD
+import prisma from "../src/lib/db"
+import { UsuarioData } from "../src/app/types/types";
+
+
+
+// Maneja la solicitud GET para obtener todos los usuarios
+
+
+=======
 import { prisma } from "@/libs/prisma";
 import { UsuarioData } from "../src/app/types/types";
 
 // Maneja la solicitud GET para obtener todos los usuarios
+>>>>>>> master
 export async function GET() {
     try {
         return await prisma.usuario.findMany();
@@ -23,6 +34,28 @@ export async function getUsuarioById( id: number) {
     }
 }
 
+<<<<<<< HEAD
+
+export async function getUsuarioByEmail( email : string) {
+    try {
+        const usuario = await prisma.usuario.findUnique({
+            where: {
+                correo: email, 
+            }
+        });
+       
+
+        return usuario;
+
+    } catch (error) {
+        console.error("Error al obtener usuario:", error);
+        return NextResponse.json({ error: "Error al obtener usuario" }, { status: 500 });
+    }
+}
+
+
+=======
+>>>>>>> master
 export async function updateUsuario( data: UsuarioData) {
     try {
         return await prisma.usuario.update({
@@ -48,10 +81,22 @@ export async function deleteUsuario( id: number) {
 
 // Maneja la solicitud POST para crear un nuevo usuario
 export async function createUsuario(data: UsuarioData) {
+<<<<<<< HEAD
+    try {
+        const usuarioGuardado = await prisma.usuario.create({
+            data: data
+        });
+        return NextResponse.json(usuarioGuardado);
+=======
     try {    
         return await prisma.usuario.create({data});
+>>>>>>> master
     } catch (error) {
         console.error("Error al crear usuario:", error);
         return NextResponse.json({ error: "Error al crear usuario" }, { status: 500 });
     }
 }
+<<<<<<< HEAD
+
+=======
+>>>>>>> master

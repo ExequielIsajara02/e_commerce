@@ -1,0 +1,41 @@
+import Link from "next/link";
+import { auth } from "@/auth";
+import LogoutButton from "./logout-button";
+
+const NavBar = async () => {
+  const session = await auth();
+  console.log(session);
+
+  return (
+    <nav className="flex justify-between bg-gray-950 text-white px-24">
+      <h1>E-Commerce</h1>
+
+      <ul className="flex gap-x-2 justify-center items-center">
+        <li>
+          <Link href="/">Home</Link>
+        </li>
+        {!session?.user ? (
+            <>
+                <li>
+                    <Link href="/auth/login">Login</Link>
+                </li>
+                <li>
+                    <Link href="/registro">Register</Link>
+                </li>
+            </>
+        ) : (
+            <>
+                <li>
+                    <Link href="/protected/dashboard">Dashboard</Link>
+                </li>
+                <li>
+                  <LogoutButton />
+                </li>
+            </>
+        )}
+      </ul>
+    </nav>
+  );
+};
+
+export default NavBar;
