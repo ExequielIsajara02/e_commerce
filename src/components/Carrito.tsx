@@ -2,7 +2,7 @@
 
 import React, { useContext } from 'react';
 import { CartContext } from '@/context/CartContext';
-import { crearSesionStripe } from '../../utils/pasarela_stripe';
+// import { crearSesionStripe } from '../../utils/pasarela_stripe';
 
 
 
@@ -21,8 +21,9 @@ export const Carrito: React.FC = () => {
     return null;
   }
   const handlePay = async () => {
-    const session = await crearSesionStripe(cartItems);
-    window.location.href = session ?? '';
+    // const session = await crearSesionStripe(cartItems);
+    // window.location.href = session ?? '';
+    console.log("Prueba de pago")
 
   }
 
@@ -43,7 +44,7 @@ export const Carrito: React.FC = () => {
           <ul className="list-none p-0">
             {cartItems.map(item => (
               <li key={item.producto.id_producto} className="flex items-center mb-4">
-                <img src={item.producto.imagen} alt={item.producto.nombre} className="w-16 h-16 object-cover mr-4" />
+                {/* <img src={item.producto.imagen} alt={item.producto.nombre} className="w-16 h-16 object-cover mr-4" /> */}
                 <div className="flex-1">
                   <span>{item.producto.nombre} - ${item.producto.precio.toFixed(2)} x {item.cantidad}</span>
                   <p className="text-sm text-gray-600">{item.producto.descripcion}</p>

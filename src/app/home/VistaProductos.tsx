@@ -69,21 +69,25 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
 
           <div className="mb-4">
             <label className="block">Rango de Precio:</label>
+            <div className="flex justify-between mb-2">
+              <span>${priceRange[0]}</span>
+              <span>${priceRange[1]}</span>
+            </div>
             <input
-              type="number"
+              type="range"
+              min={0}
+              max={100000}
               value={priceRange[0]}
               onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
-              className="border rounded px-2 py-1 w-full mb-2"
-              min={0}
-              max={priceRange[1]}
+              className="w-full accent-blue-500" // Cambia el color del slider
             />
             <input
-              type="number"
+              type="range"
+              min={0}
+              max={100000}
               value={priceRange[1]}
               onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
-              className="border rounded px-2 py-1 w-full"
-              min={priceRange[0]}
-              max={100000}
+              className="w-full accent-blue-500" // Cambia el color del slider
             />
           </div>
         </div>
@@ -127,15 +131,28 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {sortedProducts.map((producto) => (
-            <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={producto.id_producto}>
-              <p>ID: {producto.id_producto}</p>
-              <p className="mb-1 font-semibold">{producto.nombre}</p>
-              <p className="mb-1 text-gray-600">{producto.descripcion}</p>
-              <p className="mb-2 text-lg font-bold">${producto.precio}</p>
-              <ButtonAddToCarrito producto={producto} cantidad={1} />
-            </div>
-          ))}
+          {sortedProducts.map((producto) => {
+            const [cantidad, setCantidad] = useState(1); // Añadir estado para la cantidad
+
+            return (
+              <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={producto.id_producto}>
+                <p>ID: {producto.id_producto}</p>
+                <p className="mb-1 font-semibold">{producto.nombre}</p>
+                <p className="mb-1 text-gray-600">{producto.descripcion}</p>
+                <p className="mb-2 text-lg font-bold">${producto.precio}</p>
+
+                <input
+                  type="number"
+                  value={cantidad}
+                  onChange={(e) => setCantidad(Math.max(1, Number(e.target.value)))}
+                  className="border rounded px-2 py-1 w-24 mb-2"
+                  min={1}
+                />
+                
+                <ButtonAddToCarrito producto={producto} cantidad={cantidad} />
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -143,3 +160,4 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
 };
 
 export default VistaProductos;
+

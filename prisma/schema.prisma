@@ -17,6 +17,9 @@ model Producto {
   imagen String
   precio Float
   cantidad Int
+  marca String
+  tipo String
+  descuentos   Descuento[] @relation("DescuentosAplicables")
 }
 
 // Modelo de Pedido
@@ -39,7 +42,7 @@ model PedidoProducto {
   id_producto  Int
   cantidad     Int  // Cantidad del producto en el pedido
   pedido       Pedido  @relation(fields: [id_pedido], references: [id_pedido])
-  producto     Producto @relation(fields: [id_producto], references: [id_producto])
+  //producto     Producto @relation(fields: [id_producto], references: [id_producto])
   
   @@id([id_pedido, id_producto])  // Llave compuesta
 }
@@ -55,4 +58,15 @@ model Usuario {
   localidad        String
   cuentaVerificada Boolean @default(false)
   pedidos          Pedido[]
+}
+
+model Descuento {
+  id_descuento     Int      @id @default(autoincrement())
+  codigo           String   @unique
+  porcentaje       Float
+  fechaInicio      DateTime
+  fechaFin         DateTime
+  activo           Boolean  @default(true)
+  creadoEn         DateTime @default(now())
+  productos        Producto[] @relation("DescuentosAplicables")
 }

@@ -1,12 +1,5 @@
-import React, { 
-  createContext, 
-  useState, 
-  ReactNode, 
-  Dispatch, 
-  SetStateAction, 
-  useEffect 
-} from 'react';
-import { CarritoData } from '../types/types';
+import React, { createContext, useState, ReactNode, Dispatch, SetStateAction, useEffect } from 'react';
+import { CarritoData } from '../types/types'; // Asegúrate de que esta ruta sea correcta
 import { Header } from '@/components/Header';
 import { Carrito } from '@/components/Carrito';
 
@@ -18,9 +11,9 @@ interface CartContextType {
   setCarritoVisible: Dispatch<SetStateAction<boolean>>;
 }
 
-// Crear el contexto
+// Crear el contexto con valores por defecto
 const CartContext = createContext<CartContextType>({
-  cartItems: [], 
+  cartItems: [],
   setCartItems: () => {},
   isCarritoVisible: false,
   setCarritoVisible: () => {},
@@ -28,21 +21,22 @@ const CartContext = createContext<CartContextType>({
 
 // Proveedor del contexto
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<CarritoData[]>([]);
-  const [isCarritoVisible, setCarritoVisible] = useState(false); 
-
-  useEffect(() => {
-    // Verificar si estamos en el lado del cliente antes de acceder al localStorage
+  const [cartItems, setCartItems] = useState<CarritoData[]>(() => {
     if (typeof window !== 'undefined') {
       const savedCart = localStorage.getItem('cartItems');
-      if (savedCart) {
-        setCartItems(JSON.parse(savedCart));
-      }
+      return savedCart ? JSON.parse(savedCart) : [];
     }
+    return [];
+  });
+
+  const [isCarritoVisible, setCarritoVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false); // Estado para controlar el montaje
+
+  useEffect(() => {
+    setIsMounted(true); // Establecer que el componente se ha montado
   }, []);
 
   useEffect(() => {
-    // Guardar el carrito en el localStorage cada vez que cambie
     if (typeof window !== 'undefined') {
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
     }
@@ -54,10 +48,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setCartItems,
       isCarritoVisible, 
       setCarritoVisible
-     }}>
-      <Header/>
+    }}>
+      <Header />
       <Carrito />
-      {children}
+      {isMounted && children} {/* Renderiza los hijos solo si el componente está montado */}
     </CartContext.Provider>
   );
 };
