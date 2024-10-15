@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { ProductoData } from '../../../types/PedidoData';
 import { CartContext } from '@/context/CartContext';
+import { ProductoData } from '../../../types/ProductData';
 
 interface ProductProps {
   product: ProductoData;
@@ -11,9 +11,6 @@ const Product: React.FC<ProductProps> = ({ product }) => {
   const addToCart = (producto: ProductoData) => {
     setCartItems([...cartItems, producto]);
   };
-
-
-  console.log(cartItems)
 
   return (
     <div className="border border-gray-300 p-4 mb-4 rounded-md">

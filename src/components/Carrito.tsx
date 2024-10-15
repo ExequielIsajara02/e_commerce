@@ -3,7 +3,6 @@
 import React, { useContext } from 'react';
 import { CartContext } from '@/context/CartContext';
 
-
 export const Carrito: React.FC = () => {
   const { cartItems, setCartItems, isCarritoVisible, setCarritoVisible } = useContext(CartContext);
 
@@ -18,44 +17,12 @@ export const Carrito: React.FC = () => {
   if (!cartItems.length && !isCarritoVisible) {
     return null;
   }
-  const handlePay = async () => {
-    try {
-      // 1. Guarda el pedido en tu base de datos antes de crear la sesión de Stripe.
-      const response = await fetch('/api/guardarPedido', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          productos: cartItems,
-          id_usuario: 1, // Aquí deberías agregar el ID del usuario
-          metodo_pago: 'tarjeta', // Reemplaza con el método de pago real
-          estado: 'pendiente', // Estado del pedido
-          precio_final: 1200 // El precio total del carrito
-        }),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Error al guardar el pedido');
-      }
-  
-      const { idPedido } = await response.json(); // Obtén el ID del pedido guardado
-  
-      // 2. Crea la sesión de Stripe usando los productos del carrito
-      // const session = await crearSesionStripe(cartItems, idPedido); // Pasa el ID del pedido a Stripe
-  
-      // 3. Redirige a Stripe Checkout
-      // window.location.href = session ?? '';
-    } catch (error) {
-      console.error('Error al procesar el pago:', error);
-    }
-  };
-  
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg border-l border-gray-300 transform transition-transform duration-300 ease-in-out ${isCarritoVisible ? 'translate-x-0' : 'translate-x-full'
-        }`}
+      className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg border-l border-gray-300 transform transition-transform duration-300 ease-in-out ${
+        isCarritoVisible ? 'translate-x-0' : 'translate-x-full'
+      }`}
     >
       <div className="p-4 border-b flex justify-between items-center">
         <h1 className="text-2xl">Tu Carrito</h1>
@@ -87,9 +54,7 @@ export const Carrito: React.FC = () => {
         </div>
       )}
 
-      <button className="bg-green-600 text-white w-60 h-10 rounded-lg m-6"
-        onClick={handlePay}
-      >Pagar</button>
+      <button className="bg-green-600 text-white w-60 h-10 rounded-lg m-6">Pagar</button>
     </div>
   );
 };

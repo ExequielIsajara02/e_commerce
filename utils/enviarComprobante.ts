@@ -36,7 +36,6 @@ export async function enviarComprobante(data : any) {
       ],
     });
 
-    console.log('Comprobante enviado con éxito');
   } catch (error) {
     console.error('Error al generar el PDF o enviar el correo:', error);
   }

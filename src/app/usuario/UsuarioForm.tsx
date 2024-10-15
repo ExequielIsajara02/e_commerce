@@ -30,7 +30,6 @@ const UsuarioForm = () => {
 
       const data = await res.json()
       const userId = data.id_usuario
-      // console.log(userId)
 
       const correoRes = await fetch('/api/enviarMail', {
         method: 'POST',

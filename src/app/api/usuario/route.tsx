@@ -4,7 +4,6 @@ import { NextResponse } from "next/server"
 export async function GET() {
 
     const usuario = await prisma.usuario.findMany()
-    console.log(usuario);
     
     return NextResponse.json(usuario);
 }

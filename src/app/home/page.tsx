@@ -4,7 +4,7 @@ import VistaProductos from "./VistaProductos";
 
 const Page = async () => {
     const productos : ProductoData[] = await getAllProductos();
-    console.log(productos)
+
     return (
         <div>
             <h2>Mostrar productos</h2>

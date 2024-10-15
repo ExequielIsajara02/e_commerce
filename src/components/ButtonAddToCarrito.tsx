@@ -1,35 +1,32 @@
 import { CartContext } from "@/context/CartContext";
-import { ProductType } from "@/types/ProductType";
 import { useContext } from "react";
+import { ProductoData } from "../../types/ProductData";
 
-// Definición de la interfaz para las props
-interface ButtonAddToCarritoProps {
-  producto: ProductType; 
-  cantidad?: number;      
-}
+export const ButtonAddToCarrito = (producto: ProductoData) => {
+  const { cartItems, setCartItems, setCarritoVisible } = useContext(CartContext);
 
-export const ButtonAddToCarrito: React.FC<ButtonAddToCarritoProps> = ({ producto, cantidad = 1 }) => {
-  const { setCartItems, setCarritoVisible, cartItems } = useContext(CartContext);
-
-  const addToCart = (product: ProductType, cantidad: number) => {
-    const existingItem = cartItems.find((item) => item.producto.id_producto === product.id_producto);
-    if (existingItem) {
-      existingItem.cantidad += cantidad; // Aumentar la cantidad existente
-      setCartItems((prevItems) => [
-        ...prevItems.filter((item) => item.producto.id_producto !== product.id_producto), 
-        existingItem
-      ]);
-    } else {
-      setCartItems((prevItems) => [...prevItems, { producto: product, cantidad }]);
-    }
+  const addToCart = (product: ProductoData) => {
+    const existingProduct = cartItems.find(item => item.id_producto === product.id_producto);
     
+    if (existingProduct) {
+      setCartItems(prevItems => 
+        prevItems.map(item => 
+          item.id_producto === product.id_producto 
+          ? { ...item, cantidad: item.cantidad + 1 } 
+          : item
+        )
+      );
+    } else {
+      setCartItems(prevItems => [...prevItems, { ...product, cantidad: 1 }]);
+    }
+
     setCarritoVisible(true);
   };
 
   return (
     <button 
       className="bg-blue-500 p-1 rounded-lg text-white border border-black" 
-      onClick={() => addToCart(producto, cantidad!)} // Asegúrate de que cantidad no sea undefined
+      onClick={() => addToCart(producto)}
     >
       Agregar al carrito
     </button>
