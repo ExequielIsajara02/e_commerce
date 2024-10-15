@@ -9,16 +9,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Modelo de Producto
 model Producto {
   id_producto  Int @id @default(autoincrement())
-  nombre       String
-  descripcion  String
-  imagen       String
-  precio       Float
-  cantidad     Int
-  pedidos      PedidoProducto[]  // Relación con la tabla intermedia
-}
+  nombre       String?
+  descripcion  String?
+  imagen       String?
+  precio       Float?
+  cantidad     Int?
+  marca        String?
+  tipo         String?
+  }
+
 
 // Modelo de Pedido
 model Pedido {
@@ -30,19 +31,7 @@ model Pedido {
   precio_final  Float    // Precio total después de descuentos y recargos
   recargos      Float    // Cualquier recargo adicional
   descuentos    Float    // Cualquier descuento aplicado
-  productos     PedidoProducto[]  // Relación con la tabla intermedia
   usuario       Usuario   @relation(fields: [id_usuario], references: [id_usuario]) // Relación con Usuario
-}
-
-// Modelo intermedio para la relación muchos a muchos
-model PedidoProducto {
-  id_pedido    Int
-  id_producto  Int
-  cantidad     Int  // Cantidad del producto en el pedido
-  pedido       Pedido  @relation(fields: [id_pedido], references: [id_pedido])
-  producto     Producto @relation(fields: [id_producto], references: [id_producto])
-  
-  @@id([id_pedido, id_producto])  // Llave compuesta
 }
 
 // Modelo de Usuario

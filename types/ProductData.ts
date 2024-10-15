@@ -5,4 +5,6 @@ export type ProductoData = {
     imagen: string;
     precio: number;
     cantidad: number;
+    marca?: string;
+    tipo?: string;
   };

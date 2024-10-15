@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { ProductoData } from "../types/ProductData";
 
 
-export async function getAllProductos() {
+export async function getAllProductos() : Promise<ProductoData[]>{
         return await prisma.producto.findMany();
 }
 
