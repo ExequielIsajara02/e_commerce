@@ -6,34 +6,62 @@ import React, {
   SetStateAction, 
   useEffect 
 } from 'react';
-import { ProductoData } from '../types/types';
+import { Header } from '@/components/Header';
+import { Carrito } from '@/components/Carrito';
+import { ProductoData } from '../../types/ProductData';
 
-// Definir la interfaz del contexto
 interface CartContextType {
   cartItems: ProductoData[];
   setCartItems: Dispatch<SetStateAction<ProductoData[]>>;
+  isCarritoVisible: boolean;
+  setCarritoVisible: Dispatch<SetStateAction<boolean>>;
 }
 
-// Crear el contexto
-const CartContext = createContext<CartContextType>({ cartItems: [], setCartItems: () => {} });
+const CartContext = createContext<CartContextType>({
+  cartItems: [], 
+  setCartItems: () => {},
+  isCarritoVisible: false,
+  setCarritoVisible: () => {},
+});
 
-// Proveedor del contexto
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<ProductoData[]>(() => {
-    // Cargar el carrito del local storage
-    const savedCart = localStorage.getItem('cartItems');
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
-
-  
+  const [cartItems, setCartItems] = useState<ProductoData[]>([]);
+  const [isCarritoVisible, setCarritoVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Guardar el carrito en el local storage cada vez que cambie
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  }, [cartItems]);
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted && typeof window !== 'undefined') {
+      const savedCart = localStorage.getItem('cartItems');
+      if (savedCart) {
+        try {
+          const parsedCart = JSON.parse(savedCart);
+          setCartItems(parsedCart);
+        } catch (error) {
+          console.error('Error al parsear los datos del carrito desde localStorage:', error);
+        }
+      }
+    }
+  }, [isMounted]);
+
+  useEffect(() => {
+    if (isMounted && typeof window !== 'undefined') {
+      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    }
+  }, [cartItems, isMounted]);
 
   return (
-    <CartContext.Provider value={{ cartItems, setCartItems }}>
+    <CartContext.Provider value={{ 
+      cartItems, 
+      setCartItems,
+      isCarritoVisible, 
+      setCarritoVisible
+     }}>
+      <Header/>
+      <Carrito />
       {children}
     </CartContext.Provider>
   );

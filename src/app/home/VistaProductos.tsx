@@ -1,7 +1,7 @@
 "use client"
-import { NextResponse } from "next/server"
-import { prisma } from "@/libs/prisma"
 import React, { useEffect, useState } from 'react'
+import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito"
+import { ProductoData } from '../../../types/ProductData'
 
 const VistaProductos = () => {
 
@@ -11,7 +11,6 @@ const VistaProductos = () => {
         const respuesta = await fetch("http://localhost:3000/api/producto")
         const datos = await respuesta.json()
         setProductos(datos)
-        console.log(datos);
         
         return datos
     }
@@ -22,13 +21,13 @@ const VistaProductos = () => {
   return (
 
                 <div className="grid grid-cols-4">
-                {productos.map((producto: { id_producto: number, nombre: string, descripcion: string, precio: number }) => (
+                {productos.map((producto: ProductoData) => (
                   <div className="border-black border rounded-lg m-4" key={producto.id_producto}>
                     <p>ID: {producto.id_producto}</p>
                     <p className="mb-1 mx-4 my-1">{producto.nombre}</p>
                     <p className="mb-1 mx-4 my-1">{producto.descripcion}</p>
                     <p className="mb-1 mx-4 my-1">${producto.precio}</p>
-                    <button className="bg-blue-500 p-1 rounded-lg text-white border border-black">Agregar al carrito</button>
+                    <ButtonAddToCarrito {...producto} />
                   </div>
                 ))}
               </div>

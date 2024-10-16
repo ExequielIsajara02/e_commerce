@@ -1,44 +1,48 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+// Generador de cliente
 generator client {
   provider = "prisma-client-js"
 }
 
+// Fuente de datos
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model Producto {
-  id_producto Int @id @default(autoincrement())
-  nombre String
-  descripcion String
-  imagen String
-  precio Float
-  cantidad Int
-}
+  id_producto  Int @id @default(autoincrement())
+  nombre       String?
+  descripcion  String?
+  imagen       String?
+  precio       Float?
+  cantidad     Int?
+  marca        String?
+  tipo         String?
+  }
 
+
+// Modelo de Pedido
 model Pedido {
-  id_pedido Int @id @default(autoincrement())
-  id_usuario Int
-  id_producto Int
-  cantidad Int
-  fecha DateTime
-  metodo_pago String
-  estado String
-  precio_final Float
+  id_pedido     Int @id @default(autoincrement())
+  id_usuario    Int
+  fecha         DateTime
+  metodo_pago   String
+  estado        String
+  precio_final  Float    // Precio total después de descuentos y recargos
+  recargos      Float    // Cualquier recargo adicional
+  descuentos    Float    // Cualquier descuento aplicado
+  usuario       Usuario   @relation(fields: [id_usuario], references: [id_usuario]) // Relación con Usuario
 }
 
+// Modelo de Usuario
 model Usuario {
-  id_usuario Int @id @default(autoincrement())
-  nombre String
-  apellido String
-  correo String
-  telefono String
-  direccion String
-  localidad String
+  id_usuario       Int @id @default(autoincrement())
+  nombre           String
+  apellido         String
+  correo           String
+  telefono         String
+  direccion        String
+  localidad        String
+  cuentaVerificada Boolean @default(false)
+  pedidos          Pedido[]
 }
