@@ -1,30 +1,19 @@
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { prisma } from "@/libs/prisma";
 import { ProductoData } from "@/types/types";
 
-// Manejo de errores 
-const handleError = (error: any, message: string) => {
-    console.error(message, error);
-    return NextResponse.json({ error: message }, { status: 500 });
-};
 
-export async function GET(request: Request) {
-    return getAllProductos();
-}
-
-export async function POST(request: Request) {
-    const data: ProductoData = await request.json();
-    return createProducto(data);
-}
-
-export async function getAllProductos() : Promise<ProductoData[]> {
+export async function getAllProductos() {
     try {
-        return await prisma.producto.findMany();
-        
+        const productos = await prisma.producto.findMany();
+        console.log(productos);
+        return NextResponse.json(productos);
     } catch (error) {
-        throw ( "Error al obtener productos: " + error);
+        console.error("Error al obtener productos:", error);
+        return NextResponse.json({ error: "Error al obtener productos" }, { status: 500 });
     }
 }
+
 
 async function createProducto(data: ProductoData) {
     // Validaciones básicas de los datos de entrada
@@ -38,5 +27,9 @@ async function createProducto(data: ProductoData) {
     } catch (error) {
         return handleError(error, "Error al crear producto");
     }
+}
+
+function handleError(error: unknown, arg1: string) {
+    throw new Error("Function not implemented.");
 }
 

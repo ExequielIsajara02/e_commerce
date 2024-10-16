@@ -1,11 +1,14 @@
+import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server"
+<<<<<<< HEAD
 import { prisma } from "@/libs/prisma"
 import { ProductType } from "@/types/ProductType";
+=======
+>>>>>>> master
 
 export async function GET(){
 
     const productos = await prisma.producto.findMany()
-    console.log(productos);
     
     return NextResponse.json(productos);
 }
@@ -23,6 +26,5 @@ export async function POST(request: Request) {
             tipo
         }
     });
-    console.log(guardarProducto);
     return NextResponse.json("Creating products");
 }

@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/libs/prisma";
 import { UsuarioData } from "../src/app/types/types";
+import { prisma } from "@/lib/prisma";
 
-// Maneja la solicitud GET para obtener todos los usuarios
 export async function GET() {
     try {
         return await prisma.usuario.findMany();
@@ -17,6 +16,22 @@ export async function getUsuarioById( id: number) {
         return await prisma.usuario.findUnique({
             where: { id_usuario: id }
         });
+    } catch (error) {
+        console.error("Error al obtener usuario:", error);
+        return NextResponse.json({ error: "Error al obtener usuario" }, { status: 500 });
+    }
+}
+
+export async function getUsuarioByEmail( email : string) {
+    try {
+        const usuario = await prisma.usuario.findUnique({
+            where: {
+                correo: email, 
+            }
+        });
+
+        return usuario;
+
     } catch (error) {
         console.error("Error al obtener usuario:", error);
         return NextResponse.json({ error: "Error al obtener usuario" }, { status: 500 });

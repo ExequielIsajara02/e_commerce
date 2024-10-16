@@ -13,10 +13,7 @@ const transporter = nodemailer.createTransport({
 export async function POST(req : Request) {
   try {
     const {correo, userId}  = await req.json();
-    console.log("Debug Json recibido: ", correo)
-    console.log("Debug: ", userId)
-    console.log("Debug: ", correo)
-    
+
     await transporter.sendMail({
       from: '"Validacion de correo electrónico" <ecommerce.pasantia@gmail.com>',
       to: correo,

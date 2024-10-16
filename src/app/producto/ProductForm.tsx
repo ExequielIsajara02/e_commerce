@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 const ProductForm = () => {
     const [nombre, setNombre] = useState('');
@@ -11,7 +11,7 @@ const ProductForm = () => {
     const [marca, setMarca] = useState('');
     const [tipo, setTipo] = useState('');
 
-    async function handleSubmit(e: React.FormEvent): Promise<void> {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         const productData = {

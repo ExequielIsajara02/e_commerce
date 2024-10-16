@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { prisma } from "@/libs/prisma"
+import { prisma } from "@/lib/prisma"
 
 export async function GET() {
 
@@ -9,20 +9,28 @@ export async function GET() {
     return NextResponse.json(pedidos);
 }
     
-export async function POST(request : Request) {
-    const { id_usuario, id_producto, cantidad, fecha, metodo_pago, estado, precio_final} = await request.json();
-    const guardarPedido = await prisma.pedido.create({
-        data: {
-            id_usuario,
-            id_producto,
-            cantidad,
-            fecha,
-            metodo_pago,
-            estado,
-            precio_final,
-        
-        }
-    });
-    console.log(guardarPedido);
-    return NextResponse.json(guardarPedido); 
-}
+// export async function POST(request: Request) {
+//     const { id_usuario, metodo_pago, estado, precio_final, recargos, descuentos, productos } = await request.json();
+
+//     // Crear un nuevo pedido
+//     const guardarPedido = await prisma.pedido.create({
+//         data: {
+//             id_usuario,
+//             fecha: new Date(), // Asegúrate de que la fecha sea del tipo DateTime
+//             metodo_pago,
+//             estado,
+//             precio_final,
+//             recargos,
+//             descuentos,
+//             productos: {
+//                 create: productos.map((producto: any) => ({
+//                     id_producto: producto.id_producto,
+//                     cantidad: producto.cantidad,
+//                 })),
+//             },
+//         },
+//     });
+
+//     console.log(guardarPedido);
+//     return NextResponse.json(guardarPedido);
+// }
