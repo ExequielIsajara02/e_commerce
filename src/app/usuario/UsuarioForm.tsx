@@ -10,7 +10,15 @@ const UsuarioForm = () => {
         const telefono = e.target.telefono.value
         const direccion = e.target.direccion.value
         const localidad = e.target.localidad.value
-        console.log(nombre, apellido, correo, telefono, direccion, localidad)
+
+
+        const bodyReq = {
+          nombre : e.target.nombre.value,
+          apellido : e.target.apellido.value,
+          correo : e.target.correo.value,
+          telefono : e.target.telefono.value,
+          direccion : e.target.direccion.valueww
+        }
 
       const res = await fetch('/api/usuario', {
         method: 'POST',
@@ -19,8 +27,18 @@ const UsuarioForm = () => {
           'Content-Type' : 'application/json'
         }
       })
-      const data = await res.json()
-      console.log(data)
+
+      // const data = await res.json()
+      // const userId = data.id_usuario
+
+      // const correoRes = await fetch('/api/enviarMail', {
+      //   method: 'POST',
+      //   body: JSON.stringify({ correo, userId }),
+      //   headers: {
+      //       'Content-Type': 'application/json',
+      //   },
+      // });
+
     }
   return (
     <div className='h-screen flex justify-center items-center'>

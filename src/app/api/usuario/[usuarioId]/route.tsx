@@ -1,6 +1,6 @@
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
 import { NextResponse } from "next/server"
-import { prisma } from "@/libs/prisma"
+import prisma  from "../../../../lib/db"
 
 export async function GET(request : Request, {params} : {params : Params}) {
 

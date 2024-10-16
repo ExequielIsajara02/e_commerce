@@ -1,4 +1,4 @@
-import { prisma } from "@/libs/prisma";
+import { prisma } from "@/lib/prisma";
 import { PedidoData } from "../src/app/types/types";
 
 // Función para obtener todos los pedidos
