@@ -27,7 +27,7 @@ const Carrito: React.FC = () => {
           <li key={item.id_producto} className="flex items-center mb-4">
             <img src={item.imagen} alt={item.nombre} className="w-16 h-16 object-cover mr-4" />
             <div className="flex-1">
-              <span>{item.nombre} - ${item.precio.toFixed(2)} x {item.cantidad}</span>
+              <span>{item.nombre} - ${item.precio} x {item.cantidad}</span>
               <p className="text-sm text-gray-600">{item.descripcion}</p>
             </div>
             <button className="text-red-500" onClick={() => removeFromCart(item.id_producto)}>Remove</button>

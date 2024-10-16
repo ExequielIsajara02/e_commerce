@@ -3,7 +3,6 @@ import { getAllProductos } from "../../../utils/producto";
 import VistaProductos from "./VistaProductos";
 
 const Page = async () => {
-    const productos : ProductoData[] = await getAllProductos();
 
     return (
         <div>

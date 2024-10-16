@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { PedidoData } from "../src/app/types/types";
+import { PedidoData } from "../types/PedidoData";
+
 
 // Función para obtener todos los pedidos
 export async function getAllPedidos() {
@@ -12,7 +13,7 @@ export async function getAllPedidos() {
 }
 
 // Función para crear un nuevo pedido
-export async function createPedido(data: PedidoData) {
+export async function createPedido(data : any) {
     try {
         return await prisma.pedido.create({data});
     } catch (error) {
