@@ -28,16 +28,16 @@ const UsuarioForm = () => {
         }
       })
 
-      const data = await res.json()
-      const userId = data.id_usuario
+      // const data = await res.json()
+      // const userId = data.id_usuario
 
-      const correoRes = await fetch('/api/enviarMail', {
-        method: 'POST',
-        body: JSON.stringify({ correo, userId }),
-        headers: {
-            'Content-Type': 'application/json',
-        },
-      });
+      // const correoRes = await fetch('/api/enviarMail', {
+      //   method: 'POST',
+      //   body: JSON.stringify({ correo, userId }),
+      //   headers: {
+      //       'Content-Type': 'application/json',
+      //   },
+      // });
 
     }
   return (

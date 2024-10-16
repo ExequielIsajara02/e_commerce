@@ -37,12 +37,13 @@ model Pedido {
 // Modelo de Usuario
 model Usuario {
   id_usuario       Int @id @default(autoincrement())
-  nombre           String
-  apellido         String
-  correo           String
-  telefono         String
-  direccion        String
-  localidad        String
+  nombre           String?
+  apellido         String?
+  correo           String? @unique
+  clave            String?
+  telefono         String?
+  direccion        String?
+  localidad        String?
   cuentaVerificada Boolean @default(false)
   pedidos          Pedido[]
 }
