@@ -39,9 +39,9 @@ export default {
                     id: user.id_usuario.toString(),
                     name: user.nombre,
                     email: user.correo,
-                    role: user.role
+                    // role: user.role
                 } 
-
+                console.log('Datos de sesion de usuario:', userAuth)
                 return userAuth;
                 
             },

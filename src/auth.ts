@@ -14,7 +14,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     jwt({ token, user }) {
       if (user) { // El usuario estara disponible durante el login
         token.role = user.role;
+        token.sub = user.id;
       }
+      console.log('Datos del usuario en auth.ts (TOKEN):', token)
       return token
     },
     // session() se utiliza para agregar la informacion del token a la session del usuario
@@ -22,7 +24,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     session({ session, token }) {
       if(session.user) {
         session.user.role = token.role;
+        session.user.id = token?.sub?.toString() || '';
       }
+      console.log('Datos del usuario en auth.ts (SESSION):', session)
       return session
     },
   },

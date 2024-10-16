@@ -39,11 +39,11 @@ export async function POST(request) {
       },
     });
 
-    console.log(data);
     // Muestra un usuario sin el campo clave
     const { clave: _, ...usuario } = nuevoUsuario;
     return NextResponse.json(usuario);
   } catch (error) {
+    console.log("error",error)
     return NextResponse.json({
       message: error.message,
     }, {

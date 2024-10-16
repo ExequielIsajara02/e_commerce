@@ -12,7 +12,7 @@ const NavBar = async () => {
 
       <ul className="flex gap-x-2 justify-center items-center">
         <li>
-          <Link href="/">Home</Link>
+          <Link href="/home">Home</Link>
         </li>
         {!session?.user ? (
             <>
