@@ -6,13 +6,15 @@ export type PedidoData = {
     metodo_pago: string;
     estado: string;
     precio_final: number;
+    recargos: number;
+    descuentos: number;
 };
 
 export type ProductoData = {
     id_producto: number,
     nombre: string
     descripcion: string
-    imagen: string | null
+    imagen: string
     precio: number
     cantidad: number
     marca: string
