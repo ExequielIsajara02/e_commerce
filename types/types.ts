@@ -1,6 +1,6 @@
 export type PedidoData = {
-    id_usuario: string;
-    id_producto: string;
+    id_usuario: number;
+    id_producto: number;
     cantidad: number;
     fecha: Date;
     metodo_pago: string;
@@ -28,6 +28,7 @@ export type UsuarioData = {
 };
 
 export type CarritoData = {
-    producto: ProductoData
+    producto: ProductoData,
     cantidad: number
 }
+  

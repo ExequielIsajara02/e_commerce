@@ -23,6 +23,7 @@ model Producto {
 // Modelo de Pedido
 model Pedido {
   id_pedido     Int @id @default(autoincrement())
+  id_stripe     String  @unique @default("undefined")
   id_usuario    Int
   fecha         DateTime
   metodo_pago   String

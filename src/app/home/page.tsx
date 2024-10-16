@@ -7,8 +7,8 @@ import { postCharges } from "../../../utils/stripe/postCharges";
 const Page = async () => {
 
     const charges : any= await getAllCharges();
-    console.log("-----------------------------------------------------");
-    console.log("Modelo charges", charges[0]);
+    // console.log("-----------------------------------------------------");
+    // console.log("Modelo charges", charges[0]);
     // const token = await postCharges()
     
 

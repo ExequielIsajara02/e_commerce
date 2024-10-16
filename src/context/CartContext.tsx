@@ -6,19 +6,17 @@ import React, {
   SetStateAction, 
   useEffect 
 } from 'react';
-import { CarritoData } from '../../types/types';
 import { Header } from '@/components/Header';
-import { Carrito } from '@/components/Carrito';
+import { ProductoData } from '@/app/types/types';
+import Carrito from '@/components/Carrito';
 
-// Definir la interfaz del contexto
 interface CartContextType {
-  cartItems: CarritoData[];
-  setCartItems: Dispatch<SetStateAction<CarritoData[]>>;
+  cartItems: ProductoData[];
+  setCartItems: Dispatch<SetStateAction<ProductoData[]>>;
   isCarritoVisible: boolean;
   setCarritoVisible: Dispatch<SetStateAction<boolean>>;
 }
 
-// Crear el contexto
 const CartContext = createContext<CartContextType>({
   cartItems: [], 
   setCartItems: () => {},
@@ -26,27 +24,34 @@ const CartContext = createContext<CartContextType>({
   setCarritoVisible: () => {},
 });
 
-// Proveedor del contexto
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<CarritoData[]>([]);
-  const [isCarritoVisible, setCarritoVisible] = useState(false); 
+  const [cartItems, setCartItems] = useState<ProductoData[]>([]);
+  const [isCarritoVisible, setCarritoVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Verificar si estamos en el lado del cliente antes de acceder al localStorage
-    if (typeof window !== 'undefined') {
-      const savedCart = localStorage.getItem('cartItems');
-      if (savedCart) {
-        setCartItems(JSON.parse(savedCart));
-      }
-    }
+    setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    // Guardar el carrito en el localStorage cada vez que cambie
-    if (typeof window !== 'undefined') {
+    if (isMounted && typeof window !== 'undefined') {
+      const savedCart = localStorage.getItem('cartItems');
+      if (savedCart) {
+        try {
+          const parsedCart = JSON.parse(savedCart);
+          setCartItems(parsedCart);
+        } catch (error) {
+          console.error('Error al parsear los datos del carrito desde localStorage:', error);
+        }
+      }
+    }
+  }, [isMounted]);
+
+  useEffect(() => {
+    if (isMounted && typeof window !== 'undefined') {
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
     }
-  }, [cartItems]);
+  }, [cartItems, isMounted]);
 
   return (
     <CartContext.Provider value={{ 
