@@ -41,7 +41,6 @@ export default {
                     email: user.correo,
                     // role: user.role
                 } 
-                console.log('Datos de sesion de usuario:', userAuth)
                 return userAuth;
                 
             },

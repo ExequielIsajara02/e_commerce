@@ -19,7 +19,7 @@ export async function POST(request : Request) {
             telefono,
             direccion,
             localidad,
-            // cuentaVerificada : false
+            cuentaVerificada : false
         }
     });
     console.log(guardarUsuario);
