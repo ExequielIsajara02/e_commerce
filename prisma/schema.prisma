@@ -18,12 +18,14 @@ model Producto {
   cantidad     Int?
   marca        String?
   tipo         String?
+  pedidos      PedidoProducto[]
   }
 
 
 // Modelo de Pedido
 model Pedido {
   id_pedido     Int @id @default(autoincrement())
+  id_stripe     String  @unique @default("undefined")
   id_usuario    Int
   fecha         DateTime
   metodo_pago   String
@@ -31,7 +33,18 @@ model Pedido {
   precio_final  Float    // Precio total después de descuentos y recargos
   recargos      Float    // Cualquier recargo adicional
   descuentos    Float    // Cualquier descuento aplicado
+  productos     PedidoProducto[]  // Relación con la tabla intermedia
   usuario       Usuario   @relation(fields: [id_usuario], references: [id_usuario]) // Relación con Usuario
+}
+
+model PedidoProducto {
+  id_pedido    Int
+  id_producto  Int
+  cantidad     Int  // Cantidad del producto en el pedido
+  pedido       Pedido  @relation(fields: [id_pedido], references: [id_pedido])
+  producto     Producto @relation(fields: [id_producto], references: [id_producto])
+  
+  @@id([id_pedido, id_producto])  // Llave compuesta
 }
 
 // Modelo de Usuario

@@ -34,7 +34,6 @@ const ProductForm = () => {
             }
 
             const result = await response.json();
-            console.log(result);
             setNombre('');
             setDescripcion('');
             setImagen('');
@@ -44,6 +43,7 @@ const ProductForm = () => {
             console.error('Error:', error);
         }
     };
+
 
     return (
         <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">

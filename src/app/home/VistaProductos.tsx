@@ -1,8 +1,8 @@
-"use client";
-import React, { useEffect, useState } from 'react';
-import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito";
-import { ProductoData } from '../../../types/ProductData';
-import CargandoSpinner from '@/components/cargandoSpinner';
+"use client"
+import React, { useEffect, useState } from 'react'
+import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito"
+import { ProductoData } from '../types/types'
+import CargandoSpinner from '@/components/CargandoSpinner';
 
 const VistaProductos = () => {
   const [productos, setProductos] = useState<ProductoData[]>([]);
@@ -13,6 +13,7 @@ const VistaProductos = () => {
       const respuesta = await fetch("http://localhost:3000/api/producto");
       const datos = await respuesta.json();
       setProductos(datos);
+      return datos
     } catch (error) {
       console.error('Error al traer productos:', error);
     } finally {
@@ -45,4 +46,4 @@ const VistaProductos = () => {
   );
 };
 
-export default VistaProductos;
+export default VistaProductos
