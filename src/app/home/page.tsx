@@ -1,8 +1,27 @@
 import { ProductoData } from "../../../types/ProductData";
 import { getAllProductos } from "../../../utils/producto";
+import { Header } from "@/components/Header";
+// import { useRouter } from "next/navigation";
 import VistaProductos from "./VistaProductos";
-import { getAllCharges } from "../../../utils/stripe/get-all-charges";
-import { postCharges } from "../../../utils/stripe/postCharges";
+import { auth } from "@/auth";
+
+
+const Page = async () => {
+
+    const session = await auth();
+    const productos : ProductoData[] = await getAllProductos();
+    // const router = useRouter();
+
+    /*if(session?.user === null) {
+        return null;
+    } */
+
+    // console.log("Console Log Session:",session);
+
+    // Crear un array de string con los roles
+
+
+
 
 
 // const Page = async () => {
@@ -12,8 +31,7 @@ import { postCharges } from "../../../utils/stripe/postCharges";
     // console.log("Modelo charges", charges[0]);
     // const token = await postCharges()
 
-const Page = async () => {
-    const productos : ProductoData[] = await getAllProductos();
+// const Page = async () => {
 
     return (
         <div>

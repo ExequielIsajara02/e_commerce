@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
-export async function POST(request) {
+export async function POST(request: Request) {
   try {
     const data = await request.json();
 
@@ -45,7 +45,7 @@ export async function POST(request) {
   } catch (error) {
     console.log("error",error)
     return NextResponse.json({
-      message: error.message,
+      message: (error as Error).message,
     }, {
         status: 500
     });

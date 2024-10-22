@@ -1,8 +1,9 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito"
-import { ProductoData } from '../types/types'
+// import { ProductoData } from '../types/types'
 import CargandoSpinner from '@/components/CargandoSpinner';
+import { ProductoData } from '../../../types/ProductData';
 
 const VistaProductos = () => {
   const [productos, setProductos] = useState<ProductoData[]>([]);
