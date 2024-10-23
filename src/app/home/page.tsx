@@ -3,6 +3,7 @@ import { getAllProductos } from "../../../utils/producto";
 import VistaProductos from "./VistaProductos";
 
 const Page = async () => {
+    authorization(["Dev"])
     const productos : ProductoData[] = await getAllProductos();
 
     return (
@@ -14,3 +15,7 @@ const Page = async () => {
 };
 
 export default Page;
+function authorization(arg0: string[]) {
+    throw new Error("Function not implemented.");
+}
+
