@@ -12,7 +12,6 @@ export async function obtenerCombos() {
             }
         }
     });
-    // console.log("Combos obtenidos:", combos);
     return combos;
 }
 
@@ -62,7 +61,7 @@ export async function eliminarCombo( id: number) {
         if (!id) throw new Error('ID de combo es necesario');
         await prisma.comboProducto.deleteMany({
             where: {
-              id_combo: id, // reemplaza con el ID del combo que estás intentando eliminar
+              id_combo: id,
             },
         });
         
@@ -73,12 +72,63 @@ export async function eliminarCombo( id: number) {
         });
         
         return { status: 200, message: 'Combo eliminado correctamente' };
-        // await prisma.comboProducto.deleteMany({ where: { id_combo: id } });
-        // return await prisma.combo.delete({
-        //     where: { id_combo: id }
-        // });
+
     } catch (error) {
         console.error("Error al obtener combo:", error);
         return NextResponse.json({ error: "Error al obtener combo" }, { status: 500 });
+    }
+}
+
+
+
+export async function editarCombo(id: number, data: ComboData) {
+    try {
+        if (!id) throw new Error('ID de combo es necesario');
+
+
+        const comboActual = await prisma.combo.findUnique({
+            where: { id_combo: id },
+            include: { productos: true },
+        });
+
+        if (!comboActual) throw new Error('Combo no encontrado');
+
+
+        const productosAEliminar = comboActual.productos.filter(
+            (producto) => !data.productos.some((p) => p.id_producto === producto.id_producto)
+        );
+
+
+        const productosAAgregar = data.productos.filter(
+            (producto) => !comboActual.productos.some((p) => p.id_producto === producto.id_producto)
+        );
+
+        await prisma.comboProducto.deleteMany({
+            where: {
+                id_combo: id,
+                id_producto: { in: productosAEliminar.map((p) => p.id_producto) },
+            },
+        });
+
+        await prisma.comboProducto.createMany({
+            data: productosAAgregar.map((prod) => ({
+                id_combo: id,
+                id_producto: prod.id_producto,
+            })),
+        });
+
+        const updatedCombo = await prisma.combo.update({
+            where: { id_combo: id },
+            data: {
+                nombre: data.nombre,
+                descuento: data.descuento,
+                id_usuario: data.id_usuario,
+            },
+        });
+
+        return { status: 200, message: 'Combo editado correctamente', data: updatedCombo };
+    } catch (error) {
+        console.error("Error al editar combo:", error);
+        return { status: 500, message: "Error al editar combo" };
     }
 }

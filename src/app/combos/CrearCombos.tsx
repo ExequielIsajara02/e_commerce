@@ -11,6 +11,7 @@ const AdminCombos = () => {
     const [producto, setProducto] = useState("");
     const [productos, setProductos] = useState<number[]>([]);
     const [id_usuario, setId_usuario] = useState("");
+    const [editComboId, setEditComboId] = useState<number | null>(null);
 
     const traerCombos = async () => {
         try {
@@ -44,40 +45,42 @@ const AdminCombos = () => {
         }
     };
 
-    // Maneja el submit del formulario
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        const comboData = {
-            nombre,
-            descuento: parseFloat(descuento),
-            productos: productos.map(id => ({ id_producto: id })),
-            id_usuario: parseInt(id_usuario, 10),
-        };
-
+    const editarCombo = async (id_combo: number) => {
         try {
-            const response = await fetch('/api/combos', {
-                method: 'POST',
+            const comboData = {
+                nombre,
+                descuento: parseFloat(descuento),
+                productos: productos.map(id => ({ id_producto: id })),
+                id_usuario: parseInt(id_usuario, 10),
+            };
+    
+            const respuesta = await fetch(`/api/combos/${id_combo}`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(comboData),
             });
-
-            if (!response.ok) {
-                throw new Error('Error al crear el combo');
+    
+            if (!respuesta.ok) {
+                throw new Error('Error al editar el combo');
             }
-
-            const result = await response.json();
-            setCombos((prevCombos) => [...prevCombos, result]); // Agrega el nuevo combo a la lista
-            setNombre('');
-            setDescuento('');
-            setProducto('');
-            setProductos([]);
-            setId_usuario('');
+    
+            console.log('Combo editado exitosamente');
+            traerCombos();
+            setEditComboId(null); 
         } catch (error) {
-            console.error('Error:', error);
+            console.error(error);
         }
+    };
+
+    const handleEditarClick = (combo: ComboData) => {
+
+        setEditComboId(combo.id_combo);
+        setNombre(combo.nombre);
+        setDescuento(combo.descuento.toString());
+        setProductos(combo.productos ? combo.productos.map((prod) => prod.id_producto) : []);
+        setId_usuario(combo.id_usuario.toString());
     };
 
     const handleAgregarProducto = () => {
@@ -92,6 +95,52 @@ const AdminCombos = () => {
     const handleEliminarProducto = (index: number) => {
         const nuevosProductos = productos.filter((_, i) => i !== index);
         setProductos(nuevosProductos);
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (editComboId !== null) {
+
+            editarCombo(editComboId);
+        } else {
+
+            const comboData = {
+                nombre,
+                descuento: parseFloat(descuento),
+                productos: productos.map(id => ({ id_producto: id })),
+                id_usuario: parseInt(id_usuario, 10),
+            };
+
+            try {
+                const response = await fetch('/api/combos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(comboData),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al crear el combo');
+                }
+
+                const result = await response.json();
+                setCombos((prevCombos) => [...prevCombos, result]);
+                resetForm();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    };
+
+    const resetForm = () => {
+        setNombre('');
+        setDescuento('');
+        setProducto('');
+        setProductos([]);
+        setId_usuario('');
+        setEditComboId(null);
     };
 
     return (
@@ -113,12 +162,17 @@ const AdminCombos = () => {
                                 >
                                     Eliminar
                                 </button>
+                                <button 
+                                    onClick={() => handleEditarClick(combo)} 
+                                    className="text-green-500 hover:text-green-700"
+                                >
+                                    Editar
+                                </button>
                             </div>
                         ))}
                     </div>
 
-                    {/* Formulario para crear combos */}
-                    <h2 className="text-xl font-semibold mt-10">Crear Combo</h2>
+                    <h2 className="text-xl font-semibold mt-10">{editComboId !== null ? "Editar Combo" : "Crear Combo"}</h2>
                     <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
                         <div className="mb-4">
                             <label htmlFor="nombre" className="block text-sm font-medium text-gray-900">Nombre:</label>
@@ -189,8 +243,11 @@ const AdminCombos = () => {
                             />
                         </div>
 
-                        <button type="submit" className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 transition duration-200">
-                            Crear Combo
+                        <button 
+                            type="submit" 
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                        >
+                            {editComboId !== null ? "Guardar Cambios" : "Crear Combo"}
                         </button>
                     </form>
                 </div>
