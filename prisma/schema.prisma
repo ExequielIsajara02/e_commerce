@@ -3,11 +3,17 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Role {
+  user
+  admin
+}
+
 // Fuente de datos
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
 
 model Producto {
   id_producto  Int @id @default(autoincrement())
@@ -19,6 +25,7 @@ model Producto {
   marca        String?
   tipo         String?
   pedidos      PedidoProducto[]
+  combos       ComboProducto[]
   }
 
 
@@ -30,17 +37,17 @@ model Pedido {
   fecha         DateTime
   metodo_pago   String
   estado        String
-  precio_final  Float    // Precio total después de descuentos y recargos
-  recargos      Float    // Cualquier recargo adicional
-  descuentos    Float    // Cualquier descuento aplicado
+  precio_final  Float 
+  recargos      Float
+  descuentos    Float
   productos     PedidoProducto[]  // Relación con la tabla intermedia
-  usuario       Usuario   @relation(fields: [id_usuario], references: [id_usuario]) // Relación con Usuario
+  usuario       Usuario   @relation(fields: [id_usuario], references: [id_usuario])
 }
 
 model PedidoProducto {
   id_pedido    Int
   id_producto  Int
-  cantidad     Int  // Cantidad del producto en el pedido
+  cantidad     Int
   pedido       Pedido  @relation(fields: [id_pedido], references: [id_pedido])
   producto     Producto @relation(fields: [id_producto], references: [id_producto])
   
@@ -59,4 +66,23 @@ model Usuario {
   localidad        String?
   cuentaVerificada Boolean @default(false)
   pedidos          Pedido[]
+  role             Role @default(user)
+}
+
+model Combo {
+  id_combo       Int      @id @default(autoincrement())
+  nombre         String
+  descuento      Float
+  productos      ComboProducto[]
+  id_usuario     Int
+}
+
+model ComboProducto {
+  id_combo     Int
+  id_producto  Int
+  combo        Combo     @relation(fields: [id_combo], references: [id_combo])
+  producto     Producto  @relation(fields: [id_producto], references: [id_producto])
+  precioDescuento Float  @default(0.0)
+
+  @@id([id_combo, id_producto])
 }

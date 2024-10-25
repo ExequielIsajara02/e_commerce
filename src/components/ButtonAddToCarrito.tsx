@@ -1,6 +1,7 @@
 import { CartContext } from "@/context/CartContext";
 import { useContext } from "react";
 import { ProductoData } from "../../types/ProductData";
+import { ComboData } from "../../types/ComboData";
 
 export const ButtonAddToCarrito = (producto: ProductoData) => {
   const { cartItems, setCartItems, setCarritoVisible } = useContext(CartContext);
