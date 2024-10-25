@@ -1,5 +1,6 @@
 import { generarComprobantePDF } from "./generarPdf";
 const nodemailer = require("nodemailer");
+import { auth } from "@/auth";
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -11,21 +12,22 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export async function enviarComprobante(data : any) {
-
-  if (data.status !== 200) {
-    console.error('Error: el estado es distinto a 200.');
-    return;
-  }
-
+export async function enviarComprobante(data: any) {
   try {
-    const correo = "andres.silva41202@gmail.com"
+    const session = await auth();
+
+    if (!session || !session.user?.email) {
+      throw new Error("No se pudo obtener el correo del usuario: usuario no autenticado.");
+    }
+    const correo = session.user.email;
+
     const pdf = await generarComprobantePDF(correo, data.detallesPedido);
+    
     await transporter.sendMail({
       from: '"E-commerce" <ecommerce.pasantia@gmail.com>',
       to: correo,
       subject: 'Comprobante de Pago - E-commerce',
-      text: 'Gracias por tu compra. Te adjuntamos el comprobante de pago.',
+      text: `Gracias por tu compra. Te adjuntamos el comprobante de pago.`,
       html: `<p>Gracias por tu compra. Aquí tienes tu comprobante.</p>`,
       attachments: [
         {
