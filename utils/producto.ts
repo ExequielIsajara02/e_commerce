@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { ProductoData } from "@/types/types";
+import { ProductoData } from "../types/ProductData";
+// import { ProductoData } from "@/types/types";
 
 // export async function getAllProductos() : Promise<ProductoData[]>{
 //         return await prisma.producto.findMany();

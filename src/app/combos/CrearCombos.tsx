@@ -153,8 +153,8 @@ const AdminCombos = () => {
                     <div className="grid grid-cols-4 gap-4">
                         {combos.map((combo) => (
                             <div className="border-black border rounded-lg m-4 p-4" key={combo.id_combo}>
-                                <h3 className="text-lg font-bold mb-2">ID Combo: {combo.id_combo}</h3>
-                                <h4 className="text-md mb-2">{combo.nombre}</h4>
+                                <h3 className="text-lg font-bold mb-2">{combo.nombre}</h3>
+                                <h4 className="text-md mb-2">ID Combo: {combo.id_combo}</h4>
                                 <p className="mb-4">Descuento: <span className="text-green-600 font-semibold">{combo.descuento * 100}%</span></p>
                                 <button 
                                     onClick={() => eliminarCombo(combo.id_combo)} 

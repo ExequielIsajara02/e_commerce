@@ -1,31 +1,41 @@
 import { prisma } from "@/lib/prisma";
-import { ProductType } from "../../../types/ProductData";
+import { ProductoData } from "../../../types/ProductData";
 import { getAllProductos } from "../../../utils/producto";
 
 const Page = async () => {
-      /**----------------Funciones que se utilizaran en ambos casos------------------------------------------------ */
+  /**----------------Funciones que se utilizaran en ambos casos------------------------------------------------ */
   const calcularPromedio = (totalPrecio: number, cantidadProducto: number) => {
-    return totalPrecio / cantidadProducto;
+    return cantidadProducto > 0 ? totalPrecio / cantidadProducto : 0; // Previene la división por cero
   };
-
-
 
   /** -------------------------Data Productos------------------------------------------------------------------ */
   
-  
-  const arrayProductos = await getAllProductos();
-  
-  const sumaPrecioArray = arrayProductos.reduce((precioFinal: any, element : any) => {
-    return precioFinal + element.precio;
+  const response = await getAllProductos();
+
+  // Verifica si la respuesta es un array antes de procesarla
+  const arrayProductos: ProductoData[] = Array.isArray(response)
+      ? response.map((producto: any) => ({
+          id_producto: producto.id_producto,
+          nombre: producto.nombre || "",           // Asignar cadena vacía si es null
+          descripcion: producto.descripcion || "",  // Asignar cadena vacía si es null
+          imagen: producto.imagen || "",
+          precio: producto.precio || 0,
+          cantidad: producto.cantidad || 0,
+          marca: producto.marca || "",
+          tipo: producto.tipo || "",
+      }))
+      : []; // Si no es un array, inicializa productos como un array vacío
+
+  const sumaPrecioArray = arrayProductos.reduce((precioFinal: number, element: ProductoData) => {
+    return precioFinal + (element.precio || 0); // Asegúrate de manejar precios nulos
   }, 0);
-  
-  
+
   const dataProducto = {
     totalProductos: arrayProductos.length,
     totalIngresos: sumaPrecioArray,
     valorPromedioProducto: calcularPromedio(sumaPrecioArray, arrayProductos.length),
   };
-  
+
   /** -------------------------Data Productos------------------------------------------------------------------ */
 
   const PedidosDb = await prisma.pedido.findMany();
@@ -33,18 +43,22 @@ const Page = async () => {
 
   const totalPedidos = PedidosDb.length;
 
-  const sumaTotalPedidos = PedidosDb.reduce((total, pedido) => totalPedidos, 0);
+  const sumaTotalPedidos = PedidosDb.reduce((total, pedido) => total + (pedido.precio_final || 0), 0); // Asegúrate de sumar correctamente
+
   const dataPedido = {
     totalPedidos: totalPedidos,
     totalIngresos: sumaTotalPedidos,
     valorPromedioPedido: calcularPromedio(sumaTotalPedidos, totalPedidos),
   };
 
-    return(
-        <div>
-  
-        <h1 className="text-black w-1/2 border-2 border-red-900 mx-auto text-center mt-3 font-bold rounded-md ">selecciona la metrica que quieras vizualizar </h1>
-        </div>    )
-}
+  return (
+    <div>
+      <h1 className="text-black w-1/2 border-2 border-red-900 mx-auto text-center mt-3 font-bold rounded-md">
+        selecciona la metrica que quieras vizualizar
+      </h1>
+      {/* Aquí puedes incluir lógica para mostrar dataProducto y dataPedido */}
+    </div>
+  );
+};
 
 export default Page;

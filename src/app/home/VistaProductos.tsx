@@ -1,8 +1,9 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito";
-import { ProductoData } from '@/types/types';
+// import { ProductoData } from '@/types/types';
 import { ComboData } from '../../../types/ComboData';
+import { ProductoData } from '../../../types/ProductData';
 
 interface Props {
   productos: ProductoData[];
@@ -191,24 +192,29 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
            <div className="grid grid-cols-4">
              {combos.map((combo) => (
               <div className="border-black border rounded-lg m-4 p-4" key={combo.id_combo}>
-              <h3 className="text-lg font-bold mb-2">ID Combo: {combo.id_combo}</h3>
-              <h4 className="text-md mb-2">{combo.nombre}</h4>
+              <h3 className="text-lg font-bold mb-2">{combo.nombre}</h3>
+              <h4 className="text-md mb-2">ID Combo: {combo.id_combo}</h4>
               <p className="mb-4">Descuento: <span className="text-green-600 font-semibold">{combo.descuento * 100}%</span></p>
             
               {/* Productos en el combo */}
               <div className="grid grid-cols-1 gap-4">
                 {combo.productos.map((comboProducto) => (
                   <div key={comboProducto.id_producto} className="border rounded-lg p-4 shadow-md">
-                    <h5 className="text-md font-bold mb-2">Producto: {comboProducto.producto?.nombre}</h5>
-                    <p className="mb-1">Precio original: <span className="line-through">${comboProducto.producto?.precio}</span></p>
-                    <p className="mb-1">Precio con descuento: <span className="text-green-500 font-bold">${comboProducto.precioDescuento}</span></p>
+                    <h5 className="text-md font-bold mb-2">{comboProducto.producto?.nombre}</h5>
+                    <p className="mb-1">
+                      Antes: <span className="text-gray-400 line-through mr-2">${comboProducto.producto?.precio}</span>
+                      Ahora: <span className="text-green-500 font-bold">${comboProducto.precioDescuento}</span>
+                    </p>
                   </div>
                 ))}
               </div>
+              <div className="mt-4 p-4 border-t font-bold">
+                <p>Total: ${combo.productos.reduce((total, comboProducto) => total + (comboProducto.precioDescuento || 0), 0)}</p>
+              </div>
+              <ButtonAddToCarrito combo={combo} cantidad={cantidades[combo.id_combo.toString()] || 1} />
             </div>
             ))}
           </div>
-
       </div>
     </div>
   );

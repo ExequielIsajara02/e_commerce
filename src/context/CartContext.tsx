@@ -92,7 +92,7 @@ import React, {
 } from 'react';
 import { Header } from '@/components/Header';
 import { Carrito } from '@/components/Carrito';
-import { ProductoData } from '@/types/types';
+import { ProductoData } from '../../types/ProductData';
 
 interface CartContextType {
   cartItems: ProductoData[];
