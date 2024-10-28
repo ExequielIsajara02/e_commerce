@@ -20,7 +20,7 @@
 /build
 
 #migrations
-/prisma/migrations
+/prisma
 
 # misc
 .DS_Store

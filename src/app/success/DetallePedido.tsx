@@ -3,8 +3,6 @@ import { CartContext } from "@/context/CartContext";
 import { Pedido, PedidoProducto } from "@prisma/client";
 import { useContext, useEffect } from "react";
 import Stripe from "stripe";
-// import { ProductoData } from "../types/types";
-// import { prisma } from "@/libs/prisma";
 import { createPedido } from "../../../utils/pedido";
 import { ProductoData } from "../../../types/ProductData";
 
@@ -28,7 +26,6 @@ export default function DetallePedido({
 
   const context = useContext(CartContext)
   const cartItems: ProductoData[] = context.cartItems;
-  // console.log("cartItems", cartItems)
 
 
   //----------------------------------Modelado de datos--------------------------
@@ -40,16 +37,14 @@ export default function DetallePedido({
 
   const pedido : Omit<Pedido, 'id_pedido'> = {
     id_stripe: id || "",
-    id_usuario: 1, // Reemplazar con el ID del usuario real
+    id_usuario: 1,
     fecha: new Date(),
     metodo_pago: metodoPago[0],
     estado: estado || "",
-    precio_final: total, // Stripe maneja precios en centavos
+    precio_final: total, 
     recargos: 0,
     descuentos: 0,
   }
-// console.log("ID Stripe:",pedido.id_stripe)
-// console.log("PEDIDO:", pedido)
 
   const pedidosProducto = cartItems.map(p => {
     return {
@@ -58,17 +53,6 @@ export default function DetallePedido({
         cantidad: p.cantidad,
     };
 });
-
-// Ahora pedidosProducto contendrá el array de objetos
-// console.log("Pedidos: ", pedidosProducto);
-
-
-
-
-
-
-
-
 
 useEffect(() => {
   const crearPedido = async () => {
@@ -96,7 +80,7 @@ useEffect(() => {
   };
 
   crearPedido();
-}, [id]); // Solo depende de `id`
+}, [id]);
 
 
   return (
