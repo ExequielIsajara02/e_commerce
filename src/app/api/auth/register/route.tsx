@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
-export async function POST(request) {
+export async function POST(request : Request) {
   try {
     const data = await request.json();
 
@@ -36,6 +36,7 @@ export async function POST(request) {
         telefono: data.telefono,
         direccion: data.direccion,
         localidad: data.localidad,
+        role: data.role
       },
     });
 
@@ -44,10 +45,12 @@ export async function POST(request) {
     const { clave: _, ...usuario } = nuevoUsuario;
     return NextResponse.json(usuario);
   } catch (error) {
-    return NextResponse.json({
-      message: error.message,
-    }, {
-        status: 500
-    });
+    if (error instanceof Error) {
+      console.error(error); // Log del error completo
+      return NextResponse.json(
+        { message: error.message }, 
+        { status: 500 }
+      );
+    }
   }
 }

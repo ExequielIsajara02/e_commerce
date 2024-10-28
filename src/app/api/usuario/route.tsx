@@ -9,7 +9,7 @@ export async function GET() {
 }
 
 export async function POST(request : Request) {
-    const {nombre, apellido, correo, clave, telefono, direccion, localidad} = await request.json();
+    const {nombre, apellido, correo, clave, telefono, direccion, localidad, role, cuentaVerificada} = await request.json();
     const guardarUsuario = await prisma.usuario.create({
         data: {
             nombre,
@@ -19,7 +19,8 @@ export async function POST(request : Request) {
             telefono,
             direccion,
             localidad,
-            // cuentaVerificada : false
+            role,
+            cuentaVerificada
         }
     });
     console.log(guardarUsuario);

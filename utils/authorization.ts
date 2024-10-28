@@ -1,14 +1,20 @@
 import { auth } from "@/auth";
-import router from "next/router";
 
-const authorization = async (roles : string[]) => {
+interface AuthorizationProps {
+    roles: string[];
+}
+
+export const authorizationRole = async ({ roles }: AuthorizationProps) => {
     const session = await auth();
     const roleUser =  session?.user?.role;
-    if(roleUser){
-        if(!roles.includes(roleUser)){
-            router.push("/auth/login")
-        }
+    
+
+    if (!roleUser || !roles.includes(roleUser)) {
+        return false;
     }
+
+    return true;
 }
+
 
 

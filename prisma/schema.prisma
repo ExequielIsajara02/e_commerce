@@ -9,6 +9,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  user
+  admin
+}
+
+
 model Producto {
   id_producto  Int @id @default(autoincrement())
   nombre       String?
@@ -39,10 +45,12 @@ model Usuario {
   id_usuario       Int @id @default(autoincrement())
   nombre           String
   apellido         String
-  correo           String
+  correo           String @unique
+  clave            String
   telefono         String
   direccion        String
   localidad        String
+  role             Role @default(user)
   cuentaVerificada Boolean @default(false)
   pedidos          Pedido[]
 }
