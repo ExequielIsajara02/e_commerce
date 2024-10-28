@@ -20,5 +20,5 @@ export async function POST(request: Request) {
             cantidad,
         }
     });
-    return NextResponse.json("Creating products");
+    return NextResponse.json(guardarProducto);
 }
