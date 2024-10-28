@@ -1,42 +1,17 @@
-import { ProductoData } from "../../../types/ProductData";
-import { getAllProductos } from "../../../utils/producto";
-import { Header } from "@/components/Header";
-// import { useRouter } from "next/navigation";
-import VistaProductos from "./VistaProductos";
 import { auth } from "@/auth";
-
+import { ProductoData } from "@/types/types";
+import { getAllProductos } from "../../../utils/producto";
+import VistaProductos from "./VistaProductos";
 
 const Page = async () => {
-
     const session = await auth();
-    const productos : ProductoData[] = await getAllProductos();
-    // const router = useRouter();
-
-    /*if(session?.user === null) {
-        return null;
-    } */
-
-    // console.log("Console Log Session:",session);
-
-    // Crear un array de string con los roles
-
-
-
-
-
-// const Page = async () => {
-
-//     const charges : any= await getAllCharges();
-    // console.log("-----------------------------------------------------");
-    // console.log("Modelo charges", charges[0]);
-    // const token = await postCharges()
-
-// const Page = async () => {
-
+    const productos: ProductoData[] = await getAllProductos(); // No es necesario usar .json() aquí
     return (
         <div>
-            <h2>Mostrar productos</h2>
-            <VistaProductos/>
+            <h2>Mostrar Productos</h2>
+            <VistaProductos 
+                productos={productos}
+            />
         </div>
     );
 };

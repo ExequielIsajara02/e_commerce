@@ -61,11 +61,14 @@
 
 "use client"
 import React, { useContext } from 'react';
-import { CartContext } from '@/context/CartContext';
+import { CartContext, useCartContext } from '@/context/CartContext';
 import { crearSesionStripe } from '../../utils/pasarela_stripe';
 
 export const Carrito: React.FC = () => {
   const { cartItems, setCartItems, isCarritoVisible, setCarritoVisible } = useContext(CartContext);
+  
+  const { clearCart } = useCartContext();
+
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => total + item.precio * item.cantidad, 0);
   };
@@ -76,13 +79,14 @@ export const Carrito: React.FC = () => {
     return null;
   }
 
-
     const handlePay = async () => {
     // Guardar el carrito en localStorage antes de proceder al pago
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
 
     const session = await crearSesionStripe(cartItems);
     window.location.href = session ?? '';
+
+    clearCart();
 
   }
   return (
@@ -119,6 +123,7 @@ export const Carrito: React.FC = () => {
         </div>
       )}
 
+      
       <button className="bg-green-600 text-white w-60 h-10 rounded-lg m-6"
         onClick={handlePay}
       >Pagar</button>

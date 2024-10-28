@@ -87,27 +87,38 @@ import React, {
   ReactNode,
   Dispatch,
   SetStateAction,
-  useEffect
+  useEffect, 
+  useContext
 } from 'react';
 import { Header } from '@/components/Header';
 import { Carrito } from '@/components/Carrito';
-import { ProductoData } from '../../types/ProductData';
+import { ProductoData } from '@/types/types';
+
 interface CartContextType {
   cartItems: ProductoData[];
   setCartItems: Dispatch<SetStateAction<ProductoData[]>>;
   isCarritoVisible: boolean;
   setCarritoVisible: Dispatch<SetStateAction<boolean>>;
+  clearCart: () => void; // Nueva función para limpiar el carrito
 }
 const CartContext = createContext<CartContextType>({
   cartItems: [],
   setCartItems: () => {},
   isCarritoVisible: false,
   setCarritoVisible: () => {},
+  clearCart: () => {}, // Función predeterminada
 });
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<ProductoData[]>([]);
   const [isCarritoVisible, setCarritoVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+
+  // Función para limpiar el carrito
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem('cartItems'); // Eliminar del almacenamiento local
+  };
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -133,13 +144,24 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     <CartContext.Provider value={{
       cartItems,
       setCartItems,
-      isCarritoVisible,
-      setCarritoVisible
-     }}>
-      <Header/>
+      isCarritoVisible, 
+      setCarritoVisible,
+      clearCart // Agregar clearCart al proveedor
+    }}>
+      <Header />
       <Carrito />
-      {children}
+      {isMounted && children} {/* Renderiza los hijos solo si el componente está montado */}
     </CartContext.Provider>
   );
 };
+
+// Hook personalizado para usar el contexto del carrito
+export const useCartContext = () => {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error('useCartContext debe ser usado dentro de un CartProvider');
+  }
+  return context;
+};
+
 export { CartContext };

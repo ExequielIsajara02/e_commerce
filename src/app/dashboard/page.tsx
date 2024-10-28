@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { ProductoData } from "../../../types/ProductData";
+import { ProductType } from "../../../types/ProductData";
 import { getAllProductos } from "../../../utils/producto";
 
 const Page = async () => {
@@ -15,7 +15,7 @@ const Page = async () => {
   
   const arrayProductos = await getAllProductos();
   
-  const sumaPrecioArray = arrayProductos.reduce((precioFinal, element) => {
+  const sumaPrecioArray = arrayProductos.reduce((precioFinal: any, element : any) => {
     return precioFinal + element.precio;
   }, 0);
   
