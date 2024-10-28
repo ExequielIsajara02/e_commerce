@@ -91,7 +91,7 @@ useEffect(() => {
           <div
             className="bg-slate-200 border rounded-md mb-4 p-4 shadow-sm text-center"
           >
-            <h2 className="text-lg font-bold">Pedido creado. (ID pendiente)</h2>
+            <h2 className="text-lg font-bold">Pedido creado: {pedido.id_stripe}</h2>
             <p>Fecha: {new Date(pedido.fecha).toLocaleDateString()}</p>
             <p>Método de Pago: {pedido.metodo_pago}</p>
             <p>Estado: {pedido.estado}</p>
