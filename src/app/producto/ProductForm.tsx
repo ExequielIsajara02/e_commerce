@@ -1,11 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const ProductForm = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
-    const [imagen, setImagen] = useState<File | null>(null);
-    const [imagenPreview, setImagenPreview] = useState<string | null>(null);
+    const [imagenUrl, setImagenUrl] = useState(''); 
     const [precio, setPrecio] = useState('');
     const [cantidad, setCantidad] = useState('');
     const [marca, setMarca] = useState('');
@@ -17,7 +16,7 @@ const ProductForm = () => {
         const productData = {
             nombre,
             descripcion,
-            imagen: imagenPreview, // Se puede ajustar según cómo manejes la imagen en el backend
+            imagen: imagenUrl, 
             precio: parseFloat(precio),
             cantidad: parseInt(cantidad, 10),
             marca,
@@ -32,7 +31,7 @@ const ProductForm = () => {
                 },
                 body: JSON.stringify(productData),
             });
-
+            
             if (!response.ok) {
                 throw new Error('Error al crear el producto');
             }
@@ -41,28 +40,13 @@ const ProductForm = () => {
             console.log(result);
             setNombre('');
             setDescripcion('');
-            setImagen(null);
-            setImagenPreview(null);
+            setImagenUrl(''); // Resetear la URL de la imagen
             setPrecio('');
             setCantidad('');
             setMarca('');
             setTipo('');
         } catch (error) {
             console.error('Error:', error);
-        }
-    }
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0] || null;
-        setImagen(file);
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagenPreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
-        } else {
-            setImagenPreview(null);
         }
     };
 
@@ -91,17 +75,17 @@ const ProductForm = () => {
                 />
             </div>
             <div className="mb-4">
-                <label htmlFor="imagen" className="block text-sm font-medium text-gray-700">Cargar Imagen:</label>
+                <label htmlFor="imagenUrl" className="block text-sm font-medium text-gray-700">URL de la Imagen:</label>
                 <input
-                    type="file"
-                    id="imagen"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    //required
+                    type="text"
+                    id="imagenUrl"
+                    value={imagenUrl}
+                    onChange={(e) => setImagenUrl(e.target.value)}
+                    required
                     className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-                {imagenPreview && (
-                    <img src={imagenPreview} alt="Vista previa" className="mt-2 w-32 h-32 object-cover" />
+                {imagenUrl && (
+                    <img src={imagenUrl} alt="Vista previa" className="mt-2 w-32 h-32 object-cover" />
                 )}
             </div>
             <div className="mb-4">

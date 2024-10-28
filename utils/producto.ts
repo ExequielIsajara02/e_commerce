@@ -15,7 +15,7 @@ export async function getAllProductos() {
 }
 
 
-async function createProducto(data: ProductoData) {
+export async function createProducto(data: ProductoData) {
     // Validaciones básicas de los datos de entrada
     if (!data.nombre || !data.precio || !data.marca || !data.tipo) {
         return NextResponse.json({ error: "Datos incompletos para crear el producto" }, { status: 400 });
@@ -32,4 +32,5 @@ async function createProducto(data: ProductoData) {
 function handleError(error: unknown, arg1: string) {
     throw new Error("Function not implemented.");
 }
+
 

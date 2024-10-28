@@ -2,13 +2,14 @@
 
 import React, { useContext } from 'react';
 import { CartContext } from '@/context/CartContext';
+import FinalizarCompra from './FinalizarCompra';
 // import { crearSesionStripe } from '../../utils/pasarela_stripe';
 
 
 
 export const Carrito: React.FC = () => {
   const { cartItems, setCartItems, isCarritoVisible, setCarritoVisible } = useContext(CartContext);
-
+  
   const getTotalPrice = () => {
     return cartItems.reduce((total, item) => total + item.precio * item.cantidad, 0);
   };
@@ -42,8 +43,8 @@ export const Carrito: React.FC = () => {
         ) : (
           <ul className="list-none p-0">
             {cartItems.map(item => (
-              <li key={item.producto.id_producto} className="flex items-center mb-4">
-                <img src={item.producto.imagen} alt={item.producto.nombre} className="w-16 h-16 object-cover mr-4" />
+              <li key={item.id_producto} className="flex items-center mb-4">
+                <img src={item.imagen} alt={item.nombre} className="w-16 h-16 object-cover mr-4" />
                 <div className="flex-1">
                   <span>{item.nombre} - ${item.precio.toFixed(2)} x {item.cantidad}</span>
                   <p className="text-sm text-gray-600">{item.descripcion}</p>
@@ -60,8 +61,7 @@ export const Carrito: React.FC = () => {
           <h2 className="text-xl">Total: ${getTotalPrice().toFixed(2)}</h2>
         </div>
       )}
-
-      <button className="bg-green-600 text-white w-60 h-10 rounded-lg m-6">Pagar</button>
+      <FinalizarCompra />
     </div>
   );
 };

@@ -18,7 +18,7 @@ model Producto {
   cantidad     Int?
   marca        String?
   tipo         String?
-  }
+}
 
 
 // Modelo de Pedido

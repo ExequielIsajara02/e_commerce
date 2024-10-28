@@ -14,6 +14,9 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
   const [selectedType, setSelectedType] = useState<string>("");
   const [priceRange, setPriceRange] = useState<number[]>([0, 100000]);
 
+  // Estado para manejar las cantidades de productos
+  const [cantidades, setCantidades] = useState<{ [key: string]: number }>({});
+
   // Filtrar productos
   const filteredProducts = productos.filter(producto => {
     const matchesText = producto.nombre.toLowerCase().includes(filterText.toLowerCase());
@@ -32,6 +35,14 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
   // Generar opciones de marca y tipo dinámicamente
   const uniqueBrands = Array.from(new Set(productos.map(p => p.marca)));
   const uniqueTypes = Array.from(new Set(productos.map(p => p.tipo)));
+
+  // Manejar el cambio de cantidad
+  const handleCantidadChange = (id: string, value: number) => {
+    setCantidades((prevCantidades) => ({
+      ...prevCantidades,
+      [id]: Math.max(1, value),
+    }));
+  };
 
   return (
     <div className="flex p-4">
@@ -79,7 +90,7 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
               max={100000}
               value={priceRange[0]}
               onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
-              className="w-full accent-blue-500" // Cambia el color del slider
+              className="w-full accent-blue-500"
             />
             <input
               type="range"
@@ -87,7 +98,7 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
               max={100000}
               value={priceRange[1]}
               onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
-              className="w-full accent-blue-500" // Cambia el color del slider
+              className="w-full accent-blue-500"
             />
           </div>
         </div>
@@ -131,28 +142,24 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {sortedProducts.map((producto) => {
-            const [cantidad, setCantidad] = useState(1); // Añadir estado para la cantidad
+          {sortedProducts.map((producto) => (
+            <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={producto.id_producto}>
+              <p>ID: {producto.id_producto}</p>
+              <p className="mb-1 font-semibold">{producto.nombre}</p>
+              <p className="mb-1 text-gray-600">{producto.descripcion}</p>
+              <p className="mb-2 text-lg font-bold">${producto.precio}</p>
 
-            return (
-              <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={producto.id_producto}>
-                <p>ID: {producto.id_producto}</p>
-                <p className="mb-1 font-semibold">{producto.nombre}</p>
-                <p className="mb-1 text-gray-600">{producto.descripcion}</p>
-                <p className="mb-2 text-lg font-bold">${producto.precio}</p>
-
-                <input
-                  type="number"
-                  value={cantidad}
-                  onChange={(e) => setCantidad(Math.max(1, Number(e.target.value)))}
-                  className="border rounded px-2 py-1 w-24 mb-2"
-                  min={1}
-                />
-                
-                <ButtonAddToCarrito producto={producto} cantidad={cantidad} />
-              </div>
-            );
-          })}
+              <input
+                type="number"
+                value={cantidades[producto.id_producto.toString()] || 1}
+                onChange={(e) => handleCantidadChange(producto.id_producto.toString(), Number(e.target.value))}
+                className="border rounded px-2 py-1 w-24 mb-2"
+                min={1}
+              />
+              
+              <ButtonAddToCarrito producto={producto} cantidad={cantidades[producto.id_producto.toString()] || 1} />
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -160,4 +167,3 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
 };
 
 export default VistaProductos;
-

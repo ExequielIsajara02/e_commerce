@@ -20,3 +20,20 @@ export async function createPedido(data : any) {
         throw new Error("Error creando pedido");
     }
 }
+
+export async function completePurchase(userId: string) {
+    try {
+      // Procesa la compra (por ejemplo, guarda la orden)
+      
+      // Limpia el carrito en la base de datos
+      await prisma.carrito.deleteMany({
+        where: { id_usuario: parseInt(userId) },
+      });
+  
+      return { success: true, message: "Compra completada y carrito vacío" };
+    } catch (error) {
+      console.error("Error al completar la compra", error);
+      throw new Error("Error al completar la compra");
+    }
+  }
+  
