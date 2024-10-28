@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+// import { NextResponse } from "next/server";
 import { ProductoData } from "../types/ProductData";
 import Stripe from "stripe";
 import axios from 'axios';

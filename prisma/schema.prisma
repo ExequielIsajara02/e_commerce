@@ -64,9 +64,9 @@ model Usuario {
   telefono         String?
   direccion        String?
   localidad        String?
+  role             Role    @default(user)
   cuentaVerificada Boolean @default(false)
   pedidos          Pedido[]
-  role             Role @default(user)
 }
 
 model Combo {
