@@ -5,7 +5,8 @@ import { authorizationPage } from "../../../../utils/authorization";
 import { redirect } from "next/navigation";
 
 const Page = async () => {
-  const authorize = await authorizationPage({ roles: ["admin", "editor"] });
+  const authorize = await authorizationPage({ roles: ["admin", "editor","user"] });
+  console.log("authorize", authorize)
   if (!authorize) {
     redirect("/auth/login");
   }
