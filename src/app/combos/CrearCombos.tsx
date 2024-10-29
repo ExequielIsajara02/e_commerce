@@ -104,10 +104,18 @@ const AdminCombos = () => {
 
             editarCombo(editComboId);
         } else {
+            const descuentoInt = Math.round(parseFloat(descuento));
+            if (descuentoInt < 0 || descuentoInt > 100) {
+                console.error("El descuento debe estar entre 0 y 100.");
+                return; // Termina la función si el descuento es inválido
+            }
+
+            // Convierte el descuento de un número entero (porcentaje) a un float (0.55)
+            const descuentoFloat = parseFloat((descuentoInt / 100).toFixed(2));
 
             const comboData = {
                 nombre,
-                descuento: parseFloat(descuento),
+                descuento: descuentoFloat,
                 productos: productos.map(id => ({ id_producto: id })),
                 id_usuario: parseInt(id_usuario, 10),
             };
@@ -187,7 +195,7 @@ const AdminCombos = () => {
                         </div>
 
                         <div className="mb-4">
-                            <label htmlFor="descuento" className="block text-sm font-medium text-gray-700">Descuento:</label>
+                            <label htmlFor="descuento" className="block text-sm font-medium text-gray-700">Descuento (%):</label>
                             <input
                                 type="number"
                                 id="descuento"
