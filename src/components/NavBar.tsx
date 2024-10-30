@@ -14,6 +14,12 @@ const NavBar = async () => {
         <li>
           <Link href="/home">Home</Link>
         </li>
+        <li>
+          <Link href="/producto">Productos</Link>
+        </li>
+        <li>
+          <Link href="/combos">Combos</Link>
+        </li>
         {!session?.user ? (
             <>
                 <li>

@@ -67,7 +67,6 @@ export const Carrito: React.FC = () => {
         onClick={handlePay}
       >Pagar</button>
 
-
     </div>
   );
 };
