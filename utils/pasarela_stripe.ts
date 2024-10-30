@@ -15,7 +15,6 @@ export async function crearSesionStripe(cartItems: ProductoData[]) {
                     name: item.nombre,
                     metadata: {
                         id_producto: item.id_producto,
-                        cantidad: item.cantidad
                     },
                 },
                 unit_amount: item.precio * 100,
@@ -24,7 +23,7 @@ export async function crearSesionStripe(cartItems: ProductoData[]) {
         }));
         
         const session = await stripe.checkout.sessions.create({
-            success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
             line_items: lineItems,
             mode: 'payment'
         });
