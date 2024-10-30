@@ -26,7 +26,7 @@ model Producto {
   tipo         String?
   pedidos      PedidoProducto[]
   combos       ComboProducto[]
-  }
+}
 
 
 // Modelo de Pedido

@@ -20,8 +20,10 @@ export default {
                 }
 
                 // Se verificara si el usario existe en la bd buscandolo por email
-                const user = await db.usuario.findUnique({
-                    where: { correo: data.email, }
+                const user = await db.usuario.findFirst({
+                    where: {
+                        correo: data.email
+                    }
                 });
 
                 if(!user || !user.clave) {

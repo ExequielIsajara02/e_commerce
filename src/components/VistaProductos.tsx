@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito";
 // import { ProductoData } from '@/types/types';
-import { ComboData } from '../../../types/ComboData';
-import { ProductoData } from '../../../types/ProductData';
+import { ComboData } from '../../types/ComboData';
+import { ProductoData } from '../../types/ProductData';
 
 interface Props {
   productos: ProductoData[];
@@ -46,7 +46,7 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
 
   const traerCombos = async () => {
     try {
-      const respuesta = await fetch("http://localhost:3000/api/combos");
+      const respuesta = await fetch("/combos");
       const datos = await respuesta.json();
       setCombos(datos);
     } catch (error) {
