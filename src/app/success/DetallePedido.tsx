@@ -1,10 +1,5 @@
 "use client"
-import { CartContext } from "@/context/CartContext";
-import { Pedido, PedidoProducto } from "@prisma/client";
-import { useContext, useEffect, useRef } from "react";
-import Stripe from "stripe";
-import { createPedido } from "../../../utils/pedido";
-import { ProductoData } from "../../../types/ProductData";
+
 
 type SessionStripe = {
   id: string | null;

@@ -1,6 +1,8 @@
 import DetallePedido from "@/app/success/DetallePedido";
 import getSesionStripe from "../../../utils/stripe/getSesionStripe";
 import Stripe from "stripe";
+import { auth } from "@/auth";
+
 
 
 
@@ -13,6 +15,10 @@ export default async function Page({ searchParams }: { searchParams: { session_i
   if (!session || session.payment_status !== "paid") {
     return <div>Pago fallido o no completado.</div>;
   }
+
+  // Obtener la sesión del usuario actual
+  const usuarioSession = await auth();
+  const usuarioId = usuarioSession?.user?.id;
 
   // Extraer datos de productos y construir el objeto de pedido
   const productos = session.line_items?.data.map(item => {
@@ -42,7 +48,7 @@ export default async function Page({ searchParams }: { searchParams: { session_i
     },
     body: JSON.stringify({
       id_stripe: sessionStripe.id,
-      id_usuario: 1,  // Asigna el usuario correspondiente
+      id_usuario: parseInt(usuarioId || 'null'),  // Asigna el usuario correspondiente
       fecha: new Date(),
       metodo_pago: sessionStripe.metodoPago[0],
       estado: sessionStripe.estado,
