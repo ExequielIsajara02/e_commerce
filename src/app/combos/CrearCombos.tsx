@@ -2,16 +2,18 @@
 import React, { useEffect, useState } from "react";
 import CargandoSpinner from "@/components/CargandoSpinner";
 import { ComboData } from "../../../types/ComboData";
+import { ProductoData } from "../../../types/ProductData";
 
 const AdminCombos = () => {
     const [combos, setCombos] = useState<ComboData[]>([]);
+    const [productosData, setProductosData] = useState<ProductoData[]>([]);
+    const [productos, setProductos] = useState<number[]>([]);
     const [loading, setLoading] = useState(true);
     const [nombre, setNombre] = useState("");
     const [descuento, setDescuento] = useState("");
-    const [producto, setProducto] = useState("");
-    const [productos, setProductos] = useState<number[]>([]);
     const [id_usuario, setId_usuario] = useState("");
     const [editComboId, setEditComboId] = useState<number | null>(null);
+    const [isCreatingCombo, setIsCreatingCombo] = useState(false); // Estado para manejar la visibilidad del formulario
 
     const traerCombos = async () => {
         try {
@@ -23,9 +25,23 @@ const AdminCombos = () => {
         }
     };
 
+    const traerProductos = async () => {
+        try {
+            const respuesta = await fetch("http://localhost:3000/api/producto");
+            const datos = await respuesta.json();
+            setProductosData(datos);
+        } catch (error) {
+            console.error("Error al traer productos:", error);
+        }
+    };
+
     useEffect(() => {
         setLoading(true);
-        traerCombos().finally(() => {
+        const fetchData = async () => {
+            await traerCombos();
+            await traerProductos();
+        };
+        fetchData().finally(() => {
             setLoading(false);
         });
     }, []);
@@ -51,9 +67,9 @@ const AdminCombos = () => {
                 nombre,
                 descuento: parseFloat(descuento),
                 productos: productos.map(id => ({ id_producto: id })),
-                id_usuario: parseInt(id_usuario, 10),
+                id_usuario: (parseInt(id_usuario, 10))
             };
-    
+
             const respuesta = await fetch(`/api/combos/${id_combo}`, {
                 method: 'PUT',
                 headers: {
@@ -61,35 +77,31 @@ const AdminCombos = () => {
                 },
                 body: JSON.stringify(comboData),
             });
-    
+
             if (!respuesta.ok) {
                 throw new Error('Error al editar el combo');
             }
-    
+
             console.log('Combo editado exitosamente');
             traerCombos();
-            setEditComboId(null); 
+            resetForm(); // Resetea el formulario después de editar
+            setIsCreatingCombo(false); // Cierra la modal
         } catch (error) {
             console.error(error);
         }
     };
 
     const handleEditarClick = (combo: ComboData) => {
-
         setEditComboId(combo.id_combo);
         setNombre(combo.nombre);
         setDescuento(combo.descuento.toString());
         setProductos(combo.productos ? combo.productos.map((prod) => prod.id_producto) : []);
         setId_usuario(combo.id_usuario.toString());
+        setIsCreatingCombo(true); // Abre la modal al editar
     };
 
-    const handleAgregarProducto = () => {
-        const productoNum = parseInt(producto, 10);
-
-        if (!isNaN(productoNum)) {
-            setProductos((prevProductos) => [...prevProductos, productoNum]);
-            setProducto('');
-        }
+    const handleAgregarProducto = (productoNum: number) => {
+        setProductos((prevProductos) => [...prevProductos, productoNum]);
     };
 
     const handleEliminarProducto = (index: number) => {
@@ -101,23 +113,19 @@ const AdminCombos = () => {
         e.preventDefault();
 
         if (editComboId !== null) {
-
             editarCombo(editComboId);
         } else {
             const descuentoInt = Math.round(parseFloat(descuento));
             if (descuentoInt < 0 || descuentoInt > 100) {
                 console.error("El descuento debe estar entre 0 y 100.");
-                return; // Termina la función si el descuento es inválido
+                return;
             }
-
-            // Convierte el descuento de un número entero (porcentaje) a un float (0.55)
             const descuentoFloat = parseFloat((descuentoInt / 100).toFixed(2));
-
             const comboData = {
                 nombre,
                 descuento: descuentoFloat,
                 productos: productos.map(id => ({ id_producto: id })),
-                id_usuario: parseInt(id_usuario, 10),
+                id_usuario: (parseInt(id_usuario, 10)),
             };
 
             try {
@@ -145,119 +153,142 @@ const AdminCombos = () => {
     const resetForm = () => {
         setNombre('');
         setDescuento('');
-        setProducto('');
         setProductos([]);
         setId_usuario('');
         setEditComboId(null);
     };
 
     return (
-        <div>
+        <div className="container mx-auto p-4">
             {loading ? (
                 <CargandoSpinner />
             ) : (
                 <div>
-                    <h1>Administrar Combos</h1>
-                    <div className="grid grid-cols-4 gap-4">
-                        {combos.map((combo) => (
-                            <div className="border-black border rounded-lg m-4 p-4" key={combo.id_combo}>
-                                <h3 className="text-lg font-bold mb-2">{combo.nombre}</h3>
-                                <h4 className="text-md mb-2">ID Combo: {combo.id_combo}</h4>
-                                <p className="mb-4">Descuento: <span className="text-green-600 font-semibold">{combo.descuento * 100}%</span></p>
-                                <button 
-                                    onClick={() => eliminarCombo(combo.id_combo)} 
-                                    className="text-red-500 hover:text-red-700"
-                                >
-                                    Eliminar
-                                </button>
-                                <button 
-                                    onClick={() => handleEditarClick(combo)} 
-                                    className="text-green-500 hover:text-green-700"
-                                >
-                                    Editar
-                                </button>
+                    <h1 className="text-2xl font-bold mb-4">Administrar Combos</h1>
+
+                    {/* Botón para mostrar el formulario de crear combos */}
+                    <button 
+                        onClick={() => { setIsCreatingCombo(true); resetForm(); }} // Reinicia el formulario para crear un nuevo combo
+                        className="mb-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600"
+                    >
+                        Crear Nuevo Combo
+                    </button>
+
+                    {/* Modal para crear o editar combos */}
+                    {/* Modal para crear o editar combos */}
+                    {isCreatingCombo && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                            <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl w-full flex">
+                                <div className="flex-1">
+                                    <h2 className="text-xl font-semibold mb-4">{editComboId !== null ? "Editar Combo" : "Crear Combo"}</h2>
+                                    <form onSubmit={handleSubmit}>
+                                        <div className="mb-4">
+                                            <label htmlFor="nombre" className="block text-sm font-medium text-gray-900">Nombre:</label>
+                                            <input
+                                                type="text"
+                                                id="nombre"
+                                                value={nombre}
+                                                onChange={(e) => setNombre(e.target.value)}
+                                                required
+                                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            />
+                                        </div>
+
+                                        <div className="mb-4">
+                                            <label htmlFor="descuento" className="block text-sm font-medium text-gray-700">Descuento (%):</label>
+                                            <input
+                                                type="number"
+                                                id="descuento"
+                                                value={descuento}
+                                                onChange={(e) => setDescuento(e.target.value)}
+                                                required
+                                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            />
+                                        </div>
+
+                                        <label htmlFor="productos" className="block text-sm font-medium text-gray-700 mb-2">Productos Seleccionados:</label>
+                                        <ul className="mb-4">
+                                            {productos.map((prod, index) => (
+                                                <li key={index} className="flex justify-between items-center mb-2 p-2 bg-gray-100 rounded">
+                                                    {prod}
+                                                    <button 
+                                                        type="button" 
+                                                        onClick={() => handleEliminarProducto(index)} 
+                                                        className="text-red-500 hover:text-red-700"
+                                                    >
+                                                        ✕
+                                                    </button>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        <div className="mb-4">
+                                            <label htmlFor="id_usuario" className="block text-sm font-medium text-gray-700">ID Admin:</label>
+                                            <input
+                                                type="number"
+                                                id="id_usuario"
+                                                value={id_usuario}
+                                                onChange={(e) => setId_usuario(e.target.value)}
+                                                required
+                                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            />
+                                        </div>
+
+                                        <button type="submit" className="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">
+                                            {editComboId !== null ? "Actualizar Combo" : "Crear Combo"}
+                                        </button>
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setIsCreatingCombo(false)} 
+                                            className="ml-4 bg-red-500 text-white font-semibold py-2 px-4 rounded hover:bg-red-600"
+                                        >
+                                            Cancelar
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <div className="flex-1 ml-4">
+                                    <h2 className="text-xl font-semibold mb-4">Lista de Productos</h2>
+                                    <ul className="max-h-[400px] overflow-y-auto">
+                                        {productosData.map((producto) => (
+                                            <li key={producto.id_producto} className="flex justify-between items-center mb-2 p-2 border border-gray-300 rounded">
+                                                <span>{producto.nombre}</span>
+                                                <button 
+                                                    onClick={() => handleAgregarProducto(producto.id_producto)} 
+                                                    className="bg-green-500 text-white font-semibold py-1 px-2 rounded hover:bg-green-600"
+                                                >
+                                                    Agregar
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
-                        ))}
-                    </div>
-
-                    <h2 className="text-xl font-semibold mt-10">{editComboId !== null ? "Editar Combo" : "Crear Combo"}</h2>
-                    <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
-                        <div className="mb-4">
-                            <label htmlFor="nombre" className="block text-sm font-medium text-gray-900">Nombre:</label>
-                            <input
-                                type="text"
-                                id="nombre"
-                                value={nombre}
-                                onChange={(e) => setNombre(e.target.value)}
-                                required
-                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
                         </div>
-
-                        <div className="mb-4">
-                            <label htmlFor="descuento" className="block text-sm font-medium text-gray-700">Descuento (%):</label>
-                            <input
-                                type="number"
-                                id="descuento"
-                                value={descuento}
-                                onChange={(e) => setDescuento(e.target.value)}
-                                required
-                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-
-                        <div className="mb-4">
-                            <label htmlFor="producto" className="block text-sm font-medium text-gray-700">Agregar Producto:</label>
-                            <input
-                                type="text"
-                                id="producto"
-                                value={producto}
-                                onChange={(e) => setProducto(e.target.value)}
-                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            <button 
-                                type="button" 
-                                onClick={handleAgregarProducto} 
-                                className="mt-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-                            >
-                                + Agregar Producto
-                            </button>
-                        </div>
-
-                        <ul className="mb-4">
-                            {productos.map((prod, index) => (
-                                <li key={index} className="flex justify-between items-center mb-2 p-2 bg-gray-100 rounded">
-                                    {prod}
+                    )}
+                    <ul className="mt-4">
+                        {combos.map((combo) => (
+                            <li key={combo.id_combo} className="flex justify-between items-center mb-2 p-2 border border-gray-300 rounded">
+                                <div>
+                                    <strong>{combo.nombre}</strong>  -Descuento: {(combo.descuento * 100).toFixed(0)}%
+                                </div>
+                                <div>
                                     <button 
-                                        type="button" 
-                                        onClick={() => handleEliminarProducto(index)} 
+                                        onClick={() => handleEditarClick(combo)} 
+                                        className="text-blue-500 hover:text-blue-700 mr-2"
+                                    >
+                                        Editar
+                                    </button>
+                                    <button 
+                                        onClick={() => eliminarCombo(combo.id_combo)} 
                                         className="text-red-500 hover:text-red-700"
                                     >
-                                        ✕
+                                        Eliminar
                                     </button>
-                                </li>
-                            ))}
-                        </ul>
-
-                        <div className="mb-4">
-                            <label htmlFor="id_usuario" className="block text-sm font-medium text-gray-700">ID admin:</label>
-                            <input
-                                type="number"
-                                id="id_usuario"
-                                value={id_usuario}
-                                onChange={(e) => setId_usuario(e.target.value)}
-                                required
-                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-
-                        <button 
-                            type="submit" 
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                        >
-                            {editComboId !== null ? "Guardar Cambios" : "Crear Combo"}
-                        </button>
-                    </form>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             )}
         </div>

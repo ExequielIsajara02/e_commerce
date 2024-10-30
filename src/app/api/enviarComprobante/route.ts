@@ -6,7 +6,7 @@ export async function POST(req: Request) {
         const { id_pago, detallesPedido } = await req.json();
         
         await enviarComprobante({ id_pago,detallesPedido });
-        console.log("DEBUGUEANDO POR AQUI:",detallesPedido)
+        // console.log("DEBUGUEANDO POR AQUI:",detallesPedido)
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("Error en enviarComprobante:", error);
