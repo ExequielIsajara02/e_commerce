@@ -26,7 +26,7 @@ const NavBar = async () => {
         ) : (
             <>
                 <li>
-                    <Link href="/protected/dashboard">Dashboard</Link>
+                    <Link href="/dashboard">Dashboard</Link>
                 </li>
                 <li>
                   <LogoutButton />

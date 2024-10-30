@@ -1,9 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server"
+import { db } from "@/lib/db";
 
 export async function GET() {
 
-    const productos = await prisma.producto.findMany()
+    const productos = await db.producto.findMany();
     
     return NextResponse.json(productos);
 }
@@ -19,5 +20,5 @@ export async function POST(request: Request) {
             cantidad,
         }
     });
-    return NextResponse.json("Creating products");
+    return NextResponse.json(guardarProducto);
 }

@@ -22,6 +22,18 @@ const UsuarioForm = () => {
     });
 
     if(res.status == 200) {
+      const correo = data.correo
+
+      const usuarioCreado = await res.json();
+      const userId = usuarioCreado.id_usuario;
+
+      const correoRes = await fetch('/api/enviarMail', {
+        method: 'POST',
+        body: JSON.stringify({ correo, userId }),
+        headers: {
+            'Content-Type': 'application/json',
+        },
+      });
       router.push("/auth/login")
     }
 

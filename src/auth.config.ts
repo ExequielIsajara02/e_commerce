@@ -1,5 +1,4 @@
 import type {NextAuthConfig} from "next-auth"
-import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { loginSchema } from "./lib/zod";
 import { db } from "./lib/db";
@@ -43,11 +42,9 @@ export default {
                     email: user.correo,
                     role: user.role
                 } 
-
                 return userAuth;
                 
             },
         }),
     ],
 } satisfies NextAuthConfig
-
