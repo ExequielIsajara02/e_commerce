@@ -3,23 +3,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Product from './CartProduct';
 import { CartContext } from '../../context/CartContext';
-import { ProductoData } from '../../../types/PedidoData';
-
-// Datos de productos simulados
-const mockProducts: ProductoData[] = [
-  { id_producto: 1, nombre: 'Product 1', descripcion: 'Descripción de Product 1', imagen: 'https://placehold.co/120x60/png', precio: 19.99, cantidad: 10 },
-  { id_producto: 2, nombre: 'Product 2', descripcion: 'Descripción de Product 2', imagen: 'https://placehold.co/120x60/png', precio: 29.99, cantidad: 5 },
-  { id_producto: 3, nombre: 'Product 3', descripcion: 'Descripción de Product 3', imagen: 'https://placehold.co/120x60/png', precio: 39.99, cantidad: 8 },
-];
+import { ProductoData } from '../../../types/ProductData';
 
 const ProductList: React.FC = () => {
   const [products, setProducts] = useState<ProductoData[]>([]);
-  const context = useContext(CartContext); // Obtener el contexto del carrito
-
-  useEffect(() => {
-    // Simula la llamada a una API
-    setProducts(mockProducts);
-  }, []);
+  const context = useContext(CartContext);
 
   const addToCart = (product: ProductoData) => {
     // Añadir el producto al carrito

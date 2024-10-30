@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     });
 
     if (usuarioEncontrado) {
-      console.log("El usuario ya existe");
+      alert("El usuario ya existe");
 
       return NextResponse.json(
         {

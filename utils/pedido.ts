@@ -14,7 +14,7 @@ export async function getAllPedidos() {
 }
 
 // Función para crear un nuevo pedido
-export async function createPedido(data: any) {
+export async function createPedido(data : any) {
     try {
         const res = await prisma.pedido.create({data});
         console.log(res)
@@ -25,13 +25,29 @@ export async function createPedido(data: any) {
     }
 }
 
-export async function getPedidoById( id: string){
+export async function completePurchase(userId: string) {
     try {
-        return await prisma.pedido.findUnique({
-            where: { id_pedido: parseInt(id) }
-        });
+      // Procesa la compra (por ejemplo, guarda la orden)
+      
+      // Limpia el carrito en la base de datos
+      await prisma.carrito.deleteMany({
+        where: { id_usuario: parseInt(userId) },
+      });
+  
+      return { success: true, message: "Compra completada y carrito vacío" };
     } catch (error) {
-        console.error("Error al obtener producto:", error);
-        return NextResponse.json({ error: "Error al obtener producto" }, { status: 500 });
+      console.error("Error al completar la compra", error);
+      throw new Error("Error al completar la compra");
     }
-}
+  }
+  
+//   export async function getPedidoById( id: string){
+//     try {
+//         return await prisma.pedido.findUnique({
+//             where: { id_pedido: parseInt(id) }
+//         });
+//     } catch (error) {
+//         console.error("Error al obtener producto:", error);
+//         return NextResponse.json({ error: "Error al obtener producto" }, { status: 500 });
+//     }
+// }

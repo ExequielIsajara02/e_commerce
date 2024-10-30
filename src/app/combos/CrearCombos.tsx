@@ -104,10 +104,18 @@ const AdminCombos = () => {
 
             editarCombo(editComboId);
         } else {
+            const descuentoInt = Math.round(parseFloat(descuento));
+            if (descuentoInt < 0 || descuentoInt > 100) {
+                console.error("El descuento debe estar entre 0 y 100.");
+                return; // Termina la función si el descuento es inválido
+            }
+
+            // Convierte el descuento de un número entero (porcentaje) a un float (0.55)
+            const descuentoFloat = parseFloat((descuentoInt / 100).toFixed(2));
 
             const comboData = {
                 nombre,
-                descuento: parseFloat(descuento),
+                descuento: descuentoFloat,
                 productos: productos.map(id => ({ id_producto: id })),
                 id_usuario: parseInt(id_usuario, 10),
             };
@@ -153,8 +161,8 @@ const AdminCombos = () => {
                     <div className="grid grid-cols-4 gap-4">
                         {combos.map((combo) => (
                             <div className="border-black border rounded-lg m-4 p-4" key={combo.id_combo}>
-                                <h3 className="text-lg font-bold mb-2">ID Combo: {combo.id_combo}</h3>
-                                <h4 className="text-md mb-2">{combo.nombre}</h4>
+                                <h3 className="text-lg font-bold mb-2">{combo.nombre}</h3>
+                                <h4 className="text-md mb-2">ID Combo: {combo.id_combo}</h4>
                                 <p className="mb-4">Descuento: <span className="text-green-600 font-semibold">{combo.descuento * 100}%</span></p>
                                 <button 
                                     onClick={() => eliminarCombo(combo.id_combo)} 
@@ -187,7 +195,7 @@ const AdminCombos = () => {
                         </div>
 
                         <div className="mb-4">
-                            <label htmlFor="descuento" className="block text-sm font-medium text-gray-700">Descuento:</label>
+                            <label htmlFor="descuento" className="block text-sm font-medium text-gray-700">Descuento (%):</label>
                             <input
                                 type="number"
                                 id="descuento"
