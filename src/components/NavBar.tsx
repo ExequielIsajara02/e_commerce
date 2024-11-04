@@ -20,6 +20,9 @@ const NavBar = async () => {
         <li>
           <Link href="/combos">Combos</Link>
         </li>
+        <li>
+          <Link href="/compras">Mis Compras</Link>
+        </li>
         {!session?.user ? (
             <>
                 <li>
