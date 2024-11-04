@@ -6,7 +6,7 @@ const Page = () => {
 
   return (
       <div>
-          <h1>Carrito de compra</h1>
+          <h1 className='text-black'>Carrito de compra</h1>
           <Carrito/>
       </div>
   );

@@ -12,8 +12,8 @@ export const Header = () => {
     return (
         <div className="flex justify-between p-6">
             <h1><strong>Titulo</strong></h1>
-            <p onClick={toggleSideBar}>
-                Cantidad de artículos en el carrito <strong>{cartItems.length}</strong>
+            <p onClick={toggleSideBar} className="text-[24px] cursor-pointer">
+                🛒<strong>{cartItems.length}</strong>
             </p>
         </div>
     )

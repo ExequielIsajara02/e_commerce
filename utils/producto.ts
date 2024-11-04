@@ -7,7 +7,6 @@ export async function getAllProductos() : Promise<ProductoData[]>{
         return await prisma.producto.findMany();
 }
 
-
 export async function getProductById( id: number) {
     try {
         return await prisma.producto.findUnique({
@@ -19,7 +18,7 @@ export async function getProductById( id: number) {
     }
 }
 
-export async function createProducto(data: ProductoData) {
+export async function createProducto(data: any) {
     try {
         return await prisma.producto.create({data});
     } catch (error) {
