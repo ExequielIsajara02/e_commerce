@@ -11,22 +11,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     // jwt() se ejecuta cada vez que se crea o actualiza un token JWT
     // Aqui puedes agregar informacion adicional al token
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) { // El usuario estara disponible durante el login
         token.role = user.role;
+        // token.id = user.id;
         token.sub = user.id;
       }
-      console.log('Datos del usuario en auth.ts (TOKEN):', token)
       return token
     },
     // session() se utiliza para agregar la informacion del token a la session del usuario
     // Permite que la informacion del token este disponible en el cliente
-    session({ session, token }) {
+    async session({ session, token }) {
       if(session.user) {
         session.user.role = token.role;
+        // session.user.id = token.id || "";
         session.user.id = token?.sub?.toString() || '';
       }
-      console.log('Datos del usuario en auth.ts (SESSION):', session)
       return session
     },
   },

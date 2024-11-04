@@ -1,5 +1,5 @@
 import React from 'react';
-import Carrito from './Carrito';
+import { Carrito } from '@/components/Carrito';
 
 const Page = () => {
   const removeFromCart = () => {};

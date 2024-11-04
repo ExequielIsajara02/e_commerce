@@ -1,5 +1,4 @@
 import type {NextAuthConfig} from "next-auth"
-import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { loginSchema } from "./lib/zod";
 import { db } from "./lib/db";
@@ -21,8 +20,10 @@ export default {
                 }
 
                 // Se verificara si el usario existe en la bd buscandolo por email
-                const user = await db.usuario.findUnique({
-                    where: { correo: data.email, }
+                const user = await db.usuario.findFirst({
+                    where: {
+                        correo: data.email
+                    }
                 });
 
                 if(!user || !user.clave) {
@@ -39,13 +40,11 @@ export default {
                     id: user.id_usuario.toString(),
                     name: user.nombre,
                     email: user.correo,
-                    // role: user.role
+                    role: user.role
                 } 
-                console.log('Datos de sesion de usuario:', userAuth)
                 return userAuth;
                 
             },
         }),
     ],
 } satisfies NextAuthConfig
-

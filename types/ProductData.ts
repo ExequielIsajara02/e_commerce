@@ -7,4 +7,4 @@ export type ProductoData = {
     cantidad: number;
     marca: string;
     tipo: string;
-  };
+  }

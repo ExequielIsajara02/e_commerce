@@ -1,12 +1,7 @@
-"use client"
-import { auth } from '@/auth';
 import Link from 'next/link';
 import React from 'react';
 
 const MenuLateral = () => {
-
-  
-
   
   return (
     <div className="w-64 bg-slate-500 border-r-2 border-red-900 p-4">

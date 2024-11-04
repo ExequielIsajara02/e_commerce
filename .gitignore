@@ -9,12 +9,18 @@
 # testing
 /coverage
 
+# prisma
+/prisma/migrations
+
 # next.js
 /.next/
 /out/
 
 # production
 /build
+
+#migrations
+/prisma/migrations
 
 # misc
 .DS_Store

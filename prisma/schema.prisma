@@ -3,11 +3,17 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum Role {
+  user
+  admin
+}
+
 // Fuente de datos
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
 
 model Producto {
   id_producto  Int @id @default(autoincrement())
@@ -18,20 +24,34 @@ model Producto {
   cantidad     Int
   marca        String
   tipo         String
-  }
+  pedidos      PedidoProducto[]
+  combos       ComboProducto[]
+}
 
 
 // Modelo de Pedido
 model Pedido {
   id_pedido     Int @id @default(autoincrement())
+  id_stripe     String  @unique @default("undefined")
   id_usuario    Int
   fecha         DateTime
   metodo_pago   String
   estado        String
-  precio_final  Float    // Precio total después de descuentos y recargos
-  recargos      Float    // Cualquier recargo adicional
-  descuentos    Float    // Cualquier descuento aplicado
-  usuario       Usuario   @relation(fields: [id_usuario], references: [id_usuario]) // Relación con Usuario
+  precio_final  Float 
+  recargos      Float
+  descuentos    Float
+  productos     PedidoProducto[]  // Relación con la tabla intermedia
+  usuario       Usuario   @relation(fields: [id_usuario], references: [id_usuario])
+}
+
+model PedidoProducto {
+  id_pedido    Int
+  id_producto  Int
+  cantidad     Int
+  pedido       Pedido  @relation(fields: [id_pedido], references: [id_pedido])
+  producto     Producto @relation(fields: [id_producto], references: [id_producto])
+  
+  @@id([id_pedido, id_producto])  // Llave compuesta
 }
 
 // Modelo de Usuario
@@ -44,7 +64,26 @@ model Usuario {
   telefono         String?
   direccion        String?
   localidad        String?
+  role             Role    @default(user)
   cuentaVerificada Boolean @default(false)
   // role          String?
   pedidos          Pedido[]
+}
+
+model Combo {
+  id_combo       Int      @id @default(autoincrement())
+  nombre         String
+  descuento      Float
+  productos      ComboProducto[]
+  id_usuario     Int
+}
+
+model ComboProducto {
+  id_combo     Int
+  id_producto  Int
+  combo        Combo     @relation(fields: [id_combo], references: [id_combo])
+  producto     Producto  @relation(fields: [id_producto], references: [id_producto])
+  precioDescuento Float  @default(0.0)
+
+  @@id([id_combo, id_producto])
 }

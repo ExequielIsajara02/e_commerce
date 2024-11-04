@@ -1,21 +1,14 @@
-import { auth } from '@/auth'
-import LogoutButton from '@/components/logout-button'
+import { redirect } from "next/navigation"
+import { authorizationPage } from "../../../utils/authorization"
 
 const AdminPage = async () => {
 
-  const session = await auth();
-
-  // const session = await getServerSession()
-  if(session?.user?.role !== "admin"){
-    return <div>You are not admin</div>
-  }
-
-  // console.log(session)}
+  await authorizationPage({ roles: ["admin", "editor", "user"] });
 
   return (
     <div>
       <h1>Welcome Admin</h1>
-      <pre>{JSON.stringify(session, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(session, null, 2)}</pre>*/}
     </div>
   )
 }

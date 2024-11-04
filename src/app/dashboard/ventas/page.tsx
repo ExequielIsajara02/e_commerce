@@ -1,4 +1,3 @@
-'use client';
 import MetricasVentas from './MetricasVentas';
 import { prisma } from '@/lib/prisma';
 
