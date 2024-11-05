@@ -34,9 +34,13 @@ const NavBar = async () => {
             </>
         ) : (
             <>
-                <li>
-                    <Link href="/dashboard">Dashboard</Link>
-                </li>
+                {
+                  session?.user?.role === "admin" && (
+                    <li>
+                      <Link href="/dashboard">Dashboard</Link>
+                    </li>
+                  )
+                }
                 <li>
                   <LogoutButton />
                 </li>
