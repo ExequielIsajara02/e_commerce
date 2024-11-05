@@ -41,7 +41,7 @@ function FormLogin() {
         setError(res.error);
       }
       else {
-        router.push("/home")
+        router.push("/")
       }
     });
     

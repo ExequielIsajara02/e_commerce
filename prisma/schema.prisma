@@ -17,13 +17,13 @@ datasource db {
 
 model Producto {
   id_producto  Int @id @default(autoincrement())
-  nombre       String?
-  descripcion  String?
-  imagen       String?
-  precio       Float?
-  cantidad     Int?
-  marca        String?
-  tipo         String?
+  nombre       String
+  descripcion  String
+  imagen       String
+  precio       Float
+  cantidad     Int
+  marca        String
+  tipo         String
   pedidos      PedidoProducto[]
   combos       ComboProducto[]
 }
@@ -66,6 +66,7 @@ model Usuario {
   localidad        String?
   role             Role    @default(user)
   cuentaVerificada Boolean @default(false)
+  // role          String?
   pedidos          Pedido[]
 }
 
