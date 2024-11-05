@@ -26,7 +26,7 @@ model Producto {
   tipo         String?
   pedidos      PedidoProducto[]
   combos       ComboProducto[]
-  }
+}
 
 
 // Modelo de Pedido
@@ -40,6 +40,7 @@ model Pedido {
   precio_final  Float 
   recargos      Float
   descuentos    Float
+  detalles      String?           // Campo opcional para almacenar detalles de la compra
   productos     PedidoProducto[]  // Relación con la tabla intermedia
   usuario       Usuario   @relation(fields: [id_usuario], references: [id_usuario])
 }
@@ -67,6 +68,7 @@ model Usuario {
   role             Role    @default(user)
   cuentaVerificada Boolean @default(false)
   pedidos          Pedido[]
+  puntos           Int      @default(0) // Campo para almacenar los puntos del usuario
 }
 
 model Combo {
