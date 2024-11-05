@@ -1,8 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { ProductoData } from "../../../types/ProductData";
 import { getAllProductos } from "../../../utils/producto";
+import { authorizationPage } from "../../../utils/authorization";
 
 const Page = async () => {
+  await authorizationPage({ roles: ["admin", "editor"] });
   /**----------------Funciones que se utilizaran en ambos casos------------------------------------------------ */
   const calcularPromedio = (totalPrecio: number, cantidadProducto: number) => {
     return cantidadProducto > 0 ? totalPrecio / cantidadProducto : 0; // Previene la división por cero

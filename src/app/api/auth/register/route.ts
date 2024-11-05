@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
+
 export async function POST(request: Request) {
+
   try {
     const data = await request.json();
 
@@ -13,7 +15,7 @@ export async function POST(request: Request) {
     });
 
     if (usuarioEncontrado) {
-      console.log("El usuario ya existe");
+      alert("El usuario ya existe");
 
       return NextResponse.json(
         {
@@ -36,6 +38,7 @@ export async function POST(request: Request) {
         telefono: data.telefono,
         direccion: data.direccion,
         localidad: data.localidad,
+        role: data.role
       },
     });
 
@@ -47,6 +50,13 @@ export async function POST(request: Request) {
     };
     return NextResponse.json(usuario);
   } catch (error) {
+    if (error instanceof Error) {
+      console.error(error); // Log del error completo
+      return NextResponse.json(
+        { message: error.message }, 
+        { status: 500 }
+      );
+    }
     console.log("error",error)
     return NextResponse.json({
       message: (error as Error).message,

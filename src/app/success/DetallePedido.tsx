@@ -1,15 +1,7 @@
 "use client"
+import { SessionStripe } from "../../../types/SessionStripe";
 
 
-type SessionStripe = {
-  id: string | null;
-  estado: string | null;
-  totalSession: number | null;
-  moneda: string | null;
-  estadoPago: string | null;
-  metodoPago: string[];
-  productos: { nombre: string, id_producto: number; cantidad: number }[]; // Ajuste para recibir productos
-}
 
 export default function DetallePedido({
   id,

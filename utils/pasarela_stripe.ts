@@ -1,6 +1,6 @@
 // import { NextResponse } from "next/server";
 import { ProductoData } from "../types/ProductData";
-import Stripe from "stripe";
+import Stripe from 'stripe'
 import axios from 'axios';
 import { enviarComprobante } from "./enviarComprobante";
 

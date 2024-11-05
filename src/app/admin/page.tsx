@@ -3,14 +3,7 @@ import { authorizationPage } from "../../../utils/authorization"
 
 const AdminPage = async () => {
 
-
-  // const session = await getServerSession()
-  const authorize = await authorizationPage({ roles: ["admin", "editor"] });
-  if(!authorize){
-    redirect("/auth/login")
-  }
-
-  // console.log(session)}
+  await authorizationPage({ roles: ["admin", "editor", "user"] });
 
   return (
     <div>

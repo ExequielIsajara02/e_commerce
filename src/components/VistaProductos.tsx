@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito";
 // import { ProductoData } from '@/types/types';
-import { ComboData } from '../../../types/ComboData';
-import { ProductoData } from '../../../types/ProductData';
+import { ComboData } from '../../types/ComboData';
+import { ProductoData } from '../../types/ProductData';
 
 interface Props {
   productos: ProductoData[];
@@ -46,7 +46,7 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
 
   const traerCombos = async () => {
     try {
-      const respuesta = await fetch("http://localhost:3000/api/combos");
+      const respuesta = await fetch("/combos");
       const datos = await respuesta.json();
       setCombos(datos);
     } catch (error) {
@@ -189,9 +189,9 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
         </div>
 
         <h2>Combos</h2>
-           <div className="grid grid-cols-4">
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
              {combos.map((combo) => (
-              <div className="border-black border rounded-lg m-4 p-4" key={combo.id_combo}>
+              <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={combo.id_combo}>
               <h3 className="text-lg font-bold mb-2">{combo.nombre}</h3>
               <h4 className="text-md mb-2">ID Combo: {combo.id_combo}</h4>
               <p className="mb-4">Descuento: <span className="text-green-600 font-semibold">{combo.descuento * 100}%</span></p>
@@ -199,7 +199,7 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
               {/* Productos en el combo */}
               <div className="grid grid-cols-1 gap-4">
                 {combo.productos.map((comboProducto) => (
-                  <div key={comboProducto.id_producto} className="border rounded-lg p-4 shadow-md">
+                  <div key={comboProducto.id_producto} className="border rounded-lg p-2 shadow-md w-50">
                     <h5 className="text-md font-bold mb-2">{comboProducto.producto?.nombre}</h5>
                     <p className="mb-1">
                       Antes: <span className="text-gray-400 line-through mr-2">${comboProducto.producto?.precio}</span>
