@@ -2,6 +2,7 @@ import DetallePedido from "@/app/success/DetallePedido";
 import getSesionStripe from "../../../utils/stripe/getSesionStripe";
 import Stripe from "stripe";
 import { auth } from "@/auth";
+import { descontarCantidadProductos } from "../../../utils/descontarCantidadProducto";
 
 
 
@@ -66,6 +67,12 @@ export default async function Page({ searchParams }: { searchParams: { session_i
 
   const nuevoPedido = await response.json();
   
+  // Descontar la cantidad de los productos en el inventario
+  try {
+    await descontarCantidadProductos(sessionStripe.productos);
+  } catch (error) {
+    console.error("Error al descontar productos en inventario:", error);
+  }
 
   return (
     <div>

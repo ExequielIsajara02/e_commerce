@@ -1,9 +1,12 @@
+import SeguimientoCompra from "@/components/SeguimientoCompra";
 import { getPedidos } from "../../../utils/getPedidos";
 
 export default async function MisCompras() {
   try {
-    const pedidos = await getPedidos();
-    console.log(pedidos);
+    let pedidos = await getPedidos();
+    
+    // Ordenar pedidos del más reciente al más antiguo
+    pedidos = pedidos.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
 
     return (
       <div className="max-w-4xl mx-auto p-6">
@@ -32,6 +35,7 @@ export default async function MisCompras() {
                                 </li>
                             ))}
                         </ul>
+                        < SeguimientoCompra/>
                     </div>
                 ))
             ) : (
