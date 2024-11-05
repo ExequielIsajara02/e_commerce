@@ -17,7 +17,7 @@ export const MetricasProductos: React.FC<PropsMetricasProductos> = ({ data }) =>
       <ul className="list-none mb-0">
         <li className="py-2 border-b border-black">Total Productos: {data.totalProductos}</li>
         <li className="py-2 border-b border-black">Total Ingresos: {data.totalIngresos}</li>
-        <li className="py-2">Valor Promedio Producto: {data.valorPromedioProducto}</li>
+        <li className="py-2">Valor Promedio Producto: {data.valorPromedioProducto.toFixed(2)}</li>
       </ul>
     </div>
   );

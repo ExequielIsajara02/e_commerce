@@ -14,6 +14,15 @@ const NavBar = async () => {
         <li>
           <Link href="/">Home</Link>
         </li>
+        <li>
+          <Link href="/producto">Productos</Link>
+        </li>
+        <li>
+          <Link href="/combos">Combos</Link>
+        </li>
+        <li>
+          <Link href="/compras">Mis Compras</Link>
+        </li>
         {!session?.user ? (
             <>
                 <li>
@@ -25,9 +34,13 @@ const NavBar = async () => {
             </>
         ) : (
             <>
-                <li>
-                    <Link href="/dashboard">Dashboard</Link>
-                </li>
+                {
+                  session?.user?.role === "admin" && (
+                    <li>
+                      <Link href="/dashboard">Dashboard</Link>
+                    </li>
+                  )
+                }
                 <li>
                   <LogoutButton />
                 </li>
