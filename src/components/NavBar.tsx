@@ -15,12 +15,6 @@ const NavBar = async () => {
           <Link href="/">Home</Link>
         </li>
         <li>
-          <Link href="/producto">Productos</Link>
-        </li>
-        <li>
-          <Link href="/combos">Combos</Link>
-        </li>
-        <li>
           <Link href="/compras">Mis Compras</Link>
         </li>
         {!session?.user ? (
@@ -36,9 +30,20 @@ const NavBar = async () => {
             <>
                 {
                   session?.user?.role === "admin" && (
+                    <>
+                    <li>
+                      <Link href="/producto">Productos</Link>
+                    </li>
+                    <li>
+                      <Link href="/combos">Combos</Link>
+                    </li>
+                    <li>
+                      <Link href="/usuario">Usuarios</Link>
+                    </li>
                     <li>
                       <Link href="/dashboard">Dashboard</Link>
                     </li>
+                    </>
                   )
                 }
                 <li>

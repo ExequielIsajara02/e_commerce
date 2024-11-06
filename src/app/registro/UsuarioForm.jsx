@@ -34,6 +34,7 @@ const UsuarioForm = () => {
             'Content-Type': 'application/json',
         },
       });
+      alert("Registro exitoso")
       router.push("/auth/login")
     }
 
