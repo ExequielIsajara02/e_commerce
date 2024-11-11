@@ -57,19 +57,20 @@ model PedidoProducto {
 
 // Modelo de Usuario
 model Usuario {
-  id_usuario       Int @id @default(autoincrement())
-  nombre           String?
-  apellido         String?
-  correo           String? @unique
-  clave            String?
-  telefono         String?
-  direccion        String?
-  localidad        String?
-  role             Role    @default(user)
-  cuentaVerificada Boolean @default(false)
-  // role          String?
-  pedidos          Pedido[]
-  puntos           Int      @default(0) // Campo para almacenar los puntos del usuario
+  id_usuario          Int @id @default(autoincrement())
+  nombre              String?
+  apellido            String?
+  correo              String? @unique
+  clave               String?
+  telefono            String?
+  direccion           String?
+  localidad           String?
+  role                Role    @default(user)
+  cuentaVerificada    Boolean @default(false)
+  // role             String?
+  pedidos             Pedido[]
+  puntos              Int      @default(0)  // Campo para almacenar los puntos del usuario
+  fecha_ultima_compra DateTime?             // Fecha de la última compra
 }
 
 model Combo {

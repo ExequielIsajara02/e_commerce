@@ -6,6 +6,6 @@ export const loginSchema = object({
     .email("Invalid email"),
   password: string({ required_error: "Password is required" })
     .min(1, "Password is required")
-    .min(6, "Password must be more than 8 characters")
+    .min(5, "Password must be more than 5 characters")
     .max(32, "Password must be less than 32 characters"),
 })

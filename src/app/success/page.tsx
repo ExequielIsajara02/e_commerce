@@ -76,8 +76,7 @@ export default async function Page({ searchParams }: { searchParams: { session_i
         moneda={sessionStripe.moneda}
         estadoPago={sessionStripe.estado}
         metodoPago={sessionStripe.metodoPago}
-        productos={sessionStripe.productos}
-      />
+        productos={sessionStripe.productos} usuarioId={1}      />
     </div>
   );
 }
