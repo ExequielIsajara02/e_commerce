@@ -14,9 +14,9 @@ const transporter = nodemailer.createTransport({
 
 export async function enviarComprobante(data: any) {
   try {
-    const session = await auth();
+    const  = await auth();
 
-    if (!session || !session.user?.email) {
+    if (!session || !.user?.email) {
       throw new Error("No se pudo obtener el correo del usuario: usuario no autenticado.");
     }
     const correo = session.user.email;

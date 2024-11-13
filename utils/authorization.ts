@@ -7,8 +7,8 @@ interface AuthorizationProps {
 
 export const authorizationPage = async ({roles}: AuthorizationProps) => {
 
-    const session = await auth();
-    const roleUser =  session?.user?.role;
+    const  = await auth();
+    const roleUser =  ?.user?.role;
 
     if (!roleUser || !roles.includes(roleUser)) {
         redirect("/auth/login")

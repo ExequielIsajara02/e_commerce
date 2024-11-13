@@ -3,6 +3,7 @@ import { ProductoData } from "../types/ProductData";
 import Stripe from 'stripe'
 import axios from 'axios';
 import { enviarComprobante } from "./enviarComprobante";
+import { Session } from "inspector/promises";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
@@ -24,7 +25,7 @@ export async function crearSesionStripe(cartItems: ProductoData[]) {
         }));
         
         const session = await stripe.checkout.sessions.create({
-            success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?_id={CHECKOUT_SESSION_ID}`,
             line_items: lineItems,
             mode: 'payment'
         });

@@ -1,4 +1,4 @@
-export type SessionStripe = {
+export type Stripe = {
     id: string | null;
     estado: string | null;
     totalSession: number | null;

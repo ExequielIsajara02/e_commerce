@@ -4,8 +4,8 @@ import { auth } from "@/auth";
 
 export async function getPedidos() {
   
-  const usuarioSession = await auth();
-  const usuarioId = parseInt(usuarioSession?.user?.id || "0");
+  const usuario = await auth();
+  const usuarioId = parseInt(usuario?.user?.id || "0");
 
   
   if (!usuarioId) {
