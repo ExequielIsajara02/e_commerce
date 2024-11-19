@@ -26,6 +26,8 @@ model Producto {
   tipo         String?
   pedidos      PedidoProducto[]
   combos       ComboProducto[]
+
+  ComboCantidad ComboCantidad[]
 }
 
 
@@ -85,4 +87,14 @@ model ComboProducto {
   precioDescuento Float  @default(0.0)
 
   @@id([id_combo, id_producto])
+}
+
+model ComboCantidad {
+  id_comboCantidad  Int   @id @default(autoincrement())
+  id_producto       Int
+  cantidad_minima   Int
+  descuento         Float
+  producto          Producto @relation(fields: [id_producto], references: [id_producto])
+
+  @@unique([id_producto, cantidad_minima])
 }

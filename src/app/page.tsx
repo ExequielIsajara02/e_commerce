@@ -1,31 +1,31 @@
 import { auth } from "@/auth";
-import { getAllProductos } from "../../utils/producto";
+import {obtenerProductos } from "../../utils/producto";
 import VistaProductos from "@/components/VistaProductos";
-import Image from "next/image";
+import { Slider } from "@/components/Slider";
 
 const Home = async () => {
   const session = await auth();
-  const response = await getAllProductos();
+  const response = await obtenerProductos();
   
-  // Verifica si la respuesta es un array antes de mapear
   const productos = Array.isArray(response)
       ? response.map((producto: any) => ({
           id_producto: producto.id_producto,
-          nombre: producto.nombre || "",           // Asignar cadena vacía si es null
-          descripcion: producto.descripcion || "",  // Asignar cadena vacía si es null
+          nombre: producto.nombre || "",          
+          descripcion: producto.descripcion || "",
           imagen: producto.imagen || "",
           precio: producto.precio || 0,
           cantidad: producto.cantidad || 0,
           marca: producto.marca || "",
           tipo: producto.tipo || "",
       }))
-      : []; // Si no es un array, inicializa productos como un array vacío
+      : [];
 
   return (
       <div>
-          <h2>Mostrar Productos</h2>
-          <VistaProductos 
-              productos={productos}
+        <Slider/>
+        <h2>Mostrar Productos</h2>
+        <VistaProductos 
+            productos={productos}
           />
       </div>
   );
