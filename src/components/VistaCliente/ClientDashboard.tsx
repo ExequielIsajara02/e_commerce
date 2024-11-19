@@ -114,7 +114,7 @@ export async function getServerSideProps(context: any) {
     };
   }
 
-  const userId = .user.id_usuario;
+  const userId = usuario.id_usuario;
 
   return {
     props: { userId },
