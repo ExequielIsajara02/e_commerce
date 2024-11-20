@@ -11,10 +11,12 @@ export default function DetallePedido({
   metodoPago,
   productos,
   usuarioId,  // Asegúrate de recibir el userId aquí
+  
 }: SessionStripe & { usuarioId: number }) {
   const [puntosTotales, setPuntosTotales] = useState<number>(0);
-  const [puntosGanados, setPuntosGanados] = useState<number>(0); // Estado para puntos ganados en la compra
+  //const [puntosGanados, setPuntosGanados] = useState<number>(0); // Estado para puntos ganados en la compra
   const total = totalSession ? totalSession / 100 : 0;
+  const puntosGanados = total ? Math.floor(total / 100) : 0;
 
   useEffect(() => {
       const obtenerPuntosTotales = async () => {
@@ -23,8 +25,7 @@ export default function DetallePedido({
               const response = await fetch(`/api/usuario/puntos?usuarioId=${usuarioId}`);
               const data = await response.json();
               setPuntosTotales(data.puntos);
-              setPuntosGanados(data.puntosGanados); // Almacena los puntos ganados en la compra reciente
-          } catch (error) {
+            } catch (error) {
               console.error("Error al obtener puntos:", error);
           }
       };
