@@ -9,7 +9,7 @@ const PageEnvio =  () => {
 
   const handleCotizacion = async () => {
     const url = "https://api.envia.com/ship/rate/";
-    const params = JSON.stringify({
+    const params = {
       "origin": {
         "name": "USA",
         "company": "enviacommarcelo",
@@ -70,8 +70,8 @@ const PageEnvio =  () => {
       "settings": {
         "currency": "USD"
       }
-    });
-
+    };
+    
     try {
       const data = await cotizacion(url, params);
       setResultado(data);
