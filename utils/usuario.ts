@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { UsuarioData } from "../src/app/types/types";
+import { UsuarioData } from "../types/UsuarioData";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function getAllUsers() {
     try {
         return await prisma.usuario.findMany();
     } catch (error) {
