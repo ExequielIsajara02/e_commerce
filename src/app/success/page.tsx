@@ -33,7 +33,7 @@ export default async function Page({ searchParams }: { searchParams: { session_i
 
   const sessionStripe = {
     id: session.id,
-    estado: session.status?.toString() || null,
+    estadoCompra: session.status?.toString() || null,
     totalSession: session.amount_total,
     moneda: session.currency,
     estadoPago: session.payment_status.toString() || null,
@@ -52,7 +52,7 @@ export default async function Page({ searchParams }: { searchParams: { session_i
       id_usuario: parseInt(usuarioId || 'null'),  // Asigna el usuario correspondiente
       fecha: new Date(),
       metodo_pago: sessionStripe.metodoPago[0],
-      estado: sessionStripe.estado,
+      estadoCompra: sessionStripe.estadoCompra,
       precio_final: (session.amount_total ?? 0) /100,
       recargos: 0,
       descuentos: 0,
@@ -78,10 +78,10 @@ export default async function Page({ searchParams }: { searchParams: { session_i
     <div>
       <DetallePedido 
         id={sessionStripe.id}
-        estado={sessionStripe.estado}
+        estadoCompra={sessionStripe.estadoCompra}
         totalSession={sessionStripe.totalSession}
         moneda={sessionStripe.moneda}
-        estadoPago={sessionStripe.estado}
+        estadoPago={sessionStripe.estadoPago}
         metodoPago={sessionStripe.metodoPago}
         productos={sessionStripe.productos}
       />

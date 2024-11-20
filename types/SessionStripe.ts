@@ -1,6 +1,6 @@
 export type SessionStripe = {
     id: string | null;
-    estado: string | null;
+    estadoCompra: string | null;
     totalSession: number | null;
     moneda: string | null;
     estadoPago: string | null;

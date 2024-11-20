@@ -2,12 +2,27 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
 export async function GET() {
-
-    const pedidos = await prisma.pedido.findMany()
-    // console.log("que hay aca", pedidos);
-    
-    return NextResponse.json(pedidos);
+    try {
+        const pedidos = await prisma.pedido.findMany({
+            include: {
+                productos: {
+                    include: {
+                        producto: true,
+                    },
+                },
+                
+                usuario: true, // Incluir los datos del usuario asociado
+                  
+            },
+        });
+        return NextResponse.json(pedidos);
+    } catch (error) {
+        console.error("Error al obtener pedidos:", error);
+        return NextResponse.json({ error: "Error al obtener pedidos" }, { status: 500 });
+    }
 }
+
+
     
 export async function POST(request: Request) {
     const {
@@ -16,7 +31,8 @@ export async function POST(request: Request) {
         id_usuario,
         fecha,
         metodo_pago,
-        estado,
+        estadoCompra,
+        estadoPedido,
         precio_final,
         recargos,
         descuentos,
@@ -32,11 +48,11 @@ export async function POST(request: Request) {
                 id_usuario,
                 fecha,
                 metodo_pago,
-                estado,
+                estadoCompra,
+                estadoPedido,
                 precio_final,
                 recargos,
                 descuentos,
-                // Aquí debes asegurarte de que productos esté en el formato correcto
                 productos: {
                     create: productos.map((producto: { id_producto: number; cantidad: number; }) => ({
                         id_producto: producto.id_producto,
@@ -52,5 +68,22 @@ export async function POST(request: Request) {
         console.error("Error al crear el pedido:", error);
         console.log(error)
         return NextResponse.json({ error: "Error al crear el pedido", details: error }, { status: 500 });
+    }
+    
+}
+
+export async function PATCH(request: Request) {
+    const { id_pedido, estadoPedido } = await request.json();
+
+    try {
+        const pedidoActualizado = await prisma.pedido.update({
+            where: { id_pedido },
+            data: { estadoPedido },
+        });
+
+        return NextResponse.json(pedidoActualizado);
+    } catch (error) {
+        console.error("Error al actualizar el estado del pedido:", error);
+        return NextResponse.json({ error: "Error al actualizar el estado del pedido" }, { status: 500 });
     }
 }

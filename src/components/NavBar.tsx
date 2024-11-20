@@ -23,28 +23,34 @@ const NavBar = async () => {
         <li>
           <Link href="/compras">Mis Compras</Link>
         </li>
+
         {!session?.user ? (
-            <>
-                <li>
-                    <Link href="/auth/login">Login</Link>
-                </li>
-                <li>
-                    <Link href="/registro">Register</Link>
-                </li>
-            </>
+          <>
+            <li>
+              <Link href="/auth/login">Login</Link>
+            </li>
+            <li>
+              <Link href="/registro">Register</Link>
+            </li>
+          </>
         ) : (
-            <>
-                {
-                  session?.user?.role === "admin" && (
-                    <li>
-                      <Link href="/dashboard">Dashboard</Link>
-                    </li>
-                  )
-                }
-                <li>
-                  <LogoutButton />
-                </li>
-            </>
+          <>
+            {
+              session?.user?.role === "admin" && (
+                <>
+                  <li>
+                    <Link href="/dashboard">Dashboard</Link>
+                  </li>
+                  <li>
+                    <Link href="/pedidosAdmin">Pedidos</Link>
+                  </li>
+                </>
+              )
+            }
+            <li>
+              <LogoutButton />
+            </li>
+          </>
         )}
       </ul>
     </nav>

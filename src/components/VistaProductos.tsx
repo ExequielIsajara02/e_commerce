@@ -46,7 +46,7 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
 
   const traerCombos = async () => {
     try {
-      const respuesta = await fetch("/combos");
+      const respuesta = await fetch("http://localhost:3000/api/combos");
       const datos = await respuesta.json();
       setCombos(datos);
     } catch (error) {
@@ -175,6 +175,8 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
               <p className="mb-1 text-gray-600">{producto.descripcion}</p>
               <p className="mb-2 text-lg font-bold">${producto.precio}</p>
 
+              {producto.cantidad > 0 ? (
+                <>
               <input
                 type="number"
                 value={cantidades[producto.id_producto.toString()] || 1}
@@ -184,6 +186,10 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
               />
               
               <ButtonAddToCarrito producto={producto} cantidad={cantidades[producto.id_producto.toString()] || 1} />
+              </>
+            ) : (
+              <p className="text-red-500 font-semibold">SIN STOCK</p>
+            )}
             </div>
           ))}
         </div>

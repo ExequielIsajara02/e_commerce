@@ -7,6 +7,12 @@ enum Role {
   user
   admin
 }
+enum EstadoPedido {
+  RECIBIDO
+  PREPARADO
+  DESPACHADO
+  ENTREGADO
+}
 
 // Fuente de datos
 datasource db {
@@ -36,7 +42,8 @@ model Pedido {
   id_usuario    Int
   fecha         DateTime
   metodo_pago   String
-  estado        String
+  estadoCompra  String
+  estadoPedido  EstadoPedido @default(RECIBIDO)
   precio_final  Float 
   recargos      Float
   descuentos    Float

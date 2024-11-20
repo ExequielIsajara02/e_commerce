@@ -5,7 +5,7 @@ import { SessionStripe } from "../../../types/SessionStripe";
 
 export default function DetallePedido({
   id,
-  estado,
+  estadoCompra,
   totalSession,
   moneda,
   estadoPago,
@@ -23,7 +23,7 @@ export default function DetallePedido({
             <h2 className="text-lg font-bold">Código de pedido: {id}</h2>
             <p>Fecha: {new Date().toLocaleDateString()}</p>
             <p>Método de Pago: {metodoPago[0]}</p>
-            <p>Estado: {estado}</p>
+            <p>Estado: {estadoCompra}</p>
             <p>Total: ${total.toFixed(2)}</p>
             <h3 className="text-lg font-semibold">Productos:</h3>
             {productos.map((producto, index) => (
