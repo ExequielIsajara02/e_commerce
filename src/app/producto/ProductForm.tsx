@@ -266,103 +266,107 @@ const ProductForm: React.FC<Props> = ({ productos }) => {
                         </div>
                     )}
 
-                <div className="w-1/4">
-                    <div className="bg-white shadow rounded p-4">
-                    <h2 className="font-semibold mb-2">Filtros</h2>
-                    <div className="mb-4">
-                        <label className="block">Marca:</label>
-                        <select
-                        value={selectedBrand}
-                        onChange={(e) => setSelectedBrand(e.target.value)}
-                        className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        >
-                        <option value="">Todas las marcas</option>
-                        {uniqueBrands.map((brand) => (
-                            <option key={brand} value={brand}>{brand}</option>
-                        ))}
-                        </select>
-                    </div>
-
-                    <div className="mb-4">
-                        <label className="block">Tipo:</label>
-                        <select
-                        value={selectedType}
-                        onChange={(e) => setSelectedType(e.target.value)}
-                        className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        >
-                        <option value="">Todos los tipos</option>
-                        {uniqueTypes.map((type) => (
-                            <option key={type} value={type}>{type}</option>
-                        ))}
-                        </select>
-                    </div>
-                    
-                    <div className="flex justify-between">
-                        <div className="flex items-center">
-                        <label className="mr-2">Precio: </label>
-                        <input
-                            type="number"
-                            value={priceRange[0]}
-                            onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
-                            className="border rounded px-2 py-1 w-24"
-                            min={0}
-                            max={priceRange[1]}
-                        />
-                        <span className="mx-2">-</span>
-                        <input
-                            type="number"
-                            value={priceRange[1]}
-                            onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
-                            className="border rounded px-2 py-1 w-24"
-                            min={priceRange[0]}
-                            max={100000}
-                        />
+                <div className="w-full flex flex-wrap">
+                    <div className="w-1/4">
+                        <div className="bg-white shadow rounded p-4">
+                        <h2 className="font-semibold mb-2">Filtros</h2>
+                        <div className="mb-4">
+                            <label className="block">Marca:</label>
+                            <select
+                            value={selectedBrand}
+                            onChange={(e) => setSelectedBrand(e.target.value)}
+                            className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            >
+                            <option value="">Todas las marcas</option>
+                            {uniqueBrands.map((brand) => (
+                                <option key={brand} value={brand}>{brand}</option>
+                            ))}
+                            </select>
                         </div>
-                    </div>
-                    </div>
-                </div>
 
-
-                <div className="flex-1 ml-4">
-                    <div className="bg-white shadow rounded p-4 mb-4">
-                    <h2 className="font-semibold mb-2">Buscar Producto</h2>
-                    <div className="mb-4 flex">
-                        <input
-                        type="text"
-                        placeholder="Buscar producto..."
-                        value={filterText}
-                        onChange={(e) => setFilterText(e.target.value)}
-                        className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
-                    </div>  
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {sortedProducts.map((producto) => (
-                        <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={producto.id_producto}>
-                            <p>ID: {producto.id_producto}</p>
-                            <p className="mb-1 font-semibold">{producto.nombre}</p>
-                            <p className="mb-1 text-gray-600">{producto.descripcion}</p>
-                            <p className="mb-2 text-lg font-bold">${producto.precio}</p>
-
-                            <div>
-                                <button 
-                                    onClick={() => handleEditarClick(producto)} 
-                                    className="text-blue-500 hover:text-blue-700 mr-2"
-                                >
-                                    Editar
-                                </button>
-                                <button 
-                                    onClick={() => eliminarProductoLocal(producto.id_producto)} 
-                                    className="text-red-500 hover:text-red-700"
-                                >
-                                    Eliminar
-                                </button>
+                        <div className="mb-4">
+                            <label className="block">Tipo:</label>
+                            <select
+                            value={selectedType}
+                            onChange={(e) => setSelectedType(e.target.value)}
+                            className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            >
+                            <option value="">Todos los tipos</option>
+                            {uniqueTypes.map((type) => (
+                                <option key={type} value={type}>{type}</option>
+                            ))}
+                            </select>
+                        </div>
+                        
+                        <div className="flex justify-between">
+                            <div className="flex items-center">
+                            <label className="mr-2">Precio: </label>
+                            <input
+                                type="number"
+                                value={priceRange[0]}
+                                onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
+                                className="border rounded px-2 py-1 w-24"
+                                min={0}
+                                max={priceRange[1]}
+                            />
+                            <span className="mx-2">-</span>
+                            <input
+                                type="number"
+                                value={priceRange[1]}
+                                onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+                                className="border rounded px-2 py-1 w-24"
+                                min={priceRange[0]}
+                                max={100000}
+                            />
                             </div>
                         </div>
-                    ))}
+                        </div>
+                    </div>
+
+                    <div className="flex-1 ml-4">
+                        <div className="bg-white shadow rounded p-4 mb-4">
+                        <h2 className="font-semibold mb-2">Buscar Producto</h2>
+                        <div className="mb-4 flex">
+                            <input
+                            type="text"
+                            placeholder="Buscar producto..."
+                            value={filterText}
+                            onChange={(e) => setFilterText(e.target.value)}
+                            className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            />
+                        </div>  
+                        </div>
+                        
                     </div>
                 </div>
+
+                <div className="left-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {sortedProducts.map((producto) => (
+                    <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={producto.id_producto}>
+                        <p>ID: {producto.id_producto}</p>
+                        <p className="mb-1 font-semibold">{producto.nombre}</p>
+                        <p className="mb-1 text-gray-600">{producto.descripcion}</p>
+                        <p className="mb-2 text-lg font-bold">${producto.precio}</p>
+
+                        <div>
+                            <button 
+                                onClick={() => handleEditarClick(producto)} 
+                                className="text-blue-500 hover:text-blue-700 mr-2"
+                            >
+                                Editar
+                            </button>
+                            <button 
+                                onClick={() => eliminarProductoLocal(producto.id_producto)} 
+                                className="text-red-500 hover:text-red-700"
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                ))}
+                </div>
+
+
             </div>
             )}
         </div>
