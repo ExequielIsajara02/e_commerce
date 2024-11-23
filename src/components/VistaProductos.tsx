@@ -5,6 +5,7 @@ import { ComboData } from '../../types/ComboData';
 import { ProductoData } from '../../types/ProductData';
 import { ComboCantidadData } from '../../types/ComboCantidadData';
 
+
 interface Props {
   productos: ProductoData[];
 }
@@ -94,6 +95,19 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
       [id]: Math.max(1, value),
     }));
   };
+
+  const handleClick = async () => {
+    try {
+      const response = await fetch("/api/mailStockBajo", { method: "GET" });
+      if (!response.ok) throw new Error("Error al obtener los administradores");
+  
+      const data = await response.json();
+      console.log("Correos de administradores:", data);
+    } catch (error) {
+      console.error("Error en handleClick:", error);
+    }
+  };
+  
 
 
   return (
@@ -219,6 +233,7 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
                 </div>
                 
                 <ButtonAddToCarrito combo={combo} cantidad={cantidades[combo.id_combo.toString()] || 1} />
+                <button onClick={handleClick}>Probar Consola</button>
               </div>
             </div>
           ))}
