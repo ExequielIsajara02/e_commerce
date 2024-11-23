@@ -30,7 +30,7 @@ export const Carrito: React.FC = () => {
   }
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-80 bg-white shadow-lg border-l border-gray-300 transform transition-transform duration-300 ease-in-out ${
+      className={`fixed z-10 top-0 right-0 h-full w-80 bg-white shadow-lg border-l border-gray-300 transform transition-transform duration-300 ease-in-out ${
         isCarritoVisible ? 'translate-x-0' : 'translate-x-full'
       }`}
     >

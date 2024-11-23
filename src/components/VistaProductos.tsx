@@ -1,14 +1,14 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito";
-// import { ProductoData } from '@/types/types';
 import { ComboData } from '../../types/ComboData';
 import { ProductoData } from '../../types/ProductData';
+import { ComboCantidadData } from '../../types/ComboCantidadData';
+
 
 interface Props {
   productos: ProductoData[];
 }
-
 
 const VistaProductos: React.FC<Props> = ({ productos }) => {
   const [filterText, setFilterText] = useState("");
@@ -16,13 +16,10 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
   const [selectedBrand, setSelectedBrand] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string>("");
   const [priceRange, setPriceRange] = useState<number[]>([0, 100000]);
-  // const [productos, setProductos] = useState<ProductoData[]>([]);
   const [combos, setCombos] = useState<ComboData[]>([]); 
+  const [comboCantidad, setComboCantidad] = useState<ComboCantidadData[]>([]);
   const [loading, setLoading] = useState(true);
 
-
-
-  // Estado para manejar las cantidades de productos
   const [cantidades, setCantidades] = useState<{ [key: string]: number }>({});
 
   // Filtrar productos
@@ -40,20 +37,42 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
     sortOption === "asc" ? a.precio - b.precio : b.precio - a.precio
   );
 
+  // Filtrar combos
+  const filteredCombos = combos.filter(combo => {
+    const matchesText = combo.nombre.toLowerCase().includes(filterText.toLowerCase());
+    const matchesPrice = combo.productos.reduce((total, producto) => total + (producto.precioDescuento || 0), 0) >= priceRange[0] &&
+                         combo.productos.reduce((total, producto) => total + (producto.precioDescuento || 0), 0) <= priceRange[1];
+    return matchesText && matchesPrice;
+  });
+
+  // Ordenar combos
+  const sortedCombos = [...filteredCombos].sort((a, b) => 
+    sortOption === "asc" ? 
+    a.productos.reduce((total, producto) => total + (producto.precioDescuento || 0), 0) - b.productos.reduce((total, producto) => total + (producto.precioDescuento || 0), 0) :
+    b.productos.reduce((total, producto) => total + (producto.precioDescuento || 0), 0) - a.productos.reduce((total, producto) => total + (producto.precioDescuento || 0), 0)
+  );
+
   // Generar opciones de marca y tipo dinámicamente
   const uniqueBrands = Array.from(new Set(productos.map(p => p.marca)));
   const uniqueTypes = Array.from(new Set(productos.map(p => p.tipo)));
 
+
   const traerCombos = async () => {
     try {
-      const respuesta = await fetch("http://localhost:3000/api/combos");
+      const [comboCantidadRes, respuesta] = await Promise.all([
+        fetch("http://localhost:3000/api/combosCantidad"), // Endpoint para ComboCantidad
+        fetch("http://localhost:3000/api/combos")
+      ]);
+      const comboCantidadData = await comboCantidadRes.json();
       const datos = await respuesta.json();
+      
+      setComboCantidad(comboCantidadData);
       setCombos(datos);
+
     } catch (error) {
       console.error("Error al traer combos:", error);
     }
   };
-
 
   useEffect(() => {
     setLoading(true);
@@ -62,6 +81,13 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
     });
   }, []);
 
+  // Verificar si un producto tiene descuento por cantidad
+  const tieneDescuentoCantidad = (id_producto: number) => {
+    return comboCantidad.some(
+      (combo) => combo.id_producto === id_producto
+    );
+  };
+
   // Manejar el cambio de cantidad
   const handleCantidadChange = (id: string, value: number) => {
     setCantidades((prevCantidades) => ({
@@ -69,6 +95,8 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
       [id]: Math.max(1, value),
     }));
   };
+  
+
 
   return (
     <div className="flex p-4">
@@ -103,46 +131,7 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
               ))}
             </select>
           </div>
-
-          <div className="mb-4">
-            <label className="block">Rango de Precio:</label>
-            <div className="flex justify-between mb-2">
-              <span>${priceRange[0]}</span>
-              <span>${priceRange[1]}</span>
-            </div>
-            <input
-              type="range"
-              min={0}
-              max={100000}
-              value={priceRange[0]}
-              onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
-              className="w-full accent-blue-500"
-            />
-            <input
-              type="range"
-              min={0}
-              max={100000}
-              value={priceRange[1]}
-              onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
-              className="w-full accent-blue-500"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Tarjeta de búsqueda a la derecha */}
-      <div className="flex-1 ml-4">
-        <div className="bg-white shadow rounded p-4 mb-4">
-          <h2 className="font-semibold mb-2">Buscar Producto</h2>
-          <div className="mb-4 flex">
-            <input
-              type="text"
-              placeholder="Buscar producto..."
-              value={filterText}
-              onChange={(e) => setFilterText(e.target.value)}
-              className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
+          
           <div className="flex justify-between">
             <div className="flex items-center">
               <label className="mr-2">Precio: </label>
@@ -166,6 +155,22 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Tarjeta de búsqueda a la derecha */}
+      <div className="flex-1 ml-4">
+        <div className="bg-white shadow rounded p-4 mb-4">
+          <h2 className="font-semibold mb-2">Buscar Producto</h2>
+          <div className="mb-4 flex">
+            <input
+              type="text"
+              placeholder="Buscar producto..."
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>  
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {sortedProducts.map((producto) => (
@@ -173,6 +178,12 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
               <p>ID: {producto.id_producto}</p>
               <p className="mb-1 font-semibold">{producto.nombre}</p>
               <p className="mb-1 text-gray-600">{producto.descripcion}</p>
+              {/* Mostrar mensaje si tiene descuento por cantidad */}
+              {tieneDescuentoCantidad(producto.id_producto) && (
+                <div className="mb-2 text-sm text-green-600">
+                  ¡Descuento disponible al comprar en cantidad!
+                </div>
+              )}
               <p className="mb-2 text-lg font-bold">${producto.precio}</p>
 
               {producto.cantidad > 0 ? (
@@ -195,9 +206,9 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
         </div>
 
         <h2>Combos</h2>
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-             {combos.map((combo) => (
-              <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={combo.id_combo}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {sortedCombos.map((combo) => (
+            <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={combo.id_combo}>
               <h3 className="text-lg font-bold mb-2">{combo.nombre}</h3>
               <h4 className="text-md mb-2">ID Combo: {combo.id_combo}</h4>
               <p className="mb-4">Descuento: <span className="text-green-600 font-semibold">{combo.descuento * 100}%</span></p>
@@ -207,20 +218,19 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
                 {combo.productos.map((comboProducto) => (
                   <div key={comboProducto.id_producto} className="border rounded-lg p-2 shadow-md w-50">
                     <h5 className="text-md font-bold mb-2">{comboProducto.producto?.nombre}</h5>
-                    <p className="mb-1">
-                      Antes: <span className="text-gray-400 line-through mr-2">${comboProducto.producto?.precio}</span>
-                      Ahora: <span className="text-green-500 font-bold">${comboProducto.precioDescuento}</span>
-                    </p>
+                    <p>Precio: ${comboProducto.precioDescuento || comboProducto.producto?.precio}</p>
                   </div>
                 ))}
+                <div className="font-bold text-lg mt-2">
+                  Total : $
+                  {combo.productos.reduce((total, comboProducto) => total + (comboProducto.precioDescuento || 0), 0)}
+                </div>
+                
+                <ButtonAddToCarrito combo={combo} cantidad={cantidades[combo.id_combo.toString()] || 1} />
               </div>
-              <div className="mt-4 p-4 border-t font-bold">
-                <p>Total: ${combo.productos.reduce((total, comboProducto) => total + (comboProducto.precioDescuento || 0), 0)}</p>
-              </div>
-              <ButtonAddToCarrito combo={combo} cantidad={cantidades[combo.id_combo.toString()] || 1} />
             </div>
-            ))}
-          </div>
+          ))}
+        </div>
       </div>
     </div>
   );
