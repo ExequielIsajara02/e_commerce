@@ -1,8 +1,6 @@
-// import { NextResponse } from "next/server";
 import { ProductoData } from "../types/ProductData";
 import Stripe from 'stripe'
 import axios from 'axios';
-import { enviarComprobante } from "./enviarComprobante";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 

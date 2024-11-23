@@ -10,7 +10,6 @@ const ProductList: React.FC = () => {
   const context = useContext(CartContext);
 
   const addToCart = (product: ProductoData) => {
-    // Añadir el producto al carrito
     context.setCartItems((prevItems) => [...prevItems, product]);
   };
 

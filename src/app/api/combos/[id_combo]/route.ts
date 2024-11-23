@@ -4,8 +4,6 @@ import { editarCombo, eliminarCombo } from '../../../../../utils/combos';
 export async function DELETE(request: Request) {
     const url = new URL(request.url);
     const id = url.pathname.split('/').pop();
-    console.log("ID recibido en DELETE:", id);
-
     if (!id) {
         return NextResponse.json({ message: 'ID no proporcionado' }, { status: 400 });
     }
@@ -22,10 +20,8 @@ export async function DELETE(request: Request) {
 export async function PUT(request:Request) {
     const url = new URL(request.url);
     const id = url.pathname.split('/').pop();
-    console.log("ID recibido en UPDATE:", id);
     try {
         const data = await request.json();
-        console.log("Datos EDICION PUT",data)
         await editarCombo(Number(id), data);
         return NextResponse.json({ message: 'Combo listo para editar exitosamente' }, { status: 200 });
     } catch (error) {

@@ -19,7 +19,7 @@ async function obtenerDatos() {
 
   const comprasFinalizadas = await prisma.pedido.findMany({
     where: {
-      estado: 'finalizado',
+      estadoCompra: 'finalizado',
     },
     orderBy: {
       fecha: 'desc',
@@ -28,7 +28,7 @@ async function obtenerDatos() {
   }).then(compras =>
     compras.map(compra => ({
       fecha: compra.fecha.toISOString(), // Convertir Date a string
-      estado: compra.estado,
+      estado: compra.estadoCompra,
     }))
   );
 

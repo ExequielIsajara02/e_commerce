@@ -1,6 +1,6 @@
 import React from 'react';
 import { PrismaClient } from '@prisma/client';
-import { Line } from 'react-chartjs-2';
+// import { Line } from 'react-chartjs-2';
 
 interface PropsMetricasVentas {
   data: {
