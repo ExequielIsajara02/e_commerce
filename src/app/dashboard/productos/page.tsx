@@ -1,6 +1,6 @@
 import React from 'react';
 import MetricasProductos from './MetricasProductos';
-import { getAllProductos } from '../../../../utils/producto';
+import { obtenerProductos } from '../../../../utils/producto';
 import { ProductoData } from '../../../../types/ProductData';
 
 const Page = async () => {
@@ -9,7 +9,7 @@ const Page = async () => {
         return cantidadProducto > 0 ? totalPrecio / cantidadProducto : 0; // Previene la división por cero
     };
 
-    const response = await getAllProductos();
+    const response = await obtenerProductos();
 
     // Verifica si la respuesta es un array antes de procesarla
     const arrayProductos: ProductoData[] = Array.isArray(response)

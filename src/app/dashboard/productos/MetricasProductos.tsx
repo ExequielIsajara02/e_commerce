@@ -1,4 +1,4 @@
-// MetricsProductos.tsx
+// MetricasProductos.tsx
 
 import React from 'react';
 
