@@ -49,6 +49,7 @@ model Pedido {
   precio_final  Float 
   recargos      Float
   descuentos    Float
+  detalles      String?           // Campo opcional para almacenar detalles de la compra
   productos     PedidoProducto[]  // Relación con la tabla intermedia
   usuario       Usuario   @relation(fields: [id_usuario], references: [id_usuario])
 }
@@ -65,18 +66,20 @@ model PedidoProducto {
 
 // Modelo de Usuario
 model Usuario {
-  id_usuario       Int @id @default(autoincrement())
-  nombre           String?
-  apellido         String?
-  correo           String? @unique
-  clave            String?
-  telefono         String?
-  direccion        String?
-  localidad        String?
-  role             Role    @default(user)
-  cuentaVerificada Boolean @default(false)
-  // role          String?
-  pedidos          Pedido[]
+  id_usuario          Int @id @default(autoincrement())
+  nombre              String?
+  apellido            String?
+  correo              String? @unique
+  clave               String?
+  telefono            String?
+  direccion           String?
+  localidad           String?
+  role                Role    @default(user)
+  cuentaVerificada    Boolean @default(false)
+  // role             String?
+  pedidos             Pedido[]
+  puntos              Int      @default(0)  // Campo para almacenar los puntos del usuario
+  fecha_ultima_compra DateTime?             // Fecha de la última compra
 }
 
 model Combo {

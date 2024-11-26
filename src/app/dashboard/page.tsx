@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { ProductoData } from "../../../types/ProductData";
-import { obtenerProductos } from "../../../utils/producto";
+import { obtenerProductos} from "../../../utils/producto";
 import { authorizationPage } from "../../../utils/authorization";
 
 const Page = async () => {

@@ -39,3 +39,32 @@ export async function DELETE(request : Request, {params} : {params : Params}) {
         return NextResponse.json({error}, {status: 404});
     }
 }
+
+// const pedidoCreado = await prisma.pedido.findUnique({
+//   where: {
+//     id_pedido: params.pedidoId,
+//   },
+//   include: {
+//     usuario: {
+//       select: {
+//         puntos: true, // Puntos totales acumulados del usuario
+//       },
+//     },
+//   },
+// });
+
+// // Verificar si el pedido existe
+// if (!pedidoCreado) {
+//   return NextResponse.json({ error: "Pedido no encontrado" }, { status: 404 });
+// }
+
+// // Calcular los puntos ganados en esta compra
+// const puntosGanados = Math.floor(pedidoCreado.precio_final / 100); // Ajusta el cálculo según sea necesario
+// const puntosTotales = pedidoCreado.usuario.puntos;
+
+// // Responder con el pedido, los puntos ganados y los puntos totales
+// return NextResponse.json({
+//   pedido: pedidoCreado,
+//   puntosGanados,
+//   puntosTotales,
+// });
