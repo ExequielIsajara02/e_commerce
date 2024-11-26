@@ -2,12 +2,16 @@
 
 import React, { ReactNode } from 'react';
 import { CartProvider } from '../context/CartContext';
+import {NextUIProvider} from "@nextui-org/system";
 
 const Providers: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <CartProvider>
+    <NextUIProvider>
+      <CartProvider>
       {children}
     </CartProvider>
+    </NextUIProvider>
+    
   );
 }
 

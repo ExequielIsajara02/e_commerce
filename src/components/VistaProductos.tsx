@@ -103,7 +103,7 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
       {/* Tarjeta de filtros a la izquierda */}
       <div className="w-1/4">
         <div className="bg-white shadow rounded p-4">
-          <h2 className="font-semibold mb-2">Filtros</h2>
+          <h2 className="font-semibold mb-2">Filtrá tu búsqueda por:</h2>
           <div className="mb-4">
             <label className="block">Marca:</label>
             <select
