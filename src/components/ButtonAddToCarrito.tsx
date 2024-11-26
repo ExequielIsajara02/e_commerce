@@ -63,7 +63,7 @@ export const ButtonAddToCarrito = ({ producto, combo, cantidad }: Props) => {
       className="bg-blue-500 p-1 rounded-lg text-white border border-black" 
       onClick={handleAddToCart}
     >
-      Agregar al carrito
+      Agregar
     </button>
   );
 };
