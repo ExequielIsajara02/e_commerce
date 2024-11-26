@@ -4,8 +4,10 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-}
-
+  background-color: #dddd;
+  }
+  
+/* 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -75,4 +77,4 @@ body {
   body {
     @apply bg-background text-foreground;
   }
-}
+} */

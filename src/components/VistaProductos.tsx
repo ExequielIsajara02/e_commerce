@@ -4,6 +4,8 @@ import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito";
 import { ComboData } from '../../types/ComboData';
 import { ProductoData } from '../../types/ProductData';
 import { ComboCantidadData } from '../../types/ComboCantidadData';
+import {Card, CardBody, CardFooter, Image} from "@nextui-org/react";
+
 
 
 interface Props {
@@ -172,13 +174,14 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
           </div>  
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {sortedProducts.map((producto) => (
+        <div className="gap-2 grid grid-cols-2 sm:grid-cols-4">
+          {/* {sortedProducts.map((producto) => (
             <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={producto.id_producto}>
               <p>ID: {producto.id_producto}</p>
               <p className="mb-1 font-semibold">{producto.nombre}</p>
               <p className="mb-1 text-gray-600">{producto.descripcion}</p>
-              {/* Mostrar mensaje si tiene descuento por cantidad */}
+              
+              
               {tieneDescuentoCantidad(producto.id_producto) && (
                 <div className="mb-2 text-sm text-green-600">
                   ¡Descuento disponible al comprar en cantidad!
@@ -188,20 +191,60 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
 
               {producto.cantidad > 0 ? (
                 <>
-              <input
-                type="number"
-                value={cantidades[producto.id_producto.toString()] || 1}
-                onChange={(e) => handleCantidadChange(producto.id_producto.toString(), Number(e.target.value))}
-                className="border rounded px-2 py-1 w-24 mb-2"
-                min={1}
-              />
-              
-              <ButtonAddToCarrito producto={producto} cantidad={cantidades[producto.id_producto.toString()] || 1} />
-              </>
-            ) : (
-              <p className="text-red-500 font-semibold">SIN STOCK</p>
-            )}
+                  <input
+                    type="number"
+                    value={cantidades[producto.id_producto.toString()] || 1}
+                    onChange={(e) => handleCantidadChange(producto.id_producto.toString(), Number(e.target.value))}
+                    className="border rounded px-2 py-1 w-24 mb-2"
+                    min={1}
+                  />
+                
+                  <ButtonAddToCarrito producto={producto} cantidad={cantidades[producto.id_producto.toString()] || 1} />
+                </>
+              ) : (
+                <p className="text-red-500 font-semibold">SIN STOCK</p>
+              )}
             </div>
+          ))} */}
+
+          {sortedProducts.map((producto) => (
+            <Card className='bg-white p-2 rounded-xl shadow-gray-700 shadow-lg' shadow="lg" key={producto.id_producto}
+            //  isPressable onPress={() => console.log("item pressed")}
+             >
+            <CardBody className="overflow-visible p-0 text-center">
+              <b>{producto.nombre}</b>
+              <Image
+                shadow="lg"
+                radius="lg"
+                width="100%"
+                alt={producto.nombre}
+                className="w-full shadow-gray-700  shadow-lg rounded-md object-cover h-[140px]"
+                src={producto.imagen}
+              />
+            </CardBody>
+            <CardFooter className="flex flex-col text-small justify-between">
+              {producto.cantidad > 0 ? (
+                <>
+                  <div className='flex w-full justify-between'>
+                    <p className="text-default-500">Precio: {producto.precio}</p>
+                    <input
+                      type="number"
+                      value={cantidades[producto.id_producto.toString()] || 1}
+                      onChange={(e) => handleCantidadChange(producto.id_producto.toString(), Number(e.target.value))}
+                      className="border rounded px-2 py-1 w-24 mb-2"
+                      min={1}
+                    />
+                  
+                  </div>
+                </>
+              ) : (
+                <p className="text-red-500 font-semibold">SIN STOCK</p>
+              )}
+              <div className='absolute top-15'>
+                <ButtonAddToCarrito producto={producto} cantidad={cantidades[producto.id_producto.toString()] || 1} />
+              </div>
+            </CardFooter>
+          </Card>
           ))}
         </div>
 

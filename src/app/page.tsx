@@ -2,6 +2,8 @@ import { auth } from "@/auth";
 import {obtenerProductos } from "../../utils/producto";
 import VistaProductos from "@/components/VistaProductos";
 import { Slider } from "@/components/Slider";
+import {Button, ButtonGroup} from "@nextui-org/button";
+
 
 const Home = async () => {
   const session = await auth();
@@ -24,6 +26,9 @@ const Home = async () => {
       <div>
         <Slider/>
         <h2>Mostrar Productos</h2>
+        <Button radius="full" className="border-none bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg">
+          Button
+        </Button>
         <VistaProductos 
             productos={productos}
           />

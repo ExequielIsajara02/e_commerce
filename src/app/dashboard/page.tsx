@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { ProductoData } from "../../../types/ProductData";
-import { getAllProductos } from "../../../utils/producto";
+import { obtenerProductos } from "../../../utils/producto";
 import { authorizationPage } from "../../../utils/authorization";
 
 const Page = async () => {
@@ -12,7 +12,7 @@ const Page = async () => {
 
   /** -------------------------Data Productos------------------------------------------------------------------ */
   
-  const response = await getAllProductos();
+  const response = await obtenerProductos();
 
   // Verifica si la respuesta es un array antes de procesarla
   const arrayProductos: ProductoData[] = Array.isArray(response)
