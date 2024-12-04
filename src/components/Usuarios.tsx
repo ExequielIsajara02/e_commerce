@@ -5,7 +5,7 @@ import { $Enums } from '@prisma/client';
 
 
 const Usuarios = ({ data }:any) => {
-    console.log(data)
+  console.log("Data en usuarios.tsx: ", data);
     return (
       <div>
         {/* Iteramos sobre 'data' con map */}
