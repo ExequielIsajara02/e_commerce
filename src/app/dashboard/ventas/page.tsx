@@ -45,7 +45,7 @@ export default async function MetricasPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-center">Dashboard de Ventas</h1>
+      
       <MetricasVentas  data={data}/>
     </div>
   );

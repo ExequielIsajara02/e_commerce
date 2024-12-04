@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input"
 import { loginAction } from "../../actions/auth-actions";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 
  
@@ -49,15 +50,16 @@ function FormLogin() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-1/2 mx-auto mt-4">
+      <h1 className="mx-auto w-44 text-lg">INICIAR SESIÓN</h1>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-1/2 mx-auto mt-4 bg-white shadow-md shadow-black p-4 rounded-md">
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel className="text-gray-500 font-bold text-[16px]">Email</FormLabel>
               <FormControl>
-                <Input placeholder="Email" {...field} type="email"/>
+                <Input placeholder="Email" {...field} type="email" className="rounded-md focus:border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -68,16 +70,18 @@ function FormLogin() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel className="text-gray-500 font-bold text-[16px]">Password</FormLabel>
               <FormControl>
-                <Input placeholder="password" {...field} type="password"/>
+                <Input placeholder="password" {...field} type="password" className="rounded-md focus:border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"/>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         {error && <FormMessage>{error}</FormMessage>}
-        <Button type="submit" disabled={isPending}>Submit</Button>
+        <Button type="submit" disabled={isPending} className="bg-purple-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-sm shadow-black">Ingresar</Button>
+        <span className="mx-1">- o -</span>
+        <Button type="submit" disabled={isPending} className="bg-purple-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-sm shadow-black"><Link href="/registro">Crear una cuenta</Link></Button>
       </form>
     </Form>
   )
