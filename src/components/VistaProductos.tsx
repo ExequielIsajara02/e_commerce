@@ -240,7 +240,7 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
               ) : (
                 <p className="text-red-500 font-semibold">SIN STOCK</p>
               )}
-              <div className='absolute top-15'>
+              <div className='relat ive top-15'>
                 <ButtonAddToCarrito producto={producto} cantidad={cantidades[producto.id_producto.toString()] || 1} />
               </div>
             </CardFooter>

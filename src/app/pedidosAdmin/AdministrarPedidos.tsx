@@ -1,10 +1,10 @@
 "use client";
 
-import { EstadoPedido } from "@prisma/client"; // Importa el enum EstadoPedido
-import { useEffect, useState } from "react"; // Necesitarás hooks del cliente
+import { EstadoPedido } from "@prisma/client";
+import { useEffect, useState } from "react";
 import { UsuarioData } from "../../../types/UsuarioData";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Select, SelectItem } from "@nextui-org/react";
 
-// Define la interfaz para el tipo de pedido
 interface Pedido {
   id_pedido: number;
   id_stripe: string;
@@ -16,12 +16,12 @@ interface Pedido {
   precio_final: number;
   recargos: number;
   descuentos: number;
-  productos: { id_producto: number; cantidad: number }[]; // Ajusta según tu estructura de productos
-  usuario: UsuarioData | null; // Incluir los datos del usuario
+  productos: { id_producto: number; cantidad: number }[];
+  usuario: UsuarioData | null;
 }
 
 export default function AdminPedidos() {
-  const [pedidos, setPedidos] = useState<Pedido[]>([]); // Usa la interfaz como tipo
+  const [pedidos, setPedidos] = useState<Pedido[]>([]);
 
   async function cargarPedidos() {
     try {
@@ -33,7 +33,6 @@ export default function AdminPedidos() {
     }
   }
 
-  // Función para manejar el cambio de estado del pedido
   async function handleEstadoChange(id_pedido: number, nuevoEstado: EstadoPedido) {
     try {
       await fetch(`/api/pedido`, {
@@ -43,58 +42,99 @@ export default function AdminPedidos() {
         },
         body: JSON.stringify({ id_pedido, estadoPedido: nuevoEstado }),
       });
-      cargarPedidos(); // Recargar los pedidos después de actualizar
+      cargarPedidos();
     } catch (error) {
       console.error("Error al actualizar el estado del pedido:", error);
     }
   }
 
-  // Carga pedidos al cargar el componente
   useEffect(() => {
     cargarPedidos();
   }, []);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Administrar Pedidos</h1>
-      <table className="min-w-full bg-white border border-gray-300">
-        <thead>
-          <tr>
-            <th className="py-2 px-4 border-b">ID Pedido</th>
-            <th className="py-2 px-4 border-b">Nombre del Cliente</th>
-            <th className="py-2 px-4 border-b">Fecha</th>
-            <th className="py-2 px-4 border-b">Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          {pedidos.map((pedido) => (
-            <tr key={pedido.id_pedido} className="hover:bg-gray-100">
-              <td className="py-2 px-4 border-b text-center">{pedido.id_pedido}</td>
-              <td className="py-2 px-4 border-b text-center">
-                {pedido.usuario ? `${pedido.usuario.nombre} ${pedido.usuario.apellido}` : "Sin nombre"}
-              </td>
-              <td className="py-2 px-4 border-b text-center">
-                {new Date(pedido.fecha).toLocaleDateString()}
-              </td>
-              <td className="py-2 px-4 border-b text-center">
-                <select
-                  defaultValue={pedido.estadoPedido}
-                  onChange={(e) =>
-                    handleEstadoChange(pedido.id_pedido, e.target.value as EstadoPedido)
-                  }
-                  className="p-1 border border-gray-300 rounded"
-                >
-                  <option value="RECIBIDO">Recibido</option>
-                  <option value="PREPARADO">Preparado</option>
-                  <option value="DESPACHADO">Despachado</option>
-                  <option value="ENTREGADO">Entregado</option>
-                </select>
-              </td>
-            </tr>
-          ))}
-        </tbody>
+    <div className="p-4">
+      <h1 className="text-xl font-bold mb-4 text-center">ADMINISTRAR PEDIDOS</h1>
+      <div className="overflow-x-auto">
+        <Table
+          aria-label="Tabla de pedidos"
+          className="min-w-full border border-gray-300 bg-white rounded-xl text-sm cursor-default"
+        >
+          <TableHeader>
+            <TableColumn className="bg-gray-100 font-semibold text-gray-600 rounded-l-xl text-center py-2 px-2 text-xs sm:text-sm">
+              ID PEDIDO
+            </TableColumn>
+            <TableColumn className="bg-gray-100 font-semibold text-gray-600 text-center py-2 px-2 text-xs sm:text-sm">
+              CLIENTE
+            </TableColumn>
+            <TableColumn className="bg-gray-100 font-semibold text-gray-600 text-center py-2 px-2 text-xs sm:text-sm">
+              FECHA
+            </TableColumn>
+            <TableColumn className="bg-gray-100 font-semibold text-gray-600 rounded-r-xl text-center py-2 px-2 text-xs sm:text-sm">
+              ESTADO
+            </TableColumn>
+          </TableHeader>
 
-      </table>
+          <TableBody className="divide-y divide-gray-200">
+            {pedidos.map((pedido) => (
+              <TableRow key={pedido.id_pedido} className="hover:bg-gray-50 transition">
+                <TableCell className="text-center py-1 px-2 text-xs sm:text-sm">
+                  {pedido.id_pedido}
+                </TableCell>
+                <TableCell className="text-center py-1 px-2 text-xs sm:text-sm">
+                  {pedido.usuario
+                    ? `${pedido.usuario.nombre} ${pedido.usuario.apellido}`
+                    : "Sin nombre"}
+                </TableCell>
+                <TableCell className="text-center py-1 px-2 text-xs sm:text-sm">
+                  {new Date(pedido.fecha).toLocaleDateString()}
+                </TableCell>
+                <TableCell className="text-center py-1 px-2 text-xs sm:text-sm">
+                <Select
+                    className="max-w-xs border border-gray-300 bg-white rounded-md shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+                    selectedKeys={new Set([pedido.estadoPedido])}
+                    onSelectionChange={(keys) => {
+                      const nuevoEstado = Array.from(keys)[0] as EstadoPedido;
+                      handleEstadoChange(pedido.id_pedido, nuevoEstado);
+                    }}
+                  >
+                    <SelectItem
+                      key="RECIBIDO"
+                      className="py-2 pl-3 pr-10 text-gray-700 bg-white hover:bg-blue-50 hover:text-blue-700"
+                    >
+                      Recibido
+                    </SelectItem>
+                    <SelectItem
+                      key="PREPARADO"
+                      className="py-2 pl-3 pr-10 text-gray-700 bg-white hover:bg-blue-50 hover:text-blue-700"
+                    >
+                      Preparado
+                    </SelectItem>
+                    <SelectItem
+                      key="DESPACHADO"
+                      className="py-2 pl-3 pr-10 text-gray-700 bg-white hover:bg-blue-50 hover:text-blue-700"
+                    >
+                      Despachado
+                    </SelectItem>
+                    <SelectItem
+                      key="ENTREGADO"
+                      className="py-2 pl-3 pr-10 text-gray-700 bg-white hover:bg-blue-50 hover:text-blue-700"
+                    >
+                      Entregado
+                    </SelectItem>
+                  </Select>
+
+
+
+
+
+
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
