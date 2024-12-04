@@ -1,70 +1,64 @@
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
-import { NextResponse } from "next/server"
-import { prisma } from "@/lib/prisma"
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
+// Obtener el estado del pedido y puntos asociados
 export async function GET(request: Request, { params }: { params: Params }) {
-    const pedidoId = Number(params.pedidoId); // Convertir a número, asumiendo que id_pedido es un entero
-  
-    if (isNaN(pedidoId)) {
-      return NextResponse.json({ error: "ID de pedido inválido" }, { status: 400 });
-    }
-  
-    try {
-      const pedido = await prisma.pedido.findUnique({
-        where: { id_pedido: pedidoId },
-        select: { estadoPedido: true } // Solo obtener el estado
-      });
-  
-      if (!pedido) {
-        return NextResponse.json({ error: "Pedido no encontrado" }, { status: 404 });
-      }
-  
-      return NextResponse.json({ estado: pedido.estadoPedido });
-    } catch (error) {
-      console.error("Error al obtener el pedido:", error);
-      return NextResponse.json({ error: "Error al obtener el pedido" }, { status: 500 });
-    }
+  const pedidoId = Number(params.pedidoId); // Convertir a número, asumiendo que id_pedido es un entero
+
+  if (isNaN(pedidoId)) {
+    return NextResponse.json({ error: "ID de pedido inválido" }, { status: 400 });
   }
 
-export async function DELETE(request : Request, {params} : {params : Params}) {
-    try {
-        const pedidoBorrado = await prisma.pedido.delete({
-            where: {
-                id_pedido: params.pedidoId,
-            }
-        });
-        
-        return NextResponse.json(pedidoBorrado);
-    }catch(error) {
-        return NextResponse.json({error}, {status: 404});
+  try {
+    const pedidoCreado = await prisma.pedido.findUnique({
+      where: { id_pedido: pedidoId },
+      include: {
+        usuario: {
+          select: {
+            puntos: true, // Puntos totales acumulados del usuario
+          },
+        },
+      },
+    });
+
+    // Verificar si el pedido existe
+    if (!pedidoCreado) {
+      return NextResponse.json({ error: "Pedido no encontrado" }, { status: 404 });
     }
+
+    // Calcular los puntos ganados en esta compra
+    const puntosGanados = Math.floor(pedidoCreado.precio_final / 100); // Ajusta el cálculo según sea necesario
+    const puntosTotales = pedidoCreado.usuario.puntos;
+
+    // Responder con el estado del pedido, puntos ganados y puntos totales
+    return NextResponse.json({
+      estado: pedidoCreado.estadoPedido,
+      puntosGanados,
+      puntosTotales,
+    });
+  } catch (error) {
+    console.error("Error al obtener el pedido:", error);
+    return NextResponse.json({ error: "Error al obtener el pedido" }, { status: 500 });
+  }
 }
 
-// const pedidoCreado = await prisma.pedido.findUnique({
-//   where: {
-//     id_pedido: params.pedidoId,
-//   },
-//   include: {
-//     usuario: {
-//       select: {
-//         puntos: true, // Puntos totales acumulados del usuario
-//       },
-//     },
-//   },
-// });
+// Eliminar un pedido
+export async function DELETE(request: Request, { params }: { params: Params }) {
+  const pedidoId = Number(params.pedidoId);
 
-// // Verificar si el pedido existe
-// if (!pedidoCreado) {
-//   return NextResponse.json({ error: "Pedido no encontrado" }, { status: 404 });
-// }
+  if (isNaN(pedidoId)) {
+    return NextResponse.json({ error: "ID de pedido inválido" }, { status: 400 });
+  }
 
-// // Calcular los puntos ganados en esta compra
-// const puntosGanados = Math.floor(pedidoCreado.precio_final / 100); // Ajusta el cálculo según sea necesario
-// const puntosTotales = pedidoCreado.usuario.puntos;
+  try {
+    const pedidoBorrado = await prisma.pedido.delete({
+      where: { id_pedido: pedidoId },
+    });
 
-// // Responder con el pedido, los puntos ganados y los puntos totales
-// return NextResponse.json({
-//   pedido: pedidoCreado,
-//   puntosGanados,
-//   puntosTotales,
-// });
+    return NextResponse.json(pedidoBorrado);
+  } catch (error) {
+    console.error("Error al eliminar el pedido:", error);
+    return NextResponse.json({ error: "Error al eliminar el pedido" }, { status: 404 });
+  }
+}

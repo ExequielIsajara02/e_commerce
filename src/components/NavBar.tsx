@@ -4,7 +4,7 @@ import LogoutButton from "./logout-button";
 
 const NavBar = async () => {
   const session = await auth();
-  console.log(session);
+  console.log("Session en NavBar: ", session);
 
   return (
     <nav className="flex justify-between items-center bg-gray-950 text-white px-24">

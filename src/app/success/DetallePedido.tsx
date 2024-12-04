@@ -1,3 +1,4 @@
+
 "use client";
 import { useState, useEffect } from "react";
 import { SessionStripe } from "../../../types/SessionStripe"; 
@@ -19,17 +20,17 @@ export default function DetallePedido({
   const puntosGanados = total ? Math.floor(total / 100) : 0;
 
   useEffect(() => {
-      const obtenerPuntosTotales = async () => {
-          try {
-              console.log("ID de usuario:", usuarioId);
-              const response = await fetch(`/api/usuario/puntos?usuarioId=${usuarioId}`);
-              const data = await response.json();
-              setPuntosTotales(data.puntos);
-            } catch (error) {
-              console.error("Error al obtener puntos:", error);
-          }
-      };
-
+    const obtenerPuntosTotales = async () => {
+        try {
+          console.log("ID de usuario:", usuarioId);
+          const response = await fetch(`/api/usuario/${usuarioId}`); // Usa backticks aquí
+          const data = await response.json();
+          setPuntosTotales(data.puntos);
+        } catch (error) {
+          console.error("Error al obtener puntos:", error);
+        }
+    };
+      
       obtenerPuntosTotales();
   }, [usuarioId]);
 

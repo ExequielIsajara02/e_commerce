@@ -4,8 +4,7 @@ import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito";
 import { ComboData } from '../../types/ComboData';
 import { ProductoData } from '../../types/ProductData';
 import { ComboCantidadData } from '../../types/ComboCantidadData';
-import {Card, CardBody, CardFooter, Image} from "@nextui-org/react";
-
+import { Card, CardBody, CardFooter, Image } from '@nextui-org/react';
 
 
 interface Props {
@@ -240,7 +239,7 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
               ) : (
                 <p className="text-red-500 font-semibold">SIN STOCK</p>
               )}
-              <div className='absolute top-15'>
+              <div className='relative top-15'>
                 <ButtonAddToCarrito producto={producto} cantidad={cantidades[producto.id_producto.toString()] || 1} />
               </div>
             </CardFooter>

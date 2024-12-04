@@ -60,6 +60,7 @@ export default async function Page({ searchParams }: { searchParams: { session_i
     }),
   });
 
+
   if (!response.ok) {
     console.error("Error al crear el pedido:", response.statusText);
     return <div>Error al crear el pedido</div>;
@@ -83,7 +84,7 @@ export default async function Page({ searchParams }: { searchParams: { session_i
         moneda={sessionStripe.moneda}
         estadoPago={sessionStripe.estadoPago}
         metodoPago={sessionStripe.metodoPago}
-        productos={sessionStripe.productos} usuarioId={1} puntosGanados={0} puntosTotales={0} 
+        productos={sessionStripe.productos} usuarioId={Number(usuarioId) || 0} puntosGanados={0} puntosTotales={0} 
       />       
     </div>
   );
