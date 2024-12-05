@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation"
+import swal from 'sweetalert';
 
 const UsuarioForm = () => {
   const {
@@ -9,8 +9,6 @@ const UsuarioForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  const [ingreso, setIngreso] = useState(false);
 
   const router = useRouter();
 
@@ -36,9 +34,11 @@ const UsuarioForm = () => {
             'Content-Type': 'application/json',
         },
       });
-      alert("Registro exitoso")
-      setIngreso(true);
+      swal("Registro Existoso!", "Cuenta creada con exito!", "success");
       router.push("/auth/login")
+    }
+    else {
+      swal("Error en el registro!", "Error al intentar crear cuenta!", "error");
     }
 
     // const jsonRes = await res.json();
@@ -46,7 +46,7 @@ const UsuarioForm = () => {
 
   return (
     <div className="h-screen flex justify-center items-center">
-      <form className="bg-white rounded-md p-10 w-2/4 shadow-md shadow-black" onSubmit={onSubmit}>
+      <form className="bg-white rounded-md p-10 w-2/5 shadow-md shadow-black" onSubmit={onSubmit}>
         <label htmlFor="nombre" className="text-slate-500 font-bold">
           Nombre
         </label>
@@ -63,8 +63,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.nombre && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.nombre.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.nombre.message?.toString()}
           </span>
         )}
 
@@ -84,8 +84,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.apellido && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.apellido.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.apellido.message?.toString()}
           </span>
         )}
 
@@ -105,8 +105,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.correo && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.correo.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.correo.message?.toString()}
           </span>
         )}
 
@@ -126,8 +126,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.clave && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.clave.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.clave.message?.toString()}
           </span>
         )}
 
@@ -147,8 +147,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.telefono && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.telefono.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.telefono.message?.toString()}
           </span>
         )}
 
@@ -168,8 +168,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.direccion && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.direccion.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.direccion.message?.toString()}
           </span>
         )}
 
@@ -189,8 +189,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.localidad && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.localidad.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.localidad.message?.toString()}
           </span>
         )}
 
