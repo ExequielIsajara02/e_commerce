@@ -15,8 +15,7 @@ export const Header = () => {
     };
 
     return (
-        <div className="flex justify-between p-6">
-            <h1><strong>Titulo</strong></h1>
+        <div className="flex justify-end p-6">
             {isMounted && ( // Renderiza solo si el componente está montado
                 <p onClick={toggleSideBar}>
                     Cantidad de artículos en el carrito <strong>{cartItems.length}</strong>

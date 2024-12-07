@@ -13,7 +13,7 @@ const LogoutButton = () => {
     }
 
   return (
-    <Button onClick={handleClick}>LogOut</Button>
+    <Button className="hover:bg-blue-500" onClick={handleClick}>LogOut</Button>
   )
 }
 

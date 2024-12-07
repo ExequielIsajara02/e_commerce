@@ -1,6 +1,6 @@
 const { PDFDocument } = require("pdf-lib");
 
-export async function generarComprobantePDF(correo: any, detalles: any) {
+export async function generarComprobantePDF(usuario: any, detalles: any) {
   console.log("Contenido de detallesPedido en generarComprobantePDF:", JSON.stringify(detalles, null, 2));
 
   const pdfDoc = await PDFDocument.create();
@@ -12,6 +12,7 @@ export async function generarComprobantePDF(correo: any, detalles: any) {
     month: "2-digit",
     year: "numeric",
   });
+  const totalFormateado = `$${(detalles.total / 100).toFixed(2)}`;
 
   page.moveTo(50, 700);
   page.drawText("Comprobante de Pago", { size: 18 });
@@ -26,15 +27,27 @@ export async function generarComprobantePDF(correo: any, detalles: any) {
   page.drawText(`Fecha: ${fechaFormateada}`, { size: 12 });
 
   page.drawLine({
-    start: { x: 50, y: 650 },
-    end: { x: 550, y: 650 },
+    start: { x: 50, y: 550 },
+    end: { x: 550, y: 550 },
     thickness: 1,
   });
 
-  page.moveTo(50, 620);
-  page.drawText(`Correo: ${correo}`, { size: 12 });
+  page.moveTo(390, 530);
+  page.drawText(totalFormateado, { size: 18 });
 
-  page.moveTo(50, 570);
+  page.moveTo(50, 484);
+  page.drawText(`Motivo: Compra Electronica`, { size: 12 });
+
+  page.moveTo(50, 464);
+  page.drawText(`De: E-commerce.com`, { size: 12 });
+
+  page.moveTo(50, 444);
+  page.drawText(`Para: ${usuario.name}`, { size: 12 });
+
+  page.moveTo(50, 420);
+  page.drawText(`Correo: ${usuario.email}`, { size: 12 });
+
+  page.moveTo(50, 370);
   page.drawText("Productos:", { size: 18 });
 
   let posicionY = 550;
@@ -63,7 +76,7 @@ export async function generarComprobantePDF(correo: any, detalles: any) {
     posicionY -= 20;
   });
 
-  const totalFormateado = `$${(detalles.total / 100).toFixed(2)}`;
+  
   page.moveTo(340, posicionY - 30);
   page.drawText("Total", { size: 12 });
   page.moveTo(390, posicionY - 30);

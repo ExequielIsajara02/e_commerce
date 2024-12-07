@@ -25,10 +25,6 @@ const Home = async () => {
   return (
       <div>
         <Slider/>
-        <h2>Mostrar Productos</h2>
-        <Button radius="full" className="border-none bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg">
-          Button
-        </Button>
         <VistaProductos 
             productos={productos}
           />

@@ -10,10 +10,18 @@ import React, {
 import { Header } from '@/components/Header';
 import { Carrito } from '@/components/Carrito';
 import { ProductoData } from '../../types/ProductData'; 
+import { ComboData } from '../../types/ComboData';
+
+export interface CartItem {
+  producto?: ProductoData | { id_producto: string; nombre: string; precio: number; cantidad: number; descripcion: string; imagen: string; marca: string; tipo: string; precioOriginal: number };
+  combo?: ComboData;
+  cantidad: number;
+}
+
 
 interface CartContextType {
-  cartItems: ProductoData[];
-  setCartItems: Dispatch<SetStateAction<ProductoData[]>>;
+  cartItems: CartItem[];
+  setCartItems: Dispatch<SetStateAction<CartItem[]>>;
   isCarritoVisible: boolean;
   setCarritoVisible: Dispatch<SetStateAction<boolean>>;
   clearCart: () => void; // Nueva función para limpiar el carrito
@@ -28,7 +36,7 @@ const CartContext = createContext<CartContextType>({
 });
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<ProductoData[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCarritoVisible, setCarritoVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -37,6 +45,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setCartItems([]);
     localStorage.removeItem('cartItems'); // Eliminar del almacenamiento local
   };
+
+  
 
   useEffect(() => {
     setIsMounted(true);

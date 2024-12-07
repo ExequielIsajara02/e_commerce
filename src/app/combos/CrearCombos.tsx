@@ -4,6 +4,7 @@ import CargandoSpinner from "@/components/CargandoSpinner";
 import { ComboData } from "../../../types/ComboData";
 import { ProductoData } from "../../../types/ProductData";
 import { ComboCantidadData } from "../../../types/ComboCantidadData";
+import {Card, CardBody, CardFooter, Image} from "@nextui-org/react";
 
 const AdminCombos = () => {
     const [combos, setCombos] = useState<ComboData[]>([]);
@@ -293,21 +294,23 @@ const AdminCombos = () => {
                 <div>
                     <h1 className="text-2xl font-bold mb-4">Administrar Combos</h1>
 
-                    {/* Botón para mostrar el formulario de crear combos */}
-                    <button 
-                        onClick={() => { setIsCreatingCombo(true); resetForm(); }} // Reinicia el formulario para crear un nuevo combo
-                        className="mb-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600"
-                    >
-                        Crear Nuevo Combo
-                    </button>
-                    
-                    {/* Botón para mostrar el formulario de crear combos POR CANTIDAD */}
-                    <button 
-                        onClick={() => { setIsCreatingComboCantidad(true); resetFormComboCantidad(); }} // Reinicia el formulario para crear un nuevo combo
-                        className="mb-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600"
-                    >
-                        Crear Nuevo Combo Cantidad
-                    </button>
+                    <div className="flex w-full justify-between">
+                        {/* Botón para mostrar el formulario de crear combos */}
+                        <button 
+                            onClick={() => { setIsCreatingCombo(true); resetForm(); }} // Reinicia el formulario para crear un nuevo combo
+                            className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-t-md hover:bg-blue-600"
+                        >
+                            Nuevo combo de productos
+                        </button>
+                        
+                        {/* Botón para mostrar el formulario de crear combos POR CANTIDAD */}
+                        <button 
+                            onClick={() => { setIsCreatingComboCantidad(true); resetFormComboCantidad(); }} // Reinicia el formulario para crear un nuevo combo
+                            className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-t-md hover:bg-blue-600"
+                        >
+                            Nuevo combo por cantidad
+                        </button>
+                    </div>
 
                     {/* Modal para crear o editar combos */}
                     {isCreatingCombo && (
@@ -480,67 +483,101 @@ const AdminCombos = () => {
                     )}
 
 
-                    <ul className="mt-4">
+
+
+                    <div className="bg-white p-4 pb-10 gap-2 grid grid-cols-2 sm:grid-cols-4">
                         {combos.map((combo) => (
-                            <li key={combo.id_combo} className="flex justify-between items-center mb-2 p-2 border border-gray-300 rounded">
-                                <div>
-                                    <p>{combo.nombre}</p> - Descuento: {(combo.descuento * 100).toFixed(0)}%
-                                </div>
-                                <div>
-                                    <p>Productos:</p>
-                                    <ul>
-                                        {(combo.productos && Array.isArray(combo.productos) ? combo.productos : []).map((producto) => {
-                                            const productoEncontrado = productosData.find((prod) => prod.id_producto === producto.id_producto);
-                                            return (
-                                                <li key={producto.id_producto}>
-                                                    {productoEncontrado ? productoEncontrado.nombre : `Producto ID: ${producto.id_producto}`}
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </div>
-                                <div>
-                                    <button 
-                                        onClick={() => handleEditarClick(combo)} 
-                                        className="text-blue-500 hover:text-blue-700 mr-2"
-                                    >
-                                        Editar
-                                    </button>
-                                    <button 
-                                        onClick={() => eliminarCombo(combo.id_combo)} 
-                                        className="text-red-500 hover:text-red-700"
-                                    >
-                                        Eliminar
-                                    </button>
-                                </div>
-                            </li>
+                            <Card className='relative bg-white p-2 rounded-xl shadow-gray-400 shadow-lg overflow-visible' shadow="lg" key={combo.id_combo}>
+                                <CardBody className="overflow-visible p-0 text-center">
+                                    <li key={combo.id_combo} className="flex flex-col justify-between items-center mb-2 p-2 border border-gray-300 rounded">
+                                        <div>
+                                            <p>{combo.nombre}</p>
+                                            <p>
+                                                Descuento: 
+                                                <span className=" font-bold text-green-600">
+                                                    {(combo.descuento * 100).toFixed(0)}%
+                                                </span>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p>Productos:</p>
+                                            <ul>
+                                                {(combo.productos && Array.isArray(combo.productos) ? combo.productos : []).map((producto) => {
+                                                    const productoEncontrado = productosData.find((prod) => prod.id_producto === producto.id_producto);
+                                                    return (
+                                                        <li key={producto.id_producto}>
+                                                            {productoEncontrado ? productoEncontrado.nombre : `Producto ID: ${producto.id_producto}`}
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </CardBody>
+                                <CardFooter className="flex flex-col text-small justify-between">
+                                    <div className="text-white flex justify-center items-centerpx-6 pb-2 absolute bottom-[-30px] left-1/2 transform -translate-x-1/2">
+                                        <button 
+                                            onClick={() => handleEditarClick(combo)} 
+                                            className="rounded-lg bg-blue-500 p-2 hover:bg-blue-700 mr-2 shadow-gray-400  shadow-lg"
+                                        >
+                                            Editar
+                                        </button>
+                                        <button 
+                                            onClick={() => eliminarCombo(combo.id_combo)} 
+                                            className="rounded-lg bg-red-500 p-2 hover:bg-red-700 shadow-gray-400  shadow-lg "
+                                        >
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </CardFooter>
+                            </Card>
                         ))}
                         {combosCantidad.map((comboCantidad) => (
-                            <li key={comboCantidad.id_comboCantidad} className="flex justify-between items-center mb-2 p-2 border border-gray-300 rounded">
-                                <div>
-                                    <p>Combo ID:</p> {comboCantidad.id_comboCantidad}<br />
-                                    <p>Producto ID:</p> {comboCantidad.id_producto}<br />
-                                    <p>Cantidad Mínima:</p> {comboCantidad.cantidad_minima}<br />
-                                    <p>Descuento:</p> {comboCantidad.descuento}%
-                                </div>
-                                <div>
-                                    <button 
-                                        onClick={() => handleEditarComboCantidad(comboCantidad)} 
-                                        className="text-blue-500 hover:text-blue-700 mr-2"
-                                    >
-                                        Editar
-                                    </button>
-                                    <button 
-                                        onClick={() => eliminarComboCantidad(comboCantidad.id_comboCantidad)} 
-                                        className="text-red-500 hover:text-red-700"
-                                    >
-                                        Eliminar
-                                    </button>
-                                </div>
-                            </li>
+                            <Card className='relative bg-white p-2 rounded-xl shadow-gray-400 shadow-lg overflow-visible' shadow="lg" key={comboCantidad.id_comboCantidad}>
+                                <CardBody className="overflow-visible p-0 text-center">
+                                    <li key={comboCantidad.id_comboCantidad} className="flex flex-col justify-between items-center mb-2 p-2 border border-gray-300 rounded">
+                                        {productosData.map((producto) => 
+                                            comboCantidad.id_producto === producto.id_producto && (
+                                                <div>
+                                                    <p>Producto: {producto.nombre}</p>
+                                                    <Image
+                                                        shadow="lg"
+                                                        radius="lg"
+                                                        width="100%"
+                                                        alt={producto.nombre}
+                                                        className="w-full shadow-gray-700  shadow-lg rounded-md object-cover h-[140px]"
+                                                        src={producto.imagen}
+                                                    />
+                                                </div>
+                                            )
+                                        )}
+                                        <p>Descuento: 
+                                            <span className=" font-bold text-green-600">
+                                                {comboCantidad.descuento}%
+                                            </span>
+                                        </p>
+                                        <p>Cantidad Mínima:{comboCantidad.cantidad_minima}</p>
+                                    </li>
+                                </CardBody>
+                                <CardFooter>
+                                    <div className="text-white flex justify-center items-center px-6 pb-2 absolute bottom-[-30px]">
+                                        <button 
+                                            onClick={() => handleEditarComboCantidad(comboCantidad)} 
+                                            className="rounded-lg bg-blue-500 p-2 hover:bg-blue-700 mr-2 shadow-gray-400 shadow-lg"
+                                        >
+                                            Editar
+                                        </button>
+                                        <button 
+                                            onClick={() => eliminarComboCantidad(comboCantidad.id_comboCantidad)} 
+                                            className="rounded-lg bg-red-500 p-2 hover:bg-red-700 shadow-gray-400 shadow-lg "
+                                        >
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </CardFooter>
+                            </Card>
                         ))}
-                    </ul>
-
+                    </div>
                 </div>
             )}
         </div>

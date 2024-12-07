@@ -20,7 +20,6 @@ const Page = async () => {
 
     return (
         <div>
-            <h1>Crear Combos</h1>
             <AdminCombos/>
         </div>
     )
