@@ -4,20 +4,20 @@ import React from 'react';
 const MenuLateral = () => {
   
   return (
-    <div className="w-64 bg-slate-500 border-r-2 border-red-900 p-4">
-      <h2 className="text-lg font-bold">Menu</h2>
-      <ul className='text-white'>
+    <div className="w-64 rounded-tr-md border-r-2 p-4 bg-white">
+      <h2 className="text-lg font-bold border-b-2 mb-2">MENU MÉTRICAS</h2>
+      <ul className='text-slate-700 text-[14px] flex-col space-y-4 font-bold'>
         <li>
-          <Link href="/dashboard">Dashboard</Link>
+          
         </li>
-        <li>
-          <Link href="/dashboard/pedidos">Métricas de Pedidos</Link>
+        <li className='hover:outline sm:outline-offset-1 rounded-md pl-1 cursor-pointer'>
+          <Link href="/dashboard/pedidos">PEDIDOS</Link>
         </li>
-        <li>
-          <Link href="/dashboard/productos">Métricas de Productos</Link>
+        <li className='hover:outline sm:outline-offset-1 rounded-md pl-1 cursor-pointer'>
+          <Link href="/dashboard/productos">PRODUCTOS</Link>
         </li>
-        <li>
-          <a href="/dashboard/ventas">Métricas de ventas</a>
+        <li className='hover:outline sm:outline-offset-1 rounded-md pl-1 cursor-pointer'>
+          <a href="/dashboard/ventas">VENTAS</a>
         </li>
         {/* <li>
           <Link href="/dashboard">Categorías</Link>

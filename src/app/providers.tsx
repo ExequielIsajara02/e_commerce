@@ -1,8 +1,9 @@
 'use client';
 
-import { NextUIProvider } from "@nextui-org/react";
 import React, { ReactNode } from 'react';
 import { CartProvider } from '../context/CartContext';
+import { NextUIProvider } from "@nextui-org/react";
+
 
 const Providers: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (

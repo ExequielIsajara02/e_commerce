@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import React from 'react';
 
 interface PropsMetricasPedidos {
   data?: {
@@ -12,19 +10,24 @@ interface PropsMetricasPedidos {
 
 const MetricasPedidos: React.FC<PropsMetricasPedidos> = ({ data }) => {
   return (
-    <div className="bg-slate-400 rounded shadow-md p-4 w-1/3 border border-black mx-auto mb-4 mt-4">
-      <h2 className="text-lg font-bold text-center text-black">Métricas de Pedidos</h2>
-      <ul className="list-none mb-0">
-        <li className="py-2 border-b border-black">Total Pedidos: {data?.totalPedidos}</li>
-        <li className="py-2 border-b border-black">Total Ingresos: {data?.totalIngresos}</li>
-        <li className="py-2">Valor Promedio Pedido: {data?.valorPromedioPedido}</li>
+    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-300 mx-auto w-96 shadow-black">
+      <h2 className="text-xl font-bold text-center mb-4 text-gray-800">Métricas de Pedidos</h2>
+      <ul className="space-y-4">
+        <li className="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
+          <span className="font-semibold text-gray-600">Total Pedidos:</span>
+          <span>{data?.totalPedidos}</span>
+        </li>
+        <li className="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
+          <span className="font-semibold text-gray-600">Total Ingresos:</span>
+          <span>{data?.totalIngresos}</span>
+        </li>
+        <li className="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
+          <span className="font-semibold text-gray-600">Valor Promedio:</span>
+          <span>{data?.valorPromedioPedido}</span>
+        </li>
       </ul>
     </div>
   );
 };
-
-export async function getServerSideProps() {
-  
-}
 
 export default MetricasPedidos;

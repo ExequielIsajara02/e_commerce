@@ -2,7 +2,7 @@
 "use client"
 import React from 'react';
 import MenuLateral from '@/components/MenuLateral';
-import Carrito from '../carrito/Carrito';
+import { Carrito } from '@/components/Carrito';
 
 interface Props {
   children: React.ReactNode;

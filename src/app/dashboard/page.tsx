@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { ProductoData } from "../../../types/ProductData";
 import { obtenerProductos} from "../../../utils/producto";
 import { authorizationPage } from "../../../utils/authorization";
+import MetricasPedidos from "./pedidos/MetricasPedidos";
+import MetricasProductos from "./productos/MetricasProductos";
 
 const Page = async () => {
   await authorizationPage({ roles: ["admin", "editor"] });
@@ -55,9 +57,7 @@ const Page = async () => {
 
   return (
     <div>
-      <h1 className="text-black w-1/2 border-2 border-red-900 mx-auto text-center mt-3 font-bold rounded-md">
-        selecciona la metrica que quieras vizualizar
-      </h1>
+      <MetricasPedidos/>
       {/* Aquí puedes incluir lógica para mostrar dataProducto y dataPedido */}
     </div>
   );
