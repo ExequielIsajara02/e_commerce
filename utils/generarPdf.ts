@@ -14,73 +14,86 @@ export async function generarComprobantePDF(usuario: any, detalles: any) {
   });
   const totalFormateado = `$${(detalles.total / 100).toFixed(2)}`;
 
-  page.moveTo(50, 700);
-  page.drawText("Comprobante de Pago", { size: 18 });
+  // Título
+  page.moveTo(50, 750);
+  page.drawText("Comprobante de Pago", { size: 20, font: pdfDoc.embedStandardFont('Helvetica-Bold') });
 
+  // Línea divisoria
   page.drawLine({
-    start: { x: 50, y: 690 },
-    end: { x: 550, y: 690 },
+    start: { x: 50, y: 740 },
+    end: { x: 550, y: 740 },
     thickness: 1,
   });
 
-  page.moveTo(50, 660);
+  // Fecha
+  page.moveTo(50, 710);
   page.drawText(`Fecha: ${fechaFormateada}`, { size: 12 });
 
+  // Línea divisoria
   page.drawLine({
-    start: { x: 50, y: 550 },
-    end: { x: 550, y: 550 },
+    start: { x: 50, y: 700 },
+    end: { x: 550, y: 700 },
     thickness: 1,
   });
 
-  page.moveTo(390, 530);
-  page.drawText(totalFormateado, { size: 18 });
+  // Total destacado
+  page.moveTo(50, 670);
+  page.drawText(totalFormateado, { size: 28, font: pdfDoc.embedStandardFont('Helvetica-Bold') });
 
-  page.moveTo(50, 484);
-  page.drawText(`Motivo: Compra Electronica`, { size: 12 });
+  // Detalles de vendedor y comprador
+  page.moveTo(50, 630);
+  page.drawText("Motivo: Compra Electrónica", { size: 12 });
+  page.moveTo(50, 610);
+  page.drawText("De:", { size: 12});
+  page.moveTo(80, 610);
+  page.drawText("E-commerce.com", { size: 12, font: pdfDoc.embedStandardFont('Helvetica-Bold') });
 
-  page.moveTo(50, 464);
-  page.drawText(`De: E-commerce.com`, { size: 12 });
+  page.moveTo(50, 590);
+  page.drawText("Para:", { size: 12});
+  page.moveTo(80, 590);
+  page.drawText(usuario.name, { size: 12, font: pdfDoc.embedStandardFont('Helvetica-Bold') });
 
-  page.moveTo(50, 444);
-  page.drawText(`Para: ${usuario.name}`, { size: 12 });
-
-  page.moveTo(50, 420);
+  page.moveTo(50, 570);
   page.drawText(`Correo: ${usuario.email}`, { size: 12 });
 
-  page.moveTo(50, 370);
-  page.drawText("Productos:", { size: 18 });
+  // Título para productos
+  page.moveTo(50, 540);
+  page.drawText("Productos:", { size: 16, font: pdfDoc.embedStandardFont('Helvetica-Bold') });
 
-  let posicionY = 550;
+  // Listado de productos
+  let posicionY = 520;
 
+  detalles.productos.forEach((producto: any) => {
+    const precioTotal = producto.cantidad * producto.precio;
+
+    // Nueva página si es necesario
+    if (posicionY < 100) {
+      page = pdfDoc.addPage([600, 800]);
+      posicionY = 750;
+    }
+
+    page.moveTo(80, posicionY);
+    page.drawText(`- ${producto.nombre}`, { size: 12 });
+    page.moveTo(300, posicionY);
+    page.drawText(`Cantidad: ${producto.cantidad}`, { size: 12 });
+    page.moveTo(440, posicionY);
+    page.drawText(`$${precioTotal.toFixed(2)}`, { size: 12 });
+
+    posicionY -= 20;
+  });
+
+  // Línea divisoria antes del total
   page.drawLine({
     start: { x: 50, y: posicionY - 10 },
     end: { x: 550, y: posicionY - 10 },
     thickness: 1,
   });
 
-  detalles.productos.forEach((producto: any) => {
-    const precioTotal = producto.cantidad * producto.precio;
-
-    if (posicionY < 100) {
-      page = pdfDoc.addPage([600, 800]);
-      posicionY = 750;
-    }
-
-    page.moveTo(50, posicionY);
-    page.drawText(`Nombre: ${producto.nombre}`, { size: 12 });
-    page.moveTo(200, posicionY);
-    page.drawText(`Cantidad: ${producto.cantidad}`, { size: 12 });
-    page.moveTo(340, posicionY);
-    page.drawText(`Precio: $${precioTotal.toFixed(2)}`, { size: 12 });
-
-    posicionY -= 20;
-  });
-
-  
-  page.moveTo(340, posicionY - 30);
-  page.drawText("Total", { size: 12 });
-  page.moveTo(390, posicionY - 30);
-  page.drawText(totalFormateado, { size: 12 });
+  // Total final
+  page.moveTo(400, posicionY - 30);
+  page.drawText("Total", { size: 12, font: pdfDoc.embedStandardFont('Helvetica-Bold') });
+  page.moveTo(440, posicionY - 30);
+  page.drawText(totalFormateado, { size: 12, font: pdfDoc.embedStandardFont('Helvetica-Bold') });
 
   const pdfBytes = await pdfDoc.save();
   return pdfBytes;
