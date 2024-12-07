@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export const Slider = () => {
     const [index, setIndex] = useState(0);
+
     const banners = [
         "https://png.pngtree.com/template/20220331/ourmid/pngtree-simple-atmosphere-fashion-sneaker-banner-poster-image_912834.jpg",
         "https://d2t2u1vclegqzc.cloudfront.net/b2b/1_desktop.jpg",

@@ -50,8 +50,8 @@ function FormLogin() {
 
   return (
     <Form {...form}>
-      <h1 className="mx-auto w-44 text-lg">INICIAR SESIÓN</h1>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-1/2 mx-auto mt-4 bg-white shadow-md shadow-black p-4 rounded-md">
+      <h1 className="mx-auto w-44 text-lg text-white">INICIAR SESIÓN</h1>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-2/5 mx-auto mt-4 bg-white shadow-md shadow-black p-4 rounded-md">
         <FormField
           control={form.control}
           name="email"
@@ -61,7 +61,7 @@ function FormLogin() {
               <FormControl>
                 <Input placeholder="Email" {...field} type="email" className="rounded-md focus:border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"/>
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600"/>
             </FormItem>
           )}
         />
@@ -70,11 +70,11 @@ function FormLogin() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-gray-500 font-bold text-[16px]">Password</FormLabel>
+              <FormLabel className="text-gray-500 font-bold text-[16px]">Contraseña</FormLabel>
               <FormControl>
-                <Input placeholder="password" {...field} type="password" className="rounded-md focus:border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"/>
+                <Input placeholder="contraseña" {...field} type="password" className="rounded-md focus:border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"/>
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600"/>
             </FormItem>
           )}
         />
