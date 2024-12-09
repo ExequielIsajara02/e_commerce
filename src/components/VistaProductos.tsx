@@ -81,8 +81,8 @@ const obtenerComboCantidad = (
   return (
     <div className="flex p-4">
       {/* Tarjeta de filtros a la izquierda */}
-      <div className="w-1/4">
-        <div className="bg-white rounded-xl shadow-gray-400 shadow-lg p-4">
+      <div className="bg-gray-100 z-40 pt-14 w-1/4">
+        <div className="bg-white sticky top-14 rounded-tl-xl rounded-b-xl shadow-gray-400 shadow-sm p-4">
           <h2 className="font-semibold mb-2">Filtros</h2>
           <div className="mb-4">
             <label className="block">Marca:</label>
@@ -138,28 +138,30 @@ const obtenerComboCantidad = (
       </div>
 
       {/* Tarjeta de búsqueda a la derecha */}
-      <div className="flex-1 ml-4">
-        <div className="bg-white rounded-xl shadow-gray-400 shadow-lg p-4 mb-4">
-          <h2 className="font-semibold mb-2">Buscar Producto</h2>
-          <div className="mb-4 flex">
-            <input
-              type="text"
-              placeholder="Buscar producto..."
-              value={filterText}
-              onChange={(e) => setFilterText(e.target.value)}
-              className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>  
+      <div className="flex-1">
+        <div className='bg-zinc-100 w-full z-30 sticky pt-14 top-0'>
+          <div className="bg-white rounded-r-xl rounded-br-xl shadow-gray-400 shadow-sm p-4 mb-4">
+            <h2 className="font-semibold mb-2">Buscar Producto</h2>
+            <div className="mb-4 flex">
+              <input
+                type="text"
+                placeholder="Buscar producto..."
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>  
+          </div>
         </div>
 
-        <div className="gap-2 grid grid-cols-2 sm:grid-cols-4">
+        <div className="ml-4 gap-6 grid grid-cols-2 sm:grid-cols-4">
           {sortedProducts.map((producto) => {
             const combo = obtenerComboCantidad(Number(producto.id_producto), comboCantidad);
 
 
             return (
               <Card
-                className="relative flex bg-white rounded-xl shadow-gray-400 shadow-lg overflow-visible"
+                className="relative flex bg-white rounded-xl z-20 shadow-gray-400 shadow-sm overflow-visible"
                 shadow="lg"
                 key={producto.id_producto}
               >
@@ -169,22 +171,24 @@ const obtenerComboCantidad = (
                     radius="lg"
                     width="100%"
                     alt={producto.nombre}
-                    className="w-full shadow-gray-400 shadow-lg rounded-md object-cover h-[240px]"
+                    className="w-full rounded-t-md rounded-tl-md object-cover h-[240px]"
                     src={producto.imagen}
                   />
                 </CardBody>
-                <CardFooter className="mt-3 flex flex-col text-small h-auto">
+                <CardFooter className="mt-3 flex flex-col text-small w-full h-auto">
                   {producto.cantidad > 0 ? (
-                    <>
-                      <b className="font-extrabold mb-auto">{producto.nombre.toUpperCase()}</b>
-                      <p className="text-lg font-bold mt-2">${producto.precio}</p>
-                      {/* Mostrar mensaje de combo si aplica */}
+                    <div className='text-left w-full'>
                       {combo && (
                         <p className="text-green-600 font-semibold mt-2">
                           ¡Descuento del {combo.descuento}% si compras {combo.cantidad_minima} o más!
                         </p>
                       )}
-                    </>
+                      <b className="font-extrabold mb-auto">{producto.nombre.toUpperCase()}</b>
+                      <p className="text-slate-500 text-lg font-normal mt-2">{producto.descripcion}</p>
+                      <p className="text-lg font-extrabold mt-2">${producto.precio}</p>
+                      {/* Mostrar mensaje de combo si aplica */}
+                      
+                    </div>
                   ) : (
                     <p className="text-red-500 font-semibold">SIN STOCK</p>
                   )}

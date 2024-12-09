@@ -60,8 +60,8 @@ const config: Config = {
   		// 	sm: 'calc(var(--radius) - 4px)'
   		// },
 		backgroundImage: {
-			'sliderBanner': "url('/src/img/image1.jpg')",
-			'sliderBanner2': "url('/src/img/image7.jpg')"
+			'sliderBanner': "url('https://drive.google.com/u/3/drive-viewer/AKGpihYNmTseIdJprDgnw4BKwJ0nYSPd3_4TkLeAU0SWPgj07YEMNQFjtnHz-3qhcwZC5G5Vhem8AKek7iXK195RS0a3fYeLMkB90o0=s1600-rw-v1')",
+			'sliderBanner2': "url('/img/image7.jpg')"
 		}
   	}
   },

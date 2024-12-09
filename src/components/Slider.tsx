@@ -6,15 +6,7 @@ import { ComboData } from "../../types/ComboData";
 
 export const Slider = () => {
   const [combos, setCombos] = useState<ComboData[]>([]);
-  const [index, setIndex] = useState(0); // Control del índice actual
-
-  const nextBanner = () => {
-    setIndex((prevIndex) => (prevIndex + 1) % combos.length);
-  };
-
-  const prevBanner = () => {
-    setIndex((prevIndex) => (prevIndex - 1 + combos.length) % combos.length);
-  };
+  const [index, setIndex] = useState(0); // Control del índice actual del slider principal
 
   const traerCombos = async () => {
     try {
@@ -30,11 +22,22 @@ export const Slider = () => {
     traerCombos();
   }, []);
 
+  const nextBanner = () => {
+    setIndex((prevIndex) => (prevIndex + 1) % combos.length);
+  };
+
+  const prevBanner = () => {
+    setIndex((prevIndex) => (prevIndex - 1 + combos.length) % combos.length);
+  };
+
   return (
-    <div className="bg-slate-950 relative w-full h-auto mb-10 shadow-lg shadow-gray-400">
+    <div className="bg-slate-900 bg-center bg-cover relative w-full h-4/6 mb-10 shadow-lg shadow-gray-400">
       <div className="overflow-hidden w-full h-full flex items-center justify-center">
         {/* Contenedor de tarjetas */}
-        <div className="flex gap-4 transition-transform duration-500" style={{ transform: `translateX(calc(-${index * 250}px))` }}>
+        <div
+          className="flex gap-4 transition-transform duration-500"
+          style={{ transform: `translateX(calc(-${index * 250}px))` }}
+        >
           {combos.map((combo, i) => (
             <div
               key={combo.id_combo}
@@ -47,36 +50,32 @@ export const Slider = () => {
             >
               <div className="bg-white p-4 rounded-xl shadow-gray-400 shadow-lg">
                 <b className="font-extrabold">{combo.nombre.toUpperCase()}</b>
-                <p className="mb-4">
+                <p className="mb-2">
                   Descuento:{" "}
                   <span className="text-green-600 font-semibold">
                     {combo.descuento * 100}%
                   </span>
                 </p>
-                <div className="overflow-hidden">
-                {combo.productos.map((comboProducto, idx) => (
-                  <img
-                    key={`${combo.id_combo}-${comboProducto.id_producto}-${idx}`}
-                    alt={combo.nombre}
-                    className="w-full rounded-md object-cover h-[140px]"
-                    src={comboProducto.producto?.imagen}
-                  />
-                ))}
-                </div>
+
+                {/* Slider interno de imágenes */}
+                <CardImageSlider combo={combo} />
+
                 <div className="mt-4 text-center">
-                {combo.productos.map((comboProducto, idx) => (
-                  <div
-                    key={`${combo.id_combo}-${comboProducto.id_producto}-${idx}`}
-                    className="mb-2"
-                  >
-                    <h5 className="text-md font-bold">
-                      {comboProducto.producto?.nombre}
-                    </h5>
-                    <p>
-                      Precio: ${comboProducto.precioDescuento || comboProducto.producto?.precio}
-                    </p>
-                  </div>
-                ))}
+                  {combo.productos.map((comboProducto, idx) => (
+                    <div
+                      key={`${combo.id_combo}-${comboProducto.id_producto}-${idx}`}
+                      className="mb-2"
+                    >
+                      <div className="text-left text-md font-bold">
+                        <span>{comboProducto.producto?.nombre}</span>
+                        <span className="ml-2 font-light">
+                          $
+                          {comboProducto.precioDescuento ||
+                            comboProducto.producto?.precio}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                   <div className="font-bold text-lg mt-2">
                     Total: $
                     {combo.productos.reduce(
@@ -92,7 +91,6 @@ export const Slider = () => {
               </div>
             </div>
           ))}
-
         </div>
 
         {/* Botones de navegación */}
@@ -109,6 +107,54 @@ export const Slider = () => {
           {">"}
         </button>
       </div>
+    </div>
+  );
+};
+
+// Slider interno de imágenes para cada tarjeta
+const CardImageSlider = ({ combo }: { combo: ComboData }) => {
+  const [imageIndex, setImageIndex] = useState(0);
+
+  const nextImage = () => {
+    setImageIndex((prev) => (prev + 1) % combo.productos.length);
+  };
+
+  const prevImage = () => {
+    setImageIndex((prev) => (prev - 1 + combo.productos.length) % combo.productos.length);
+  };
+
+  return (
+    <div className="relative overflow-hidden rounded-md mt-4 h-[140px] w-full">
+      <div
+        className="flex transition-transform duration-500"
+        style={{
+          width: `${combo.productos.length * 100}%`,
+          transform: `translateX(-${imageIndex * (100 / combo.productos.length)}%)`,
+        }}
+      >
+        {combo.productos.map((comboProducto, idx) => (
+          <img
+            key={`${combo.id_combo}-${comboProducto.id_producto}-${idx}`}
+            alt={combo.nombre}
+            className="w-full h-[140px] object-cover"
+            src={comboProducto.producto?.imagen}
+          />
+        ))}
+      </div>
+
+      {/* Botones de navegación */}
+      <button
+        className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black text-white p-1 rounded-full opacity-50 hover:opacity-100"
+        onClick={prevImage}
+      >
+        {"<"}
+      </button>
+      <button
+        className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black text-white p-1 rounded-full opacity-50 hover:opacity-100"
+        onClick={nextImage}
+      >
+        {">"}
+      </button>
     </div>
   );
 };

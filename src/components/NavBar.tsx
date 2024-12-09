@@ -10,7 +10,7 @@ const NavBar = async () => {
   console.log(session);
 
   return (
-    <Navbar className="fixed bg-white z-50 p-2" shouldHideOnScroll>
+    <Navbar className="fixed bg-white z-50 p-2">
       <NavbarBrand>
         <p className="font-bold text-inherit">E-commerce</p>
       </NavbarBrand>
@@ -73,47 +73,3 @@ const NavBar = async () => {
 };
 
 export default NavBar;
-
-
-    // <nav className="flex justify-between bg-gray-950 text-white">
-    //     {!session?.user ? (
-    //       <>
-    //         <li>
-    //           <Link href="/auth/login">Login</Link>
-    //         </li>
-    //         <li>
-    //           <Link href="/registro">Register</Link>
-    //         </li>
-    //       </>
-    //     ) : (
-    //       <>
-    //         {
-    //           session?.user?.role === "admin" && (
-    //                 <>
-    //                 <li>
-    //                   <Link href="/producto">Productos</Link>
-    //                 </li>
-    //                 <li>
-    //                   <Link href="/combos">Combos</Link>
-    //                 </li>
-    //                 <li>
-    //                   <Link href="/usuario">Usuarios</Link>
-    //                 </li>
-    //             <>
-    //               <li>
-    //                 <Link href="/dashboard">Dashboard</Link>
-    //               </li>
-    //                 </>
-    //               <li>
-    //                 <Link href="/pedidosAdmin">Pedidos</Link>
-    //               </li>
-    //             </>
-    //           )
-    //         }
-    //         <li>
-    //           <LogoutButton />
-    //         </li>
-    //       </>
-    //     )}
-    //   </ul>
-    // </nav>

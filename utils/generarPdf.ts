@@ -37,12 +37,19 @@ export async function generarComprobantePDF(usuario: any, detalles: any) {
   });
 
   // Total destacado
-  page.moveTo(50, 670);
+  page.moveTo(50, 660);
   page.drawText(totalFormateado, { size: 28, font: pdfDoc.embedStandardFont('Helvetica-Bold') });
 
   // Detalles de vendedor y comprador
-  page.moveTo(50, 630);
+  page.moveTo(50, 635);
   page.drawText("Motivo: Compra Electrónica", { size: 12 });
+
+  page.drawLine({
+    start: { x: 50, y: 620 },
+    end: { x: 550, y: 620 },
+    thickness: 1,
+  });
+
   page.moveTo(50, 610);
   page.drawText("De:", { size: 12});
   page.moveTo(80, 610);
@@ -55,6 +62,12 @@ export async function generarComprobantePDF(usuario: any, detalles: any) {
 
   page.moveTo(50, 570);
   page.drawText(`Correo: ${usuario.email}`, { size: 12 });
+
+  page.drawLine({
+    start: { x: 50, y: 555 },
+    end: { x: 550, y: 555 },
+    thickness: 1,
+  });
 
   // Título para productos
   page.moveTo(50, 540);
