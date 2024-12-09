@@ -1,6 +1,7 @@
 "use client";
 import { CartContext } from "@/context/CartContext";
 import { useContext, useEffect, useState } from "react";
+import Image from "next/image";
 
 export const Header = () => {
     const { cartItems, isCarritoVisible, setCarritoVisible } = useContext(CartContext);
@@ -15,11 +16,15 @@ export const Header = () => {
     };
 
     return (
-        <div className="flex justify-end p-6">
+        <div className="flex justify-between p-6">
+            
             {isMounted && ( // Renderiza solo si el componente está montado
-                <p onClick={toggleSideBar}>
-                    Cantidad de artículos en el carrito <strong>{cartItems.length}</strong>
-                </p>
+                <div>
+                    <p className="text-lg cursor-pointer" onClick={toggleSideBar}>
+                        🛒<strong>{cartItems.length}</strong>
+                    </p>
+                    {/* <Image src="/img/grocery-store.png" alt="" width={32} height={32} className="mr-2" onClick={toggleSideBar}/>*/}
+                </div>
             )}
         </div>
     );

@@ -39,6 +39,20 @@ export async function POST(request: Request) {
         productos, // Asegúrate de que esto es un array de objetos
     } = await request.json();
 
+    console.log("Datos del pedido:", {
+        id_pedido,
+        id_stripe,
+        id_usuario,
+        fecha,
+        metodo_pago,
+        estadoCompra,
+        estadoPedido,
+        precio_final,
+        recargos,
+        descuentos,
+        productos,
+    });
+
     try {
         // Crea el pedido en la base de datos
         const nuevoPedido = await prisma.pedido.create({
@@ -62,15 +76,30 @@ export async function POST(request: Request) {
             },
         });
 
-        // console.log("NUEVO PEDIDO:",nuevoPedido)
+
+        // Calcula los puntos basados en precio_final
+        const puntosGanados = precio_final ? Math.floor(precio_final / 100) : 0;
+
+        // Actualiza los puntos del usuario
+        await prisma.usuario.update({
+            where: { id_usuario },
+            data: {
+                puntos: {
+                    increment: puntosGanados, // Incrementa los puntos existentes
+                },
+                fecha_ultima_compra: new Date(), // Actualiza la fecha de la última compra
+            },
+        });
+
+        console.log("Puntos actualizados para el usuario:", id_usuario);
+
         return NextResponse.json(nuevoPedido);
     } catch (error) {
         console.error("Error al crear el pedido:", error);
-        console.log(error)
         return NextResponse.json({ error: "Error al crear el pedido", details: error }, { status: 500 });
     }
-    
 }
+
 
 export async function PATCH(request: Request) {
     const { id_pedido, estadoPedido } = await request.json();

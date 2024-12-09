@@ -21,6 +21,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/api/complements/VistaProductos.jsx", "src/app/auth/login/FormLogin.jsx", "src/app/api/auth/[...nextauth]/route.ts", "src/lib/db.ts", "src/middleware.js", "src/app/dashboard/page.tsx", "src/middleware.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/api/complements/VistaProductos.jsx", "src/app/auth/login/FormLogin.jsx", "src/app/api/auth/[...nextauth]/route.ts", "src/lib/db.ts", "src/middleware.js", "src/app/dashboard/page.tsx", "src/middleware.ts", "src/app/registro/UsuarioForm.tsx"],
   "exclude": ["node_modules"]
 }
+

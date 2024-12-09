@@ -1,12 +1,11 @@
 import  UsuarioForm  from "./UsuarioForm";
 
-const Page = () => {
+const UserPage = () => {
     return (
         <>
-            <h1>Crear Usuario</h1>
             <UsuarioForm />
         </>
     );
 };
 
-export default Page;
+export default UserPage;

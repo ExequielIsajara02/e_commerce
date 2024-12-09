@@ -4,8 +4,7 @@ import { ButtonAddToCarrito } from "@/components/ButtonAddToCarrito";
 import { ComboData } from '../../types/ComboData';
 import { ProductoData } from '../../types/ProductData';
 import { ComboCantidadData } from '../../types/ComboCantidadData';
-import {Card, CardBody, CardFooter, Image} from "@nextui-org/react";
-
+import { Card, CardBody, CardFooter, Image } from '@nextui-org/react';
 
 
 interface Props {

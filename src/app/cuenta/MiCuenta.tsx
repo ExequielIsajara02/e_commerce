@@ -1,5 +1,6 @@
 "use client";
 
+import { auth } from "@/auth";
 import { useEffect, useState } from "react";
 
 type Usuario = {
@@ -13,7 +14,7 @@ type Usuario = {
   puntos: number;
 };
 
-function MiCuenta() {
+function MiCuenta({ session }: { session: any }) {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [isChangePasswordOpen, setChangePasswordOpen] = useState(false);
   const [claveActual, setClaveActual] = useState("");
@@ -22,17 +23,33 @@ function MiCuenta() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const usuarioId = 1; // Cambia esto según el ID del usuario autenticado
+  const [status, setStatus] = useState("loading"); // Add status state
+
 
   useEffect(() => {
     const fetchUsuario = async () => {
-      const response = await fetch(`/api/usuario/${usuarioId}`);
-      const data = await response.json();
-      setUsuario(data);
+      try {
+        const usuarioId = session?.user?.id;
+        
+        if (!usuarioId) {
+          setStatus("unauthenticated");
+          return;
+        }
+
+        const response = await fetch(`/api/usuario/${usuarioId}`);
+        if (!response.ok) throw new Error("Error al obtener datos del usuario");
+        const data = await response.json();
+        setUsuario(data);
+        setStatus("authenticated");
+      } catch (err) {
+        console.error(err);
+        setError("Error al cargar la información del usuario");
+        setStatus("error");
+      }
     };
 
     fetchUsuario();
-  }, []);
+  }, [session]);
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
@@ -45,6 +62,7 @@ function MiCuenta() {
       setError("");
       setSuccess("");
 
+      const usuarioId = session?.user?.id;
       const response = await fetch(`/api/usuario/${usuarioId}/cambiarPassword`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -67,9 +85,15 @@ function MiCuenta() {
     }
   };
 
-  if (!usuario) return <p className="text-center text-gray-500">Cargando...</p>;
+  if (status === "loading") {
+    return <p className="text-center text-gray-500">Cargando...</p>;
+  }
 
-  return (
+  if (status === "unauthenticated" || !usuario) {
+    return <p className="text-center text-gray-500">No se encontró información del usuario.</p>;
+  }
+
+  return(
     <div className="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6 mt-6">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Mi Cuenta</h2>
       <div className="border-t border-gray-200 mt-4 pt-4">
@@ -85,10 +109,6 @@ function MiCuenta() {
         </p>
         <p className="text-gray-700 mt-2">
           <span className="font-medium">Dirección:</span> {usuario.direccion}, {usuario.localidad}
-        </p>
-        <p className="text-gray-700 mt-2">
-          <span className="font-medium">Fecha de Registro:</span>{" "}
-          {new Date(usuario.fecha_registro).toLocaleDateString()}
         </p>
         <p className="text-gray-700 mt-2">
           <span className="font-medium">Puntos Acumulados:</span> {usuario.puntos}
@@ -155,3 +175,4 @@ function MiCuenta() {
 }
 
 export default MiCuenta;
+

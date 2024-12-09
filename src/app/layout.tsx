@@ -4,6 +4,7 @@ import NavBar from "@/components/NavBar";
 import "./globals.css";
 import Providers from "./providers";
 import React from "react";
+import {Button} from "@nextui-org/button";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body
       >
+        
         <NavBar/>
         <Providers>
           {children}

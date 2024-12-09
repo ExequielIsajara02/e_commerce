@@ -1,5 +1,4 @@
 // MetricasProductos.tsx
-
 import React from 'react';
 
 export interface PropsMetricasProductos {
@@ -12,12 +11,21 @@ export interface PropsMetricasProductos {
 
 export const MetricasProductos: React.FC<PropsMetricasProductos> = ({ data }) => {
   return (
-    <div className="bg-slate-400 rounded shadow-md p-4 w-1/3 border border-black mx-auto mb-4 mt-4">
-      <h2 className="text-lg font-bold text-center">Métricas de Productos</h2>
-      <ul className="list-none mb-0">
-        <li className="py-2 border-b border-black">Total Productos: {data.totalProductos}</li>
-        <li className="py-2 border-b border-black">Total Ingresos: {data.totalIngresos}</li>
-        <li className="py-2">Valor Promedio Producto: {data.valorPromedioProducto.toFixed(2)}</li>
+    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-300 mx-auto w-96 shadow-black">
+      <h2 className="text-xl font-bold text-center mb-4 text-gray-800">Métricas de Productos</h2>
+      <ul className="space-y-4">
+        <li className="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
+          <span className="font-semibold text-gray-600">Total Productos:</span>
+          <span>{data.totalProductos}</span>
+        </li>
+        <li className="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
+          <span className="font-semibold text-gray-600">Total Ingresos:</span>
+          <span>{data.totalIngresos}</span>
+        </li>
+        <li className="flex justify-between items-center bg-gray-100 p-4 rounded-lg">
+          <span className="font-semibold text-gray-600">Valor Promedio:</span>
+          <span>{data.valorPromedioProducto.toFixed(2)}</span>
+        </li>
       </ul>
     </div>
   );

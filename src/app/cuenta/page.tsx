@@ -1,9 +1,12 @@
-import MiCuenta from "./MiCuenta";
+import { auth } from "@/auth";
+import MiCuenta from "./MiCuenta";   
 
-const Page = () => {
+const Page = async () => {
+    const session = await auth();
+    console.log(session);
     return (
         <div>
-            <MiCuenta/>
+            <MiCuenta session={session}/>
         </div>
     )
 }

@@ -1,7 +1,7 @@
 "use client";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation"
+import swal from 'sweetalert';
 
 const UsuarioForm = () => {
   const {
@@ -34,8 +34,11 @@ const UsuarioForm = () => {
             'Content-Type': 'application/json',
         },
       });
-      alert("Registro exitoso")
+      swal("Registro Existoso!", "Cuenta creada con exito!", "success");
       router.push("/auth/login")
+    }
+    else {
+      swal("Error en el registro!", "Error al intentar crear cuenta!", "error");
     }
 
     // const jsonRes = await res.json();
@@ -43,7 +46,7 @@ const UsuarioForm = () => {
 
   return (
     <div className="h-screen flex justify-center items-center">
-      <form className="bg-slate-800 p-10 w-2/4" onSubmit={onSubmit}>
+      <form className="bg-white rounded-md p-10 w-2/5 shadow-md shadow-black" onSubmit={onSubmit}>
         <label htmlFor="nombre" className="text-slate-500 font-bold">
           Nombre
         </label>
@@ -51,7 +54,7 @@ const UsuarioForm = () => {
           type="text"
           placeholder="Nombre"
           id="nombre"
-          className="border border-gray-400 mb-4 w-full text-black"
+          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
           {...register("nombre", {
             required: {
               value: true,
@@ -60,8 +63,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.nombre && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.nombre.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.nombre.message?.toString()}
           </span>
         )}
 
@@ -72,7 +75,7 @@ const UsuarioForm = () => {
           type="text"
           placeholder="Apellido"
           id="apellido"
-          className="border border-gray-400 mb-4 w-full text-black"
+          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
           {...register("apellido", {
             required: {
               value: true,
@@ -81,8 +84,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.apellido && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.apellido.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.apellido.message?.toString()}
           </span>
         )}
 
@@ -93,7 +96,7 @@ const UsuarioForm = () => {
           type="email"
           placeholder="Correo"
           id="correo"
-          className="border border-gray-400 mb-4 w-full text-black"
+          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
           {...register("correo", {
             required: {
               value: true,
@@ -102,8 +105,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.correo && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.correo.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.correo.message?.toString()}
           </span>
         )}
 
@@ -114,7 +117,7 @@ const UsuarioForm = () => {
           type="password"
           placeholder="Contraseña"
           id="clave"
-          className="border border-gray-400 mb-4 w-full text-black"
+          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
           {...register("clave", {
             required: {
               value: true,
@@ -123,8 +126,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.clave && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.clave.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.clave.message?.toString()}
           </span>
         )}
 
@@ -135,7 +138,7 @@ const UsuarioForm = () => {
           type="text"
           placeholder="Teléfono"
           id="telefono"
-          className="border border-gray-400 mb-4 w-full text-black"
+          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
           {...register("telefono", {
             required: {
               value: true,
@@ -144,8 +147,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.telefono && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.telefono.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.telefono.message?.toString()}
           </span>
         )}
 
@@ -156,7 +159,7 @@ const UsuarioForm = () => {
           type="text"
           placeholder="Dirección"
           id="direccion"
-          className="border border-gray-400 mb-4 w-full text-black"
+          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
           {...register("direccion", {
             required: {
               value: true,
@@ -165,8 +168,8 @@ const UsuarioForm = () => {
           })}
         />
         {errors.direccion && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.direccion.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.direccion.message?.toString()}
           </span>
         )}
 
@@ -177,7 +180,7 @@ const UsuarioForm = () => {
           type="text"
           placeholder="Localidad"
           id="localidad"
-          className="border border-gray-400 mb-4 w-full text-black"
+          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-1 bg-gray-100"
           {...register("localidad", {
             required: {
               value: true,
@@ -186,12 +189,12 @@ const UsuarioForm = () => {
           })}
         />
         {errors.localidad && (
-          <span className="text-red-600 font-bold block text-[14px]">
-            {errors.localidad.message}
+          <span className="text-red-600 font-bold block text-[14px] mb-2">
+            {errors.localidad.message?.toString()}
           </span>
         )}
 
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button className="bg-purple-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Crear
         </button>
       </form>

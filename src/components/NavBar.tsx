@@ -7,7 +7,7 @@ import React, { useState } from "react";
 const NavBar = async () => {
   
   const session = await auth();
-  console.log(session);
+  console.log("Session en NavBar: ", session);
 
   return (
     <Navbar className="fixed bg-white z-50 p-2">

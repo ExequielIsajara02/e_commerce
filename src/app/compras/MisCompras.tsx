@@ -1,6 +1,7 @@
 import SeguimientoCompra from "@/components/SeguimientoCompra";
 import { getPedidos } from "../../../utils/getPedidos";
 
+
 export default async function MisCompras() {
   try {
     let pedidos = await getPedidos();
@@ -14,7 +15,7 @@ export default async function MisCompras() {
         {pedidos.length > 0 ? (
           pedidos.map((pedido) => (
             <div key={pedido.id_pedido} className="bg-white shadow-md rounded-lg p-4 mb-4">
-              <h2 className="text-xl font-semibold">Pedido #{pedido.id_pedido}</h2>
+              <h2 className="text-dark-blue text-xl font-semibold">Pedido #{pedido.id_pedido}</h2>
               <p className="text-gray-600">Fecha: {new Date(pedido.fecha).toLocaleDateString()}</p>
               <p className="text-gray-800 text-lg font-bold">Total: ${pedido.precio_final}</p>
               <h3 className="text-lg font-semibold mt-4">Productos:</h3>
