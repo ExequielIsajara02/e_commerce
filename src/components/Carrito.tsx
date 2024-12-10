@@ -242,6 +242,7 @@ export const Carrito: React.FC = () => {
               Pagar
             </button>
           </div>
-        </div>
-      );
-};
+        )}
+      </div>
+    </div>
+  )}
