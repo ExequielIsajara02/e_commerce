@@ -17,7 +17,7 @@ export const Carrito: React.FC = () => {
 
   const traerCombos = async () => {
     try {
-      const comboCantidadRes = await fetch("http://localhost:3000/api/combosCantidad");
+      const comboCantidadRes = await fetch("/api/combosCantidad");
       const comboCantidadData: ComboCantidadData[] = await comboCantidadRes.json();
       setCombosCantidad(comboCantidadData);
     } catch (error) {

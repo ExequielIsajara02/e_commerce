@@ -21,7 +21,7 @@ export async function crearSesionStripe(cartItems: ProductoData[], totalAfterDis
         }));
         
         const session = await stripe.checkout.sessions.create({
-            success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
+            success_url: `/success?session_id={CHECKOUT_SESSION_ID}`,
             line_items: lineItems,
             mode: 'payment'
         });
