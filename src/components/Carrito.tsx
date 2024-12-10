@@ -51,7 +51,7 @@ export const Carrito: React.FC = () => {
             },
           };
         } else {
-          console.log(`No combo found for product ${item.producto.id_producto}`);
+          console.log(`No combo found for product ${item.producto.id_producto} ------`);
           return {
             ...item,
             producto: {
