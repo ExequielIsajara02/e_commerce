@@ -11,7 +11,7 @@ const MetricasVentas: React.FC<PropsMetricasVentas> = ({ data }) => {
   const { productosMasVendidos, comprasFinalizadas } = data;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-300 mx-auto w-96 shadow-black">
+    <div className="bg-light-blue rounded-lg shadow-md p-6 border border-gray-300 mx-auto w-96 shadow-black mt-10">
       <h2 className="text-xl font-bold text-center mb-4 text-gray-800">Métricas de Ventas</h2>
       <div>
         <h3 className="font-semibold text-gray-600 mb-3">Productos Más Vendidos</h3>

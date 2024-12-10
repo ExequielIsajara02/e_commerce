@@ -44,8 +44,8 @@ export default async function MetricasPage() {
   
 
   return (
-    <div>
-      
+    
+     <div className="h-96"> 
       <MetricasVentas  data={data}/>
     </div>
   );

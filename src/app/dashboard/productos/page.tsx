@@ -36,7 +36,7 @@ const Page = async () => {
     };
 
     return (
-        <div>
+        <div className="h-96">
             <MetricasProductos data={dataProducto} />
         </div>
     );
