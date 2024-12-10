@@ -1,20 +1,16 @@
 "use client";
-import React, { useContext, useEffect, useState } from 'react';
-import { useSession } from "next-auth/react";
-import { CartContext, CartItem, useCartContext } from '@/context/CartContext';
-import { crearSesionStripe } from '../../utils/pasarela_stripe';
+import React, { useContext, useEffect, useState } from "react";
+import { CartContext, CartItem, useCartContext } from "@/context/CartContext";
+import { crearSesionStripe } from "../../utils/pasarela_stripe";
 import { ProductoData } from "../../types/ProductData";
 import { ComboCantidadData } from "../../types/ComboCantidadData";
-import { calculateDiscount, canApplyDiscount } from '../../utils/pointsDiscount';
 
 export const Carrito: React.FC = () => {
-  const { data: session } = useSession();
   const { cartItems, setCartItems, isCarritoVisible, setCarritoVisible } = useContext(CartContext);
   const { clearCart } = useCartContext();
   const [combosCantidad, setCombosCantidad] = useState<ComboCantidadData[]>([]);
-  const [selectedDiscount, setSelectedDiscount] = useState<number>(0);
 
-  // Fetch combos
+  // Mover la función afuera del hook para evitar recreaciones innecesarias
   const traerCombos = async () => {
     try {
       const comboCantidadRes = await fetch("http://localhost:3000/api/combosCantidad");
@@ -30,7 +26,6 @@ export const Carrito: React.FC = () => {
     traerCombos();
   }, []);
 
-  // Aplicar descuentos por cantidad de combo
   const applyComboDiscounts = (cartItems: CartItem[], combosCantidad: ComboCantidadData[]) => {
     return cartItems.map((item: CartItem) => {
       if (item.producto) {
@@ -41,6 +36,7 @@ export const Carrito: React.FC = () => {
         const precioBase = item.producto.precioOriginal || item.producto.precio;
   
         if (combo) {
+          // Si se cumple la cantidad mínima, aplicamos el precio con descuento
           const cumpleCombo = item.cantidad >= combo.cantidad_minima;
           const precioConDescuento = precioBase * (1 - combo.descuento / 100);
   
@@ -48,11 +44,12 @@ export const Carrito: React.FC = () => {
             ...item,
             producto: {
               ...item.producto,
-              precioOriginal: precioBase,
-              precio: cumpleCombo ? precioConDescuento : precioBase,
+              precioOriginal: precioBase, // Aseguramos que siempre esté disponible el precio original
+              precio: cumpleCombo ? precioConDescuento : precioBase, // Precio fijo dependiendo del combo
             },
           };
         } else {
+          // Si no hay combo por cantidad, mantener el precio original
           return {
             ...item,
             producto: {
@@ -67,8 +64,8 @@ export const Carrito: React.FC = () => {
       return item;
     });
   };
+  
 
-  // Calcular precio total con descuentos
   const getTotalPrice = () => {
     const itemsConDescuento = applyComboDiscounts(cartItems, combosCantidad);
     return itemsConDescuento.reduce((total: number, item: CartItem) => {
@@ -79,28 +76,10 @@ export const Carrito: React.FC = () => {
     }, 0);
   };
 
-  // Calcular el descuento aplicable
-  const handleApplyDiscount = () => {
-    const total = getTotalPrice();
-    const puntosUsuario = session?.user?.puntos || 0; // Puntos disponibles del usuario
-    const descuento = calculateDiscount(puntosUsuario, total);
-
-    if (canApplyDiscount(total, descuento)) {
-      setSelectedDiscount(descuento);
-    } else {
-      alert("No puedes aplicar este descuento.");
-    }
-  };
-
-  // Total después de aplicar el descuento
-  const totalAfterDiscount = getTotalPrice() - selectedDiscount;
-
-  // Eliminar producto del carrito
   const removeFromCart = (productId: string) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.producto?.id_producto !== productId));
   };
 
-  // Actualizar cantidad de producto
   const updateCantidad = (idProducto: string, nuevaCantidad: number) => {
     setCartItems((prevCart) => {
       const updatedCart = prevCart.map((item) =>
@@ -108,16 +87,15 @@ export const Carrito: React.FC = () => {
           ? { ...item, cantidad: nuevaCantidad > 0 ? nuevaCantidad : 1 }
           : item
       );
-      return applyComboDiscounts(updatedCart, combosCantidad);
+      return applyComboDiscounts(updatedCart, combosCantidad); // Recalcular descuentos
     });
   };
 
-  // Procesar pago
   const handlePay = async () => {
     // Guardar el carrito en localStorage
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   
-    // Crear sesión de Stripe
+    // Crear sesión de Stripe asegurando que los datos cumplan con ProductoData
     const session = await crearSesionStripe(
       cartItems.map((item) => {
         if (!item.producto) {
@@ -144,7 +122,6 @@ export const Carrito: React.FC = () => {
     clearCart();
   };
 
-  // No mostrar si no hay items y el carrito no está visible
   if (!cartItems.length && !isCarritoVisible) {
     return null;
   }
@@ -214,7 +191,7 @@ export const Carrito: React.FC = () => {
                   </button>
                 </li>
               ) : (
-                <li key={`invalid-product`} className="text-red-500">
+                <li key={item.producto} className="text-red-500">
                   Producto no válido
                 </li>
               )
@@ -222,33 +199,19 @@ export const Carrito: React.FC = () => {
           </ul>
         )}
       </div>
-
-      {/* Botón para aplicar descuento */}
-      <button
-        className={`w-full py-2 rounded-lg mb-4 ${
-          selectedDiscount > 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white'
-        }`}
-        onClick={handleApplyDiscount}
-        disabled={selectedDiscount > 0}
-      >
-        {selectedDiscount > 0 ? "Descuento Aplicado" : "Aplicar Descuento"}
-      </button>
-
-      {cartItems.length > 0 && (
-        <div className="p-4 border-t">
-          <h2 className="text-xl">Total antes del descuento: ${getTotalPrice().toFixed(2)}</h2>
-          {selectedDiscount > 0 && (
-            <>
-              <h2 className="text-xl">Descuento aplicado: ${selectedDiscount.toFixed(2)}</h2>
-              <h2 className="text-xl">Total después del descuento: ${totalAfterDiscount.toFixed(2)}</h2>
-            </>
-          )}
-        </div>
-      )}
-
-      <button className="bg-green-600 text-white w-60 h-10 rounded-lg m-6" onClick={handlePay}>
-        Pagar
-      </button>
+      <div className="bg-white flex flex-col w-full items-center absolute bottom-5 m-auto justify-center">
+        {cartItems.length > 0 && (
+          <div className="p-4 border-t">
+            <h2 className="text-xl">Total: ${getTotalPrice().toFixed(2)}</h2>
+          </div>
+        )}
+        <button
+          className="bg-green-600 text-white w-60 h-10 rounded-lg "
+          onClick={handlePay}
+        >
+          Pagar
+        </button>
+      </div>
     </div>
   );
 };
