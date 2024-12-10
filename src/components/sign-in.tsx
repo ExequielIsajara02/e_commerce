@@ -79,9 +79,9 @@ function FormLogin() {
           )}
         />
         {error && <FormMessage>{error}</FormMessage>}
-        <Button type="submit" disabled={isPending} className="bg-purple-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-sm shadow-black">Ingresar</Button>
+        <Button type="submit" disabled={isPending} className="bg-primary-700 hover:bg-secondary-700 text-white font-bold py-2 px-4 rounded shadow-sm shadow-black">Ingresar</Button>
         <span className="mx-1">- o -</span>
-        <Button type="submit" disabled={isPending} className="bg-purple-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-sm shadow-black"><Link href="/registro">Crear una cuenta</Link></Button>
+        <Button type="submit" disabled={isPending} className="bg-primary-700 hover:bg-secondary-700 text-white font-bold py-2 px-4 rounded shadow-sm shadow-black"><Link href="/registro">Crear una cuenta</Link></Button>
       </form>
     </Form>
   )
