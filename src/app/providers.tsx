@@ -3,16 +3,18 @@
 import React, { ReactNode } from 'react';
 import { CartProvider } from '../context/CartContext';
 import { NextUIProvider } from "@nextui-org/react";
-import NavBar from "@/components/NavBar";
+import { SessionProvider } from "next-auth/react";
 
 const Providers: React.FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <NextUIProvider>
-      <CartProvider>
-        {children}
-      </CartProvider>
-    </NextUIProvider>
+    <SessionProvider>
+      <NextUIProvider>
+        <CartProvider>
+          {children}
+        </CartProvider>
+      </NextUIProvider>
+    </SessionProvider>
   );
-}
+};
 
 export default Providers;

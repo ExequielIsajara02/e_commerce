@@ -11,7 +11,7 @@ export interface PropsMetricasProductos {
 
 export const MetricasProductos: React.FC<PropsMetricasProductos> = ({ data }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 border border-gray-300 mx-auto w-96 shadow-black">
+    <div className="bg-light-blue rounded-lg shadow-md p-6 border border-gray-300 mx-auto w-96 shadow-black mt-10">
       <h2 className="text-xl font-bold text-center mb-4 text-gray-800">Métricas de Productos</h2>
       <ul className="space-y-4">
         <li className="flex justify-between items-center bg-gray-100 p-4 rounded-lg">

@@ -4,7 +4,7 @@ import React from 'react';
 const MenuLateral = () => {
   
   return (
-    <div className="w-64 rounded-tr-md border-r-2 p-4 bg-white">
+    <div className="w-64 rounded-tr-md border-r-2 p-4 bg-primary-700 mt-10">
       <h2 className="text-lg font-bold border-b-2 mb-2">MENU MÉTRICAS</h2>
       <ul className='text-slate-700 text-[14px] flex-col space-y-4 font-bold'>
         <li>

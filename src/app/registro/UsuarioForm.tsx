@@ -45,8 +45,8 @@ const UsuarioForm = () => {
   });
 
   return (
-    <div className="h-screen flex justify-center items-center">
-      <form className="bg-white rounded-md p-10 w-2/5 shadow-md shadow-black" onSubmit={onSubmit}>
+    <div className="flex justify-center items-center">
+      <form className="bg-white rounded-md p-10 w-2/5 my-10 shadow-md shadow-black" onSubmit={onSubmit}>
         <label htmlFor="nombre" className="text-slate-500 font-bold">
           Nombre
         </label>
@@ -194,7 +194,7 @@ const UsuarioForm = () => {
           </span>
         )}
 
-        <button className="bg-purple-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button className="bg-primary-700 hover:bg-secondary-700 text-white font-bold py-2 px-4 rounded">
           Crear
         </button>
       </form>

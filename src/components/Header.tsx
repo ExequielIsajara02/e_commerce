@@ -16,7 +16,7 @@ export const Header = () => {
     };
 
     return (
-        <div className="flex justify-between p-6">
+        <div className="flex justify-between">
             
             {isMounted && ( // Renderiza solo si el componente está montado
                 <div>
