@@ -85,7 +85,7 @@ export const Carrito: React.FC = () => {
 
   const handleApplyDiscount = () => {
     const total = getTotalPrice();
-    const puntosUsuario = session?.user?.puntos || 0;
+    const puntosUsuario = session?.puntos || 0;
 
     console.log("Applying Discount - Total:", total);
     console.log("Applying Discount - User Points:", puntosUsuario);
@@ -157,15 +157,16 @@ export const Carrito: React.FC = () => {
 
     // Crear sesión de Stripe asegurando que los datos cumplan con ProductoData
     const session = await crearSesionStripe(
-      cartItems.map((item) => {
-        if (!item.producto) {
-          throw new Error(`El producto del carrito está incompleto: ${JSON.stringify(item)}`);
-        }
-        return {
-          ...item.producto,
-          cantidad: item.producto.cantidad,
-        };
-      })
+        cartItems.map((item) => {
+            if (!item.producto) {
+                throw new Error(`El producto del carrito está incompleto: ${JSON.stringify(item)}`);
+            }
+            return {
+                ...item.producto,
+                cantidad: item.producto.cantidad,
+            };
+        }),
+        totalAfterDiscount // Pasa el total después del descuento aquí
     );
 
     // Redirigir al usuario a la URL de la sesión de Stripe
@@ -173,7 +174,7 @@ export const Carrito: React.FC = () => {
 
     // Limpiar el carrito
     clearCart();
-  };
+};
 
   if (!cartItems.length && !isCarritoVisible) {
     return null;
