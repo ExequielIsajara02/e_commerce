@@ -4,6 +4,9 @@ import { CartContext, CartItem, useCartContext } from "@/context/CartContext";
 import { crearSesionStripe } from "../../utils/pasarela_stripe";
 import { ProductoData } from "../../types/ProductData";
 import { ComboCantidadData } from "../../types/ComboCantidadData";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+
 
 export const Carrito: React.FC = () => {
   const { cartItems, setCartItems, isCarritoVisible, setCarritoVisible } = useContext(CartContext);
@@ -133,8 +136,8 @@ export const Carrito: React.FC = () => {
       }`}
     >
       <div className="p-4 border-b flex justify-between items-center">
-        <h1 className="text-2xl">Tu Carrito</h1>
-        <button onClick={() => setCarritoVisible(false)} className="text-red-500">
+        <h1 className="text-2xl text-center items-center">Tu Carrito</h1>
+        <button onClick={() => setCarritoVisible(false)} className="text-red-500 text-center items-center text-2xl">
           x
         </button>
       </div>
@@ -153,12 +156,12 @@ export const Carrito: React.FC = () => {
                   />
                   <div className="flex-1">
                     <span>{item.producto.nombre}</span>
-                    <div>
-                      <span>${item.producto.precio.toFixed(2)}</span>
+                    <div className="flex flex-col text-left">
+                      <p>${item.producto.precio.toFixed(2)}</p>
                       {item.producto.precioOriginal && item.producto.precioOriginal > item.producto.precio && (
-                        <span className="line-through text-red-500 ml-2">
-                          ${item.producto.precioOriginal.toFixed(2)}
-                        </span>
+                        <p className="line-through text-red-500">
+                        ${item.producto.precioOriginal.toFixed(2)}
+                        </p>
                       )}
                     </div>
                     <div className="flex items-center mt-2">
@@ -187,7 +190,7 @@ export const Carrito: React.FC = () => {
                     className="text-red-500 ml-4"
                     onClick={() => removeFromCart(item.producto!.id_producto)}
                   >
-                    Remove
+                    <FontAwesomeIcon icon={faTrash} />
                   </button>
                 </li>
               ) : (
@@ -206,7 +209,7 @@ export const Carrito: React.FC = () => {
           </div>
         )}
         <button
-          className="bg-green-600 text-white w-60 h-10 rounded-lg "
+          className="bg-secondary-500 text-white w-60 h-10 rounded-lg hover:bg-secondary-700 "
           onClick={handlePay}
         >
           Pagar

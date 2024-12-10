@@ -38,7 +38,8 @@ export default {
                     id: user.id_usuario.toString(),
                     name: user.nombre,
                     email: user.correo,
-                    role: user.role
+                    role: user.role,
+                    cuentaVerificada: user.cuentaVerificada,
                 } 
                 return userAuth;
                 
