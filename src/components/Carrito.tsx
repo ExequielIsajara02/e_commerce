@@ -27,6 +27,7 @@ export const Carrito: React.FC = () => {
 
   useEffect(() => {
     traerCombos();
+    console.log(session)
   }, []);
 
   const applyComboDiscounts = (cartItems: CartItem[], combosCantidad: ComboCantidadData[]) => {
@@ -39,7 +40,7 @@ export const Carrito: React.FC = () => {
         const precioBase = item.producto.precioOriginal || item.producto.precio;
 
         if (combo) {
-          const cumpleCombo = item.cantidad >= combo.cantidad_minima;
+          const cumpleCombo = item.producto.cantidad >= combo.cantidad_minima;
           const precioConDescuento = precioBase * (1 - combo.descuento / 100);
 
           return {
@@ -73,7 +74,7 @@ export const Carrito: React.FC = () => {
 
     const total = itemsConDescuento.reduce((total: number, item: CartItem) => {
       if (item.producto && typeof item.producto.precio === "number") {
-        return total + item.producto.precio * item.cantidad;
+        return total + item.producto.precio * item.producto.cantidad;
       }
       return total;
     }, 0);
@@ -93,14 +94,22 @@ export const Carrito: React.FC = () => {
     console.log("Applying Discount - Calculated Discount:", descuento);
 
     const canApply = canApplyDiscount(total, descuento);
+    console.log("Can apply discount:", canApply);
 
     if (canApply) {
       setSelectedDiscount(descuento);
+      console.log("Discount successfully applied:", descuento);
     } else {
       alert("No puedes aplicar este descuento.");
+      console.log("Discount application failed. Details:", {
+        total,
+        puntosUsuario,
+        descuento,
+        canApply
+      });
     }
   };
-  
+
   const totalAfterDiscount = getTotalPrice() - selectedDiscount;
 
   const removeFromCart = (productId: string) => {
@@ -108,13 +117,37 @@ export const Carrito: React.FC = () => {
   };
 
   const updateCantidad = (idProducto: string, nuevaCantidad: number) => {
+    console.log('Updating quantity for product:', idProducto);
+    console.log('Current cart items:', cartItems);
+    console.log('New quantity:', nuevaCantidad);
+
     setCartItems((prevCart) => {
-      const updatedCart = prevCart.map((item) =>
-        item.producto?.id_producto === idProducto
-          ? { ...item, cantidad: nuevaCantidad > 0 ? nuevaCantidad : 1 }
-          : item
-      );
-      return applyComboDiscounts(updatedCart, combosCantidad); // Recalcular descuentos
+      const updatedCart = prevCart.map((item) => {
+        console.log('Comparing:',
+          item.producto?.id_producto,
+          idProducto,
+          item.producto?.id_producto === idProducto
+        );
+
+        return item.producto?.id_producto === idProducto
+          ? {
+            ...item,
+            producto: item.producto ? {
+              ...item.producto,
+              cantidad: nuevaCantidad > 0 ? nuevaCantidad : 1,
+            } : undefined,
+            log: console.log(`Updated item: ${JSON.stringify({
+              id: item.producto?.id_producto,
+              oldQuantity: item.producto?.cantidad,
+              newQuantity: nuevaCantidad > 0 ? nuevaCantidad : 1
+            })}`)
+          }
+          : item;
+      });
+
+      const finalCart = applyComboDiscounts(updatedCart, combosCantidad);
+      console.log('Final cart after update:', finalCart);
+      return finalCart;
     });
   };
 
@@ -129,15 +162,8 @@ export const Carrito: React.FC = () => {
           throw new Error(`El producto del carrito está incompleto: ${JSON.stringify(item)}`);
         }
         return {
-          id_producto: item.producto.id_producto,
-          nombre: item.producto.nombre,
-          descripcion: item.producto.descripcion,
-          imagen: item.producto.imagen,
-          precio: item.producto.precio,
-          marca: item.producto.marca,
-          tipo: item.producto.tipo,
-          precioOriginal: item.producto.precioOriginal,
-          cantidad: item.cantidad,
+          ...item.producto,
+          cantidad: item.producto.cantidad,
         };
       })
     );
@@ -190,20 +216,28 @@ export const Carrito: React.FC = () => {
                     <div className="flex items-center mt-2">
                       <button
                         className="bg-gray-200 p-1 rounded-md text-lg font-bold"
-                        onClick={() => updateCantidad(item.producto!.id_producto, item.cantidad - 1)}
-                        disabled={item.cantidad <= 1}
+                        onClick={() => {
+                          console.log('Decrease button clicked');
+                          console.log('Current item:', item);
+                          updateCantidad(item.producto!.id_producto, item.producto!.cantidad - 1);
+                        }}
+                        disabled={item.producto.cantidad <= 1}
                       >
                         -
                       </button>
                       <input
                         type="text"
                         className="w-12 mx-2 text-center border rounded-md"
-                        value={item.cantidad}
+                        value={item.producto.cantidad}
                         readOnly
                       />
                       <button
                         className="bg-gray-200 p-1 rounded-md text-lg font-bold"
-                        onClick={() => updateCantidad(item.producto!.id_producto, item.cantidad + 1)}
+                        onClick={() => {
+                          console.log('Increase button clicked');
+                          console.log('Current item:', item);
+                          updateCantidad(item.producto!.id_producto, item.producto!.cantidad + 1);
+                        }}
                       >
                         +
                       </button>
@@ -224,17 +258,18 @@ export const Carrito: React.FC = () => {
             )}
           </ul>
         )}
-      </div>
 
-      {/* Botón para aplicar descuento */}
-      <button
-        className={`w-full py-2 rounded-lg mb-4 ${selectedDiscount > 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white'
-          }`}
-        onClick={handleApplyDiscount}
-        disabled={selectedDiscount > 0} // Desactiva el botón si ya hay un descuento aplicado
-      >
-        {selectedDiscount > 0 ? "Descuento Aplicado" : "Aplicar Descuento"}
-      </button>
+        {/* Botón para aplicar descuento */}
+        <button
+          className={`w-full py-2 rounded-lg mb-4 ${selectedDiscount > 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white'
+            }`}
+          onClick={handleApplyDiscount}
+          disabled={selectedDiscount > 0} // Desactiva el botón si ya hay un descuento aplicado
+        >
+          {selectedDiscount > 0 ? "Descuento Aplicado" : "Aplicar Descuento"}
+        </button>
+
+      </div>
 
       <div className="bg-white flex flex-col w-full items-center absolute bottom-5 m-auto justify-center">
         {cartItems.length > 0 && (
@@ -253,4 +288,5 @@ export const Carrito: React.FC = () => {
         )}
       </div>
     </div>
-  )}
+  );
+};
