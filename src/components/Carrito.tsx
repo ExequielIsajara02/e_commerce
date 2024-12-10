@@ -1,13 +1,18 @@
 "use client";
+
+import { useSession } from "next-auth/react"
 import React, { useContext, useEffect, useState } from "react";
 import { CartContext, CartItem, useCartContext } from "@/context/CartContext";
 import { crearSesionStripe } from "../../utils/pasarela_stripe";
+import { calculateDiscount, canApplyDiscount } from '../../utils/pointsDiscount';
 import { ProductoData } from "../../types/ProductData";
 import { ComboCantidadData } from "../../types/ComboCantidadData";
 
 export const Carrito: React.FC = () => {
+  const { data: session } = useSession();
   const { cartItems, setCartItems, isCarritoVisible, setCarritoVisible } = useContext(CartContext);
   const { clearCart } = useCartContext();
+  const [selectedDiscount, setSelectedDiscount] = useState<number>(0);
   const [combosCantidad, setCombosCantidad] = useState<ComboCantidadData[]>([]);
 
   // Mover la función afuera del hook para evitar recreaciones innecesarias
@@ -32,14 +37,14 @@ export const Carrito: React.FC = () => {
         const combo = combosCantidad.find(
           (c) => c.id_producto === Number(item.producto?.id_producto)
         );
-  
+
         const precioBase = item.producto.precioOriginal || item.producto.precio;
-  
+
         if (combo) {
           // Si se cumple la cantidad mínima, aplicamos el precio con descuento
           const cumpleCombo = item.cantidad >= combo.cantidad_minima;
           const precioConDescuento = precioBase * (1 - combo.descuento / 100);
-  
+
           return {
             ...item,
             producto: {
@@ -60,11 +65,11 @@ export const Carrito: React.FC = () => {
           };
         }
       }
-  
+
       return item;
     });
   };
-  
+
 
   const getTotalPrice = () => {
     const itemsConDescuento = applyComboDiscounts(cartItems, combosCantidad);
@@ -75,6 +80,20 @@ export const Carrito: React.FC = () => {
       return total;
     }, 0);
   };
+
+  // Calcular el descuento aplicable
+  const handleApplyDiscount = () => {
+    const total = getTotalPrice();
+    const puntosUsuario = session?.user?.puntos || 0; // Puntos disponibles del usuario
+    const descuento = calculateDiscount(puntosUsuario, total);
+    if (canApplyDiscount(total, descuento)) {
+      setSelectedDiscount(descuento);
+    } else {
+      alert("No puedes aplicar este descuento.");
+    }
+  };
+  // Total después de aplicar el descuento
+  const totalAfterDiscount = getTotalPrice() - selectedDiscount;
 
   const removeFromCart = (productId: string) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.producto?.id_producto !== productId));
@@ -94,7 +113,7 @@ export const Carrito: React.FC = () => {
   const handlePay = async () => {
     // Guardar el carrito en localStorage
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  
+
     // Crear sesión de Stripe asegurando que los datos cumplan con ProductoData
     const session = await crearSesionStripe(
       cartItems.map((item) => {
@@ -114,10 +133,10 @@ export const Carrito: React.FC = () => {
         };
       })
     );
-  
+
     // Redirigir al usuario a la URL de la sesión de Stripe
     window.location.href = session ?? "";
-  
+
     // Limpiar el carrito
     clearCart();
   };
@@ -128,9 +147,8 @@ export const Carrito: React.FC = () => {
 
   return (
     <div
-      className={`fixed z-50 top-0 right-0 h-full w-80 bg-white shadow-lg border-l border-gray-300 transform transition-transform duration-300 ease-in-out ${
-        isCarritoVisible ? "translate-x-0" : "translate-x-full"
-      }`}
+      className={`fixed z-50 top-0 right-0 h-full w-80 bg-white shadow-lg border-l border-gray-300 transform transition-transform duration-300 ease-in-out ${isCarritoVisible ? "translate-x-0" : "translate-x-full"
+        }`}
     >
       <div className="p-4 border-b flex justify-between items-center">
         <h1 className="text-2xl">Tu Carrito</h1>
@@ -199,19 +217,31 @@ export const Carrito: React.FC = () => {
           </ul>
         )}
       </div>
+
+      {/* Botón para aplicar descuento */}
+      <button
+        className={`w-full py-2 rounded-lg mb-4 ${selectedDiscount > 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white'
+          }`}
+        onClick={handleApplyDiscount}
+        disabled={selectedDiscount > 0} // Desactiva el botón si ya hay un descuento aplicado
+      >
+        {selectedDiscount > 0 ? "Descuento Aplicado" : "Aplicar Descuento"}
+      </button>
+
       <div className="bg-white flex flex-col w-full items-center absolute bottom-5 m-auto justify-center">
         {cartItems.length > 0 && (
           <div className="p-4 border-t">
-            <h2 className="text-xl">Total: ${getTotalPrice().toFixed(2)}</h2>
+            <h2 className="text-xl">Total antes del descuento: ${getTotalPrice().toFixed(2)}</h2>
+            {selectedDiscount > 0 && (
+              <>
+                <h2 className="text-xl">Descuento aplicado: ${selectedDiscount.toFixed(2)}</h2>
+                <h2 className="text-xl">Total después del descuento: ${totalAfterDiscount.toFixed(2)}</h2>
+              </>
+            )}
+            <button className="bg-green-600 text-white w-60 h-10 rounded-lg m-6" onClick={handlePay}>
+              Pagar
+            </button>
           </div>
-        )}
-        <button
-          className="bg-green-600 text-white w-60 h-10 rounded-lg "
-          onClick={handlePay}
-        >
-          Pagar
-        </button>
-      </div>
-    </div>
-  );
+        </div>
+      );
 };
