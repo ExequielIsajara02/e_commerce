@@ -1,9 +1,10 @@
 import { auth } from "@/auth";
 import { obtenerProductos } from "../../../utils/producto";
 import ProductForm from "./ProductForm";
+import { authorizationPage } from "../../../utils/authorization";
 
 const Page = async () => {
-    const session = await auth();
+    await authorizationPage({ roles: ["admin", "editor", "user"] });
   const response = await obtenerProductos();
   
   const productos = Array.isArray(response)

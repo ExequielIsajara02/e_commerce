@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { ProductoData } from "../../../types/ProductData";
 import CargandoSpinner from "@/components/CargandoSpinner";
+import {Card, CardBody, CardFooter, Image} from "@nextui-org/react";
 
 interface Props {
   productos: ProductoData[];
@@ -157,118 +158,133 @@ const ProductForm: React.FC<Props> = ({ productos }) => {
                     {/* Botón para mostrar el formulario de crear combos */}
                     <button 
                         onClick={() => { setCrearProducto(true); resetForm(); }} // Reinicia el formulario para crear un nuevo combo
-                        className="mb-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600"
+                        className="fixed right-4 bottom-4 bg-blue-500 text-white text-2xl font-bold py-2 px-4 rounded-full hover:bg-blue-600"
                     >
-                        Crear Nuevo Producto
+                        +
                     </button>
                     {/* Modal para crear o editar combos */}
                     {CrearProducto && (
                         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                            <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl w-full flex">
-                                {/* <div className="flex-1"> */}
-                                    <h2 className="text-xl font-semibold mb-4">{editProductoId !== null ? "Editar Producto" : "Crear Producto"}</h2>
-                                    <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white">
-                                        <div className="mb-4">
-                                            <label htmlFor="nombre" className="block text-sm font-medium text-gray-900">Nombre:</label>
-                                            <input
-                                                type="text"
-                                                id="nombre"
-                                                value={nombre}
-                                                onChange={(e) => setNombre(e.target.value)}
-                                                required
-                                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            />
+                            <div className="flex-1 p-6 bg-gray-100 rounded-lg shadow-md max-w-2xl w-full flex flex-col">
+                                    <h2 className="text-2xl font-bold text-gray-800 text-center">
+                                        {editProductoId !== null ? "Editar Producto" : "Crear Producto"}
+                                    </h2>
+                                    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-6">
+                                        {/* Nombre y Descripción */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                            <div>
+                                                <label htmlFor="nombre" className="block text-sm font-medium text-gray-800">Nombre:</label>
+                                                <input
+                                                    type="text"
+                                                    id="nombre"
+                                                    value={nombre}
+                                                    onChange={(e) => setNombre(e.target.value)}
+                                                    required
+                                                    className="mt-2 block h-11 w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="descripcion" className="block text-sm font-medium text-gray-800">Descripción:</label>
+                                                <textarea
+                                                    id="descripcion"
+                                                    value={descripcion}
+                                                    onChange={(e) => setDescripcion(e.target.value)}
+                                                    required
+                                                    className="mt-2 block h-11 w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="mb-4">
-                                            <label htmlFor="descripcion" className="block text-sm font-medium text-gray-700">Descripción:</label>
-                                            <textarea
-                                                id="descripcion"
-                                                value={descripcion}
-                                                onChange={(e) => setDescripcion(e.target.value)}
-                                                required
-                                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            />
+                                        {/* URL de Imagen */}
+                                        <div className="mb-6">
+                                            <label htmlFor="imagenUrl" className="block text-sm font-medium text-gray-800">URL de la Imagen:</label>
+                                            <div className="flex items-center gap-4 mt-2">
+                                                <input
+                                                    type="text"
+                                                    id="imagenUrl"
+                                                    value={imagenUrl}
+                                                    onChange={(e) => setImagenUrl(e.target.value)}
+                                                    required
+                                                    className="flex-1 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                />
+                                                {imagenUrl && (
+                                                    <img src={imagenUrl} alt="Vista previa" className="w-32 h-32 rounded-lg shadow-md object-cover" />
+                                                )}
+                                            </div>
                                         </div>
-                                        <div className="mb-4">
-                                            <label htmlFor="imagenUrl" className="block text-sm font-medium text-gray-700">URL de la Imagen:</label>
-                                            <input
-                                                type="text"
-                                                id="imagenUrl"
-                                                value={imagenUrl}
-                                                onChange={(e) => setImagenUrl(e.target.value)}
-                                                required
-                                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            />
-                                            {imagenUrl && (
-                                                <img src={imagenUrl} alt="Vista previa" className="mt-2 w-32 h-32 object-cover" />
-                                            )}
+                                        {/* Precio y Cantidad */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                            <div>
+                                                <label htmlFor="precio" className="block text-sm font-medium text-gray-800">Precio:</label>
+                                                <input
+                                                    type="number"
+                                                    id="precio"
+                                                    value={precio}
+                                                    onChange={(e) => setPrecio(e.target.value)}
+                                                    required
+                                                    className="mt-2 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="cantidad" className="block text-sm font-medium text-gray-800">Cantidad:</label>
+                                                <input
+                                                    type="number"
+                                                    id="cantidad"
+                                                    value={cantidad}
+                                                    onChange={(e) => setCantidad(e.target.value)}
+                                                    required
+                                                    className="mt-2 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="mb-4">
-                                            <label htmlFor="precio" className="block text-sm font-medium text-gray-700">Precio:</label>
-                                            <input
-                                                type="number"
-                                                id="precio"
-                                                value={precio}
-                                                onChange={(e) => setPrecio(e.target.value)}
-                                                required
-                                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            />
+                                        {/* Marca y Tipo */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                            <div>
+                                                <label htmlFor="marca" className="block text-sm font-medium text-gray-800">Marca:</label>
+                                                <input
+                                                    type="text"
+                                                    id="marca"
+                                                    value={marca}
+                                                    onChange={(e) => setMarca(e.target.value)}
+                                                    required
+                                                    className="mt-2 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label htmlFor="tipo" className="block text-sm font-medium text-gray-800">Tipo:</label>
+                                                <input
+                                                    type="text"
+                                                    id="tipo"
+                                                    value={tipo}
+                                                    onChange={(e) => setTipo(e.target.value)}
+                                                    required
+                                                    className="mt-2 block w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="mb-4">
-                                            <label htmlFor="cantidad" className="block text-sm font-medium text-gray-700">Cantidad:</label>
-                                            <input
-                                                type="number"
-                                                id="cantidad"
-                                                value={cantidad}
-                                                onChange={(e) => setCantidad(e.target.value)}
-                                                required
-                                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            />
+                                        {/* Botones */}
+                                        <div className="flex justify-end gap-4">
+                                            <button
+                                                type="submit"
+                                                className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+                                            >
+                                                {editProductoId !== null ? "Actualizar Producto" : "Crear Producto"}
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setCrearProducto(false)}
+                                                className="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
+                                            >
+                                                Cancelar
+                                            </button>
                                         </div>
-                                        <div className="mb-4">
-                                            <label htmlFor="marca" className="block text-sm font-medium text-gray-700">Marca:</label>
-                                            <input
-                                                type="text"
-                                                id="marca"
-                                                value={marca}
-                                                onChange={(e) => setMarca(e.target.value)}
-                                                required
-                                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            />
-                                        </div>
-                                        <div className="mb-4">
-                                            <label htmlFor="tipo" className="block text-sm font-medium text-gray-700">Tipo:</label>
-                                            <input
-                                                type="text"
-                                                id="tipo"
-                                                value={tipo}
-                                                onChange={(e) => setTipo(e.target.value)}
-                                                required
-                                                className="text-gray-900 mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            />
-                                        </div>
-                                        {/* <button type="submit" className="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">
-                                            Crear Producto
-                                        </button> */}
-                                        <button type="submit" className="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">
-                                            {editProductoId !== null ? "Actualizar Producto" : "Crear Producto"}
-                                        </button>
-                                        <button 
-                                            type="button" 
-                                            onClick={() => setCrearProducto(false)} 
-                                            className="ml-4 bg-red-500 text-white font-semibold py-2 px-4 rounded hover:bg-red-600"
-                                        >
-                                            Cancelar
-                                        </button>
                                     </form>
-                                {/* </div> */}
                             </div>
                         </div>
                     )}
 
                 <div className="w-full flex flex-wrap">
                     <div className="w-1/4">
-                        <div className="bg-white shadow rounded p-4">
+                        <div className="bg-white shadow-gray-400  shadow-lg rounded p-4">
                         <h2 className="font-semibold mb-2">Filtros</h2>
                         <div className="mb-4">
                             <label className="block">Marca:</label>
@@ -324,7 +340,7 @@ const ProductForm: React.FC<Props> = ({ productos }) => {
                     </div>
 
                     <div className="flex-1 ml-4">
-                        <div className="bg-white shadow rounded p-4 mb-4">
+                        <div className="bg-white rounded-xl shadow-gray-400 shadow-lg p-4 mb-4">
                         <h2 className="font-semibold mb-2">Buscar Producto</h2>
                         <div className="mb-4 flex">
                             <input
@@ -337,36 +353,45 @@ const ProductForm: React.FC<Props> = ({ productos }) => {
                         </div>  
                         </div>
                         
-                    </div>
-                </div>
 
-                <div className="left-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {sortedProducts.map((producto) => (
-                    <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={producto.id_producto}>
-                        <p>ID: {producto.id_producto}</p>
-                        <p className="mb-1 font-semibold">{producto.nombre}</p>
-                        <p className="mb-1 text-gray-600">{producto.descripcion}</p>
-                        <p className="mb-2 text-lg font-bold">${producto.precio}</p>
-
-                        <div>
-                            <button 
-                                onClick={() => handleEditarClick(producto)} 
-                                className="text-blue-500 hover:text-blue-700 mr-2"
-                            >
-                                Editar
-                            </button>
-                            <button 
-                                onClick={() => eliminarProductoLocal(producto.id_producto)} 
-                                className="text-red-500 hover:text-red-700"
-                            >
-                                Eliminar
-                            </button>
+                        <div className="gap-2 grid grid-cols-2 sm:grid-cols-4">
+                        {sortedProducts.map((producto) => (
+                            <Card className='relative bg-white p-2 rounded-xl shadow-gray-400 shadow-lg overflow-visible' shadow="lg" key={producto.id_producto}>
+                            <CardBody className="overflow-visible p-0 text-center">
+                            <b className='font-extrabold mb-auto'>{(producto.nombre).toUpperCase()}</b>
+                            <div className="h-0.5 bg-gray-300 w-full my-auto"></div>
+                            <Image
+                                shadow="lg"
+                                radius="lg"
+                                width="100%"
+                                alt={producto.nombre}
+                                className="w-full shadow-gray-700  shadow-lg rounded-md object-cover h-[140px]"
+                                src={producto.imagen}
+                            />
+                            </CardBody>
+                            <CardFooter className="flex text-small items-center justify-between">
+                                <p>Precio: ${(producto.precio)}</p>
+                                <p>Stock: {(producto.cantidad)}</p>
+                            </CardFooter>
+                            <div className='text-white flex justify-center items-centerpx-6 pb-2 absolute bottom-[-30px] left-1/2 transform -translate-x-1/2'>
+                                <button 
+                                    onClick={() => handleEditarClick(producto)} 
+                                    className="rounded-lg bg-blue-500 p-2 hover:bg-blue-700 mr-2 shadow-gray-400  shadow-lg "
+                                >
+                                    Editar
+                                </button>
+                                <button 
+                                    onClick={() => eliminarProductoLocal(producto.id_producto)} 
+                                    className="rounded-lg bg-red-500 p-2 hover:bg-red-700 shadow-gray-400  shadow-lg "
+                                >
+                                    Eliminar
+                                </button>
+                            </div>
+                        </Card>
+                        ))}
                         </div>
                     </div>
-                ))}
                 </div>
-
-
             </div>
             )}
         </div>

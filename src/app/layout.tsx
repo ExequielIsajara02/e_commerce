@@ -21,10 +21,10 @@ export default function RootLayout({
       <body
       >
         
-        <Providers>
         <NavBar/>
+        <Providers>
           {children}
-          </Providers>
+        </Providers>
       </body>
     </html>
   );

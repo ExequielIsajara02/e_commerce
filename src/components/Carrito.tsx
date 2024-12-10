@@ -1,24 +1,88 @@
 "use client";
-import React, { useContext, useState } from 'react';
-import { useSession } from "next-auth/react"
-import { CartContext, useCartContext } from '@/context/CartContext';
+import React, { useContext, useEffect, useState } from 'react';
+import { useSession } from "next-auth/react";
+import { CartContext, CartItem, useCartContext } from '@/context/CartContext';
 import { crearSesionStripe } from '../../utils/pasarela_stripe';
+import { ProductoData } from "../../types/ProductData";
+import { ComboCantidadData } from "../../types/ComboCantidadData";
 import { calculateDiscount, canApplyDiscount } from '../../utils/pointsDiscount';
 
 export const Carrito: React.FC = () => {
   const { data: session } = useSession();
   const { cartItems, setCartItems, isCarritoVisible, setCarritoVisible } = useContext(CartContext);
   const { clearCart } = useCartContext();
+  const [combosCantidad, setCombosCantidad] = useState<ComboCantidadData[]>([]);
   const [selectedDiscount, setSelectedDiscount] = useState<number>(0);
 
-  const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + item.precio * item.cantidad, 0);
+  // Fetch combos
+  const traerCombos = async () => {
+    try {
+      const comboCantidadRes = await fetch("http://localhost:3000/api/combosCantidad");
+      const comboCantidadData: ComboCantidadData[] = await comboCantidadRes.json();
+      setCombosCantidad(comboCantidadData);
+    } catch (error) {
+      console.error("Error al traer combos:", error);
+    }
   };
+
+  // Llamar a traerCombos solo una vez
+  useEffect(() => {
+    traerCombos();
+  }, []);
+
+  // Aplicar descuentos por cantidad de combo
+  const applyComboDiscounts = (cartItems: CartItem[], combosCantidad: ComboCantidadData[]) => {
+    return cartItems.map((item: CartItem) => {
+      if (item.producto) {
+        const combo = combosCantidad.find(
+          (c) => c.id_producto === Number(item.producto?.id_producto)
+        );
   
+        const precioBase = item.producto.precioOriginal || item.producto.precio;
+  
+        if (combo) {
+          const cumpleCombo = item.cantidad >= combo.cantidad_minima;
+          const precioConDescuento = precioBase * (1 - combo.descuento / 100);
+  
+          return {
+            ...item,
+            producto: {
+              ...item.producto,
+              precioOriginal: precioBase,
+              precio: cumpleCombo ? precioConDescuento : precioBase,
+            },
+          };
+        } else {
+          return {
+            ...item,
+            producto: {
+              ...item.producto,
+              precioOriginal: precioBase,
+              precio: precioBase,
+            },
+          };
+        }
+      }
+  
+      return item;
+    });
+  };
+
+  // Calcular precio total con descuentos
+  const getTotalPrice = () => {
+    const itemsConDescuento = applyComboDiscounts(cartItems, combosCantidad);
+    return itemsConDescuento.reduce((total: number, item: CartItem) => {
+      if (item.producto && typeof item.producto.precio === "number") {
+        return total + item.producto.precio * item.cantidad;
+      }
+      return total;
+    }, 0);
+  };
+
   // Calcular el descuento aplicable
   const handleApplyDiscount = () => {
     const total = getTotalPrice();
-    const puntosUsuario = session?.puntos || 0; // Puntos disponibles del usuario
+    const puntosUsuario = session?.user?.puntos || 0; // Puntos disponibles del usuario
     const descuento = calculateDiscount(puntosUsuario, total);
 
     if (canApplyDiscount(total, descuento)) {
@@ -31,49 +95,130 @@ export const Carrito: React.FC = () => {
   // Total después de aplicar el descuento
   const totalAfterDiscount = getTotalPrice() - selectedDiscount;
 
-  const removeFromCart = (productId: number) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id_producto !== productId));
+  // Eliminar producto del carrito
+  const removeFromCart = (productId: string) => {
+    setCartItems((prevItems) => prevItems.filter((item) => item.producto?.id_producto !== productId));
   };
 
+  // Actualizar cantidad de producto
+  const updateCantidad = (idProducto: string, nuevaCantidad: number) => {
+    setCartItems((prevCart) => {
+      const updatedCart = prevCart.map((item) =>
+        item.producto?.id_producto === idProducto
+          ? { ...item, cantidad: nuevaCantidad > 0 ? nuevaCantidad : 1 }
+          : item
+      );
+      return applyComboDiscounts(updatedCart, combosCantidad);
+    });
+  };
+
+  // Procesar pago
+  const handlePay = async () => {
+    // Guardar el carrito en localStorage
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  
+    // Crear sesión de Stripe
+    const session = await crearSesionStripe(
+      cartItems.map((item) => {
+        if (!item.producto) {
+          throw new Error(`El producto del carrito está incompleto: ${JSON.stringify(item)}`);
+        }
+        return {
+          id_producto: item.producto.id_producto,
+          nombre: item.producto.nombre,
+          descripcion: item.producto.descripcion,
+          imagen: item.producto.imagen,
+          precio: item.producto.precio,
+          marca: item.producto.marca,
+          tipo: item.producto.tipo,
+          precioOriginal: item.producto.precioOriginal,
+          cantidad: item.cantidad,
+        };
+      })
+    );
+  
+    // Redirigir al usuario a la URL de la sesión de Stripe
+    window.location.href = session ?? "";
+  
+    // Limpiar el carrito
+    clearCart();
+  };
+
+  // No mostrar si no hay items y el carrito no está visible
   if (!cartItems.length && !isCarritoVisible) {
     return null;
   }
 
-  const handlePay = async () => {
-    // Guardar el carrito en localStorage antes de proceder al pago
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-
-    const session = await crearSesionStripe(cartItems);
-    window.location.href = session ?? '';
-
-    clearCart();
-  };
-
   return (
     <div
-      className={`fixed z-10 top-0 right-0 h-full w-80 bg-white shadow-lg border-l border-gray-300 transform transition-transform duration-300 ease-in-out ${
-        isCarritoVisible ? 'translate-x-0' : 'translate-x-full'
+      className={`fixed z-50 top-0 right-0 h-full w-80 bg-white shadow-lg border-l border-gray-300 transform transition-transform duration-300 ease-in-out ${
+        isCarritoVisible ? "translate-x-0" : "translate-x-full"
       }`}
     >
       <div className="p-4 border-b flex justify-between items-center">
         <h1 className="text-2xl">Tu Carrito</h1>
-        <button onClick={() => setCarritoVisible(false)} className="text-red-500">x</button>
+        <button onClick={() => setCarritoVisible(false)} className="text-red-500">
+          x
+        </button>
       </div>
-      <div className="p-4 overflow-y-auto">
+      <div className="p-4 overflow-y-auto h-3/4">
         {cartItems.length === 0 ? (
           <h1 className="text-center">No hay productos en el carrito de compras</h1>
         ) : (
           <ul className="list-none p-0">
-            {cartItems.map(item => (
-              <li key={item.id_producto} className="flex items-center mb-4">
-                <img src={item.imagen} alt={item.nombre} className="w-16 h-16 object-cover mr-4" />
-                <div className="flex-1">
-                  <span>{item.nombre} - ${item.precio.toFixed(2)} x {item.cantidad}</span>
-                  <p className="text-sm text-gray-600">{item.descripcion}</p>
-                </div>
-                <button className="text-red-500" onClick={() => removeFromCart(item.id_producto)}>Remove</button>
-              </li>
-            ))}
+            {cartItems.map((item) =>
+              item.producto ? (
+                <li key={item.producto.id_producto} className="flex items-center mb-4">
+                  <img
+                    src={item.producto.imagen}
+                    alt={item.producto.nombre}
+                    className="w-16 h-16 object-cover mr-4"
+                  />
+                  <div className="flex-1">
+                    <span>{item.producto.nombre}</span>
+                    <div>
+                      <span>${item.producto.precio.toFixed(2)}</span>
+                      {item.producto.precioOriginal && item.producto.precioOriginal > item.producto.precio && (
+                        <span className="line-through text-red-500 ml-2">
+                          ${item.producto.precioOriginal.toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center mt-2">
+                      <button
+                        className="bg-gray-200 p-1 rounded-md text-lg font-bold"
+                        onClick={() => updateCantidad(item.producto!.id_producto, item.cantidad - 1)}
+                        disabled={item.cantidad <= 1}
+                      >
+                        -
+                      </button>
+                      <input
+                        type="text"
+                        className="w-12 mx-2 text-center border rounded-md"
+                        value={item.cantidad}
+                        readOnly
+                      />
+                      <button
+                        className="bg-gray-200 p-1 rounded-md text-lg font-bold"
+                        onClick={() => updateCantidad(item.producto!.id_producto, item.cantidad + 1)}
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    className="text-red-500 ml-4"
+                    onClick={() => removeFromCart(item.producto!.id_producto)}
+                  >
+                    Remove
+                  </button>
+                </li>
+              ) : (
+                <li key={`invalid-product`} className="text-red-500">
+                  Producto no válido
+                </li>
+              )
+            )}
           </ul>
         )}
       </div>
@@ -84,7 +229,7 @@ export const Carrito: React.FC = () => {
           selectedDiscount > 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white'
         }`}
         onClick={handleApplyDiscount}
-        disabled={selectedDiscount > 0} // Desactiva el botón si ya hay un descuento aplicado
+        disabled={selectedDiscount > 0}
       >
         {selectedDiscount > 0 ? "Descuento Aplicado" : "Aplicar Descuento"}
       </button>

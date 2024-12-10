@@ -1,60 +1,74 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import LogoutButton from "./logout-button";
+import {Navbar, NavbarBrand, NavbarMenuToggle, NavbarMenuItem, NavbarMenu, NavbarContent, NavbarItem, Button} from "@nextui-org/react";
+import React, { useState } from "react";
 
 const NavBar = async () => {
+  
   const session = await auth();
   console.log("Session en NavBar: ", session);
 
   return (
-    <nav className="flex justify-between items-center bg-gray-950 text-white px-24">
-      <h1>E-Commerce</h1>
-
-      <ul className="flex gap-x-2 justify-center items-center py-2">
-        <li>
-          <Link href="/">Home</Link>
-        </li>
-        <li>
+    <Navbar className="fixed bg-white z-50 p-2">
+      <NavbarBrand>
+        <p className="font-bold text-inherit">E-commerce</p>
+      </NavbarBrand>
+      <NavbarContent className="hidden sm:flex gap-4 " justify="center">
+        <NavbarItem className="hover:text-blue-500">
+          <Link color="foreground" href="/">Home</Link>
+        </NavbarItem>
+        <NavbarItem className="hover:text-blue-500">
           <Link href="/compras">Mis Compras</Link>
-        </li>
-        <li>
+        </NavbarItem>
+        <NavbarItem className="hover:text-blue-500">
           <Link href="/cuenta">Mi Cuenta</Link>
-        </li>
+        </NavbarItem>
         {!session?.user ? (
           <>
-            <li className="bg-purple-600 rounded-md p-1">
-              <Link href="/auth/login">Ingresá o registrate</Link>
-            </li>
+            <NavbarItem className="hover:text-blue-500">
+              <Link href="/auth/login">Login</Link>
+            </NavbarItem>
+            <NavbarItem className="hover:text-blue-500">
+              <Link href="/registro">Register</Link>
+            </NavbarItem>
           </>
         ) : (
           <>
             {
               session?.user?.role === "admin" && (
-                    <>
-                    <li>
+                  <>
+                    <NavbarItem className="hover:text-blue-500">
                       <Link href="/producto">Productos</Link>
-                    </li>
-                    <li>
+                    </NavbarItem>
+                    <NavbarItem className="hover:text-blue-500">
                       <Link href="/combos">Combos</Link>
-                    </li>
-                <>
-                  <li>
-                    <Link href="/dashboard/pedidos">Dashboard</Link>
-                  </li>
+                    </NavbarItem>
+                    <NavbarItem className="hover:text-blue-500">
+                      <Link href="/usuario">Usuarios</Link>
+                    </NavbarItem>
+                  <>
+                  <NavbarItem className="hover:text-blue-500">
+                    <Link href="/dashboard">Dashboard</Link>
+                  </NavbarItem>                  
                     </>
-                  <li>
+                  <NavbarItem className="hover:text-blue-500">
                     <Link href="/pedidosAdmin">Pedidos</Link>
-                  </li>
+                  </NavbarItem>
                 </>
               )
             }
-            <li>
-              <LogoutButton />
-            </li>
+
+            <NavbarContent justify="end">
+              <NavbarItem className="hidden lg:flex">
+                <LogoutButton />
+              </NavbarItem>
+            </NavbarContent>
           </>
         )}
-      </ul>
-    </nav>
+      </NavbarContent>
+
+    </Navbar>
   );
 };
 

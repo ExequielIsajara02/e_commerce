@@ -19,13 +19,13 @@ export async function enviarComprobante(data: any) {
     if (!session || !session.user?.email) {
       throw new Error("No se pudo obtener el correo del usuario: usuario no autenticado.");
     }
-    const correo = session.user.email;
+    const usuario = session.user;
 
-    const pdf = await generarComprobantePDF(correo, data.detallesPedido);
+    const pdf = await generarComprobantePDF(usuario, data.detallesPedido);
     
     await transporter.sendMail({
       from: '"E-commerce" <ecommerce.pasantia@gmail.com>',
-      to: correo,
+      to: usuario.email,
       subject: 'Comprobante de Pago - E-commerce',
       text: `Gracias por tu compra. Te adjuntamos el comprobante de pago.`,
       html: `<p>Gracias por tu compra. Aquí tienes tu comprobante.</p>`,

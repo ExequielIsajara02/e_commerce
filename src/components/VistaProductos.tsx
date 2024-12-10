@@ -17,11 +17,12 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
   const [selectedBrand, setSelectedBrand] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string>("");
   const [priceRange, setPriceRange] = useState<number[]>([0, 100000]);
-  const [combos, setCombos] = useState<ComboData[]>([]); 
+  const [combos, setCombos] = useState<ComboCantidadData[]>([]);
   const [comboCantidad, setComboCantidad] = useState<ComboCantidadData[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [cantidades, setCantidades] = useState<{ [key: string]: number }>({});
+  const [cantidad, setCantidad] = useState(0)
 
   // Filtrar productos
   const filteredProducts = productos.filter(producto => {
@@ -38,20 +39,6 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
     sortOption === "asc" ? a.precio - b.precio : b.precio - a.precio
   );
 
-  // Filtrar combos
-  const filteredCombos = combos.filter(combo => {
-    const matchesText = combo.nombre.toLowerCase().includes(filterText.toLowerCase());
-    const matchesPrice = combo.productos.reduce((total, producto) => total + (producto.precioDescuento || 0), 0) >= priceRange[0] &&
-                         combo.productos.reduce((total, producto) => total + (producto.precioDescuento || 0), 0) <= priceRange[1];
-    return matchesText && matchesPrice;
-  });
-
-  // Ordenar combos
-  const sortedCombos = [...filteredCombos].sort((a, b) => 
-    sortOption === "asc" ? 
-    a.productos.reduce((total, producto) => total + (producto.precioDescuento || 0), 0) - b.productos.reduce((total, producto) => total + (producto.precioDescuento || 0), 0) :
-    b.productos.reduce((total, producto) => total + (producto.precioDescuento || 0), 0) - a.productos.reduce((total, producto) => total + (producto.precioDescuento || 0), 0)
-  );
 
   // Generar opciones de marca y tipo dinámicamente
   const uniqueBrands = Array.from(new Set(productos.map(p => p.marca)));
@@ -60,20 +47,25 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
 
   const traerCombos = async () => {
     try {
-      const [comboCantidadRes, respuesta] = await Promise.all([
-        fetch("http://localhost:3000/api/combosCantidad"), // Endpoint para ComboCantidad
-        fetch("http://localhost:3000/api/combos")
-      ]);
-      const comboCantidadData = await comboCantidadRes.json();
-      const datos = await respuesta.json();
-      
+      const comboCantidadRes = await fetch("http://localhost:3000/api/combosCantidad");
+      const comboCantidadData: ComboCantidadData[] = await comboCantidadRes.json();
       setComboCantidad(comboCantidadData);
-      setCombos(datos);
-
     } catch (error) {
       console.error("Error al traer combos:", error);
     }
   };
+
+
+const obtenerComboCantidad = (
+  id_producto: number,
+  datosComboCantidad: ComboCantidadData[]
+): ComboCantidadData | undefined => {
+  // Busca un combo relacionado al producto con tipo 'cantidad'
+  return datosComboCantidad.find(
+    (comboCantidad) => comboCantidad.id_producto === id_producto
+  );
+};
+
 
   useEffect(() => {
     setLoading(true);
@@ -82,29 +74,15 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
     });
   }, []);
 
-  // Verificar si un producto tiene descuento por cantidad
-  const tieneDescuentoCantidad = (id_producto: number) => {
-    return comboCantidad.some(
-      (combo) => combo.id_producto === id_producto
-    );
-  };
-
-  // Manejar el cambio de cantidad
-  const handleCantidadChange = (id: string, value: number) => {
-    setCantidades((prevCantidades) => ({
-      ...prevCantidades,
-      [id]: Math.max(1, value),
-    }));
-  };
   
 
 
   return (
     <div className="flex p-4">
       {/* Tarjeta de filtros a la izquierda */}
-      <div className="w-1/4">
-        <div className="bg-white shadow rounded p-4">
-          <h2 className="font-semibold mb-2">Filtrá tu búsqueda por:</h2>
+      <div className="bg-gray-100 z-40 pt-14 w-1/4">
+        <div className="bg-white sticky top-14 rounded-tl-xl rounded-b-xl shadow-gray-400 shadow-sm p-4">
+          <h2 className="font-semibold mb-2">Filtros</h2>
           <div className="mb-4">
             <label className="block">Marca:</label>
             <select
@@ -159,120 +137,73 @@ const VistaProductos: React.FC<Props> = ({ productos }) => {
       </div>
 
       {/* Tarjeta de búsqueda a la derecha */}
-      <div className="flex-1 ml-4">
-        <div className="bg-white shadow rounded p-4 mb-4">
-          <h2 className="font-semibold mb-2">Buscar Producto</h2>
-          <div className="mb-4 flex">
-            <input
-              type="text"
-              placeholder="Buscar producto..."
-              value={filterText}
-              onChange={(e) => setFilterText(e.target.value)}
-              className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>  
-        </div>
-
-        <div className="gap-2 grid grid-cols-2 sm:grid-cols-4">
-          {/* {sortedProducts.map((producto) => (
-            <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={producto.id_producto}>
-              <p>ID: {producto.id_producto}</p>
-              <p className="mb-1 font-semibold">{producto.nombre}</p>
-              <p className="mb-1 text-gray-600">{producto.descripcion}</p>
-              
-              
-              {tieneDescuentoCantidad(producto.id_producto) && (
-                <div className="mb-2 text-sm text-green-600">
-                  ¡Descuento disponible al comprar en cantidad!
-                </div>
-              )}
-              <p className="mb-2 text-lg font-bold">${producto.precio}</p>
-
-              {producto.cantidad > 0 ? (
-                <>
-                  <input
-                    type="number"
-                    value={cantidades[producto.id_producto.toString()] || 1}
-                    onChange={(e) => handleCantidadChange(producto.id_producto.toString(), Number(e.target.value))}
-                    className="border rounded px-2 py-1 w-24 mb-2"
-                    min={1}
-                  />
-                
-                  <ButtonAddToCarrito producto={producto} cantidad={cantidades[producto.id_producto.toString()] || 1} />
-                </>
-              ) : (
-                <p className="text-red-500 font-semibold">SIN STOCK</p>
-              )}
-            </div>
-          ))} */}
-
-          {sortedProducts.map((producto) => (
-            <Card className='bg-white p-2 rounded-xl shadow-gray-700 shadow-lg' shadow="lg" key={producto.id_producto}
-            //  isPressable onPress={() => console.log("item pressed")}
-             >
-            <CardBody className="overflow-visible p-0 text-center">
-              <b>{producto.nombre}</b>
-              <Image
-                shadow="lg"
-                radius="lg"
-                width="100%"
-                alt={producto.nombre}
-                className="w-full shadow-gray-700  shadow-lg rounded-md object-cover h-[140px]"
-                src={producto.imagen}
+      <div className="flex-1">
+        <div className='bg-zinc-100 w-full z-30 sticky pt-14 top-0'>
+          <div className="bg-white rounded-r-xl rounded-br-xl shadow-gray-400 shadow-sm p-4 mb-4">
+            <h2 className="font-semibold mb-2">Buscar Producto</h2>
+            <div className="mb-4 flex">
+              <input
+                type="text"
+                placeholder="Buscar producto..."
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
+                className="border rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
-            </CardBody>
-            <CardFooter className="flex flex-col text-small justify-between">
-              {producto.cantidad > 0 ? (
-                <>
-                  <div className='flex w-full justify-between'>
-                    <p className="text-default-500">Precio: {producto.precio}</p>
-                    <input
-                      type="number"
-                      value={cantidades[producto.id_producto.toString()] || 1}
-                      onChange={(e) => handleCantidadChange(producto.id_producto.toString(), Number(e.target.value))}
-                      className="border rounded px-2 py-1 w-24 mb-2"
-                      min={1}
-                    />
-                  
-                  </div>
-                </>
-              ) : (
-                <p className="text-red-500 font-semibold">SIN STOCK</p>
-              )}
-              <div className='relative top-15'>
-                <ButtonAddToCarrito producto={producto} cantidad={cantidades[producto.id_producto.toString()] || 1} />
-              </div>
-            </CardFooter>
-          </Card>
-          ))}
+            </div>  
+          </div>
         </div>
 
-        <h2>Combos</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {sortedCombos.map((combo) => (
-            <div className="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition-shadow" key={combo.id_combo}>
-              <h3 className="text-lg font-bold mb-2">{combo.nombre}</h3>
-              <h4 className="text-md mb-2">ID Combo: {combo.id_combo}</h4>
-              <p className="mb-4">Descuento: <span className="text-green-600 font-semibold">{combo.descuento * 100}%</span></p>
-            
-              {/* Productos en el combo */}
-              <div className="grid grid-cols-1 gap-4">
-                {combo.productos.map((comboProducto) => (
-                  <div key={comboProducto.id_producto} className="border rounded-lg p-2 shadow-md w-50">
-                    <h5 className="text-md font-bold mb-2">{comboProducto.producto?.nombre}</h5>
-                    <p>Precio: ${comboProducto.precioDescuento || comboProducto.producto?.precio}</p>
-                  </div>
-                ))}
-                <div className="font-bold text-lg mt-2">
-                  Total : $
-                  {combo.productos.reduce((total, comboProducto) => total + (comboProducto.precioDescuento || 0), 0)}
+        <div className="ml-4 gap-6 grid grid-cols-2 sm:grid-cols-4">
+          {sortedProducts.map((producto) => {
+            const combo = obtenerComboCantidad(Number(producto.id_producto), comboCantidad);
+
+
+            return (
+              <Card
+                className="relative flex bg-white rounded-xl z-20 shadow-gray-400 shadow-sm overflow-visible"
+                shadow="lg"
+                key={producto.id_producto}
+              >
+                <CardBody className="flex overflow-visible p-0 text-center">
+                  <Image
+                    shadow="lg"
+                    radius="lg"
+                    width="100%"
+                    alt={producto.nombre}
+                    className="w-full rounded-t-md rounded-tl-md object-cover h-[240px]"
+                    src={producto.imagen}
+                  />
+                </CardBody>
+                <CardFooter className="mt-3 flex flex-col text-small w-full h-auto">
+                  {producto.cantidad > 0 ? (
+                    <div className='text-left w-full'>
+                      {combo && (
+                        <p className="text-green-600 font-semibold mt-2">
+                          ¡Descuento del {combo.descuento}% si compras {combo.cantidad_minima} o más!
+                        </p>
+                      )}
+                      <b className="font-extrabold mb-auto">{producto.nombre.toUpperCase()}</b>
+                      <p className="text-slate-500 text-lg font-normal mt-2">{producto.descripcion}</p>
+                      <p className="text-lg font-extrabold mt-2">${producto.precio}</p>
+                      {/* Mostrar mensaje de combo si aplica */}
+                      
+                    </div>
+                  ) : (
+                    <p className="text-red-500 font-semibold">SIN STOCK</p>
+                  )}
+                </CardFooter>
+                <div className="absolute bottom-[-20px] left-1/2 transform -translate-x-1/2">
+                  <ButtonAddToCarrito
+                    producto={producto}
+                    cantidad={cantidades[producto.id_producto.toString()] || 1}
+                  />
                 </div>
-                
-                <ButtonAddToCarrito combo={combo} cantidad={cantidades[combo.id_combo.toString()] || 1} />
-              </div>
-            </div>
-          ))}
+              </Card>
+            );
+          })}
         </div>
+
+
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 export type ProductoData = {
-    id_producto: number;
+    id_producto: string;
     nombre: string;
     descripcion: string ;
     imagen: string;
@@ -7,4 +7,5 @@ export type ProductoData = {
     cantidad: number;
     marca: string;
     tipo: string;
+    precioOriginal?: number;
   }
