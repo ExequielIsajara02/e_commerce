@@ -3,6 +3,7 @@ import {obtenerProductos } from "../../utils/producto";
 import VistaProductos from "@/components/VistaProductos";
 import { Slider } from "@/components/Slider";
 import {Button, ButtonGroup} from "@nextui-org/button";
+import Footer from "@/components/Footer";
 
 
 const Home = async () => {
@@ -28,6 +29,7 @@ const Home = async () => {
         <VistaProductos 
             productos={productos}
           />
+          <Footer />
       </div>
   );
 }
