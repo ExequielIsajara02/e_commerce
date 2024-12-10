@@ -15,7 +15,6 @@ export const Carrito: React.FC = () => {
   const [selectedDiscount, setSelectedDiscount] = useState<number>(0);
   const [combosCantidad, setCombosCantidad] = useState<ComboCantidadData[]>([]);
 
-  // Mover la función afuera del hook para evitar recreaciones innecesarias
   const traerCombos = async () => {
     try {
       const comboCantidadRes = await fetch("http://localhost:3000/api/combosCantidad");
@@ -26,7 +25,6 @@ export const Carrito: React.FC = () => {
     }
   };
 
-  // Llamar a traerCombos solo una vez
   useEffect(() => {
     traerCombos();
   }, []);
@@ -41,7 +39,6 @@ export const Carrito: React.FC = () => {
         const precioBase = item.producto.precioOriginal || item.producto.precio;
 
         if (combo) {
-          // Si se cumple la cantidad mínima, aplicamos el precio con descuento
           const cumpleCombo = item.cantidad >= combo.cantidad_minima;
           const precioConDescuento = precioBase * (1 - combo.descuento / 100);
 
@@ -49,12 +46,12 @@ export const Carrito: React.FC = () => {
             ...item,
             producto: {
               ...item.producto,
-              precioOriginal: precioBase, // Aseguramos que siempre esté disponible el precio original
-              precio: cumpleCombo ? precioConDescuento : precioBase, // Precio fijo dependiendo del combo
+              precioOriginal: precioBase,
+              precio: cumpleCombo ? precioConDescuento : precioBase,
             },
           };
         } else {
-          // Si no hay combo por cantidad, mantener el precio original
+          console.log(`No combo found for product ${item.producto.id_producto}`);
           return {
             ...item,
             producto: {
@@ -70,29 +67,40 @@ export const Carrito: React.FC = () => {
     });
   };
 
-
   const getTotalPrice = () => {
     const itemsConDescuento = applyComboDiscounts(cartItems, combosCantidad);
-    return itemsConDescuento.reduce((total: number, item: CartItem) => {
+    console.log("Items con descuento:", itemsConDescuento);
+
+    const total = itemsConDescuento.reduce((total: number, item: CartItem) => {
       if (item.producto && typeof item.producto.precio === "number") {
         return total + item.producto.precio * item.cantidad;
       }
       return total;
     }, 0);
+
+    console.log("Total price calculated:", total);
+    return total;
   };
 
-  // Calcular el descuento aplicable
   const handleApplyDiscount = () => {
     const total = getTotalPrice();
-    const puntosUsuario = session?.user?.puntos || 0; // Puntos disponibles del usuario
+    const puntosUsuario = session?.user?.puntos || 0;
+
+    console.log("Applying Discount - Total:", total);
+    console.log("Applying Discount - User Points:", puntosUsuario);
+
     const descuento = calculateDiscount(puntosUsuario, total);
-    if (canApplyDiscount(total, descuento)) {
+    console.log("Applying Discount - Calculated Discount:", descuento);
+
+    const canApply = canApplyDiscount(total, descuento);
+
+    if (canApply) {
       setSelectedDiscount(descuento);
     } else {
       alert("No puedes aplicar este descuento.");
     }
   };
-  // Total después de aplicar el descuento
+  
   const totalAfterDiscount = getTotalPrice() - selectedDiscount;
 
   const removeFromCart = (productId: string) => {
