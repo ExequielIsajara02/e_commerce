@@ -9,15 +9,15 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   // const session = await unstable_getServerSession(req);  // Obtener la sesión del servidor
   const session = await auth();
 
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: 'No estás autenticado' }, { status: 401 });
-  }
+  // if (!session?.user?.id) {
+  //   return NextResponse.json({ error: 'No estás autenticado' }, { status: 401 });
+  // }
 
   const { id } = params;
 
-  if (session.user.id !== id) {
-    return NextResponse.json({ error: 'No tienes permitido verificar esta cuenta' }, { status: 403 });
-  }
+  // if (session.user.id !== id) {
+  //   return NextResponse.json({ error: 'No tienes permitido verificar esta cuenta' }, { status: 403 });
+  // }
 
   try {
     const usuario = await prisma.usuario.findUnique({
