@@ -88,7 +88,7 @@ export const Carrito: React.FC = () => {
 
   const handleApplyDiscount = () => {
     const total = getTotalPrice();
-    const puntosUsuario = session?.user.puntos || 0;
+    const puntosUsuario = session?.user?.puntos || 0;
 
     console.log("Applying Discount - Total:", total);
     console.log("Applying Discount - User Points:", puntosUsuario);
