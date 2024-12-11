@@ -34,6 +34,8 @@ const UsuarioForm = () => {
             'Content-Type': 'application/json',
         },
       });
+
+      
       swal("Registro Existoso!", "Cuenta creada con exito!", "success");
       router.push("/auth/login")
     }
@@ -45,8 +47,8 @@ const UsuarioForm = () => {
   });
 
   return (
-    <div className="h-screen flex justify-center items-center">
-      <form className="bg-white rounded-md p-10 w-2/5 shadow-md shadow-black" onSubmit={onSubmit}>
+    <div className="flex justify-center items-center">
+      <form className="bg-white rounded-md p-10 w-2/5 my-10 shadow-md shadow-black" onSubmit={onSubmit}>
         <label htmlFor="nombre" className="text-slate-500 font-bold">
           Nombre
         </label>
@@ -54,7 +56,7 @@ const UsuarioForm = () => {
           type="text"
           placeholder="Nombre"
           id="nombre"
-          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
+          className="rounded-md border focus:border-primary-700 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
           {...register("nombre", {
             required: {
               value: true,
@@ -75,7 +77,7 @@ const UsuarioForm = () => {
           type="text"
           placeholder="Apellido"
           id="apellido"
-          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
+          className="rounded-md border focus:border-primary-700 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
           {...register("apellido", {
             required: {
               value: true,
@@ -96,7 +98,7 @@ const UsuarioForm = () => {
           type="email"
           placeholder="Correo"
           id="correo"
-          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
+          className="rounded-md border focus:border-primary-700 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
           {...register("correo", {
             required: {
               value: true,
@@ -117,7 +119,7 @@ const UsuarioForm = () => {
           type="password"
           placeholder="Contraseña"
           id="clave"
-          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
+          className="rounded-md border focus:border-primary-700 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
           {...register("clave", {
             required: {
               value: true,
@@ -138,7 +140,7 @@ const UsuarioForm = () => {
           type="text"
           placeholder="Teléfono"
           id="telefono"
-          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
+          className="rounded-md border focus:border-primary-700 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
           {...register("telefono", {
             required: {
               value: true,
@@ -159,7 +161,7 @@ const UsuarioForm = () => {
           type="text"
           placeholder="Dirección"
           id="direccion"
-          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
+          className="rounded-md border focus:border-primary-700 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-2 bg-gray-100"
           {...register("direccion", {
             required: {
               value: true,
@@ -180,7 +182,7 @@ const UsuarioForm = () => {
           type="text"
           placeholder="Localidad"
           id="localidad"
-          className="rounded-md border focus:border-purple-600 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-1 bg-gray-100"
+          className="rounded-md border focus:border-primary-700 focus:bg-white outline-none mb-4 w-full text-black py-1 pl-1 bg-gray-100"
           {...register("localidad", {
             required: {
               value: true,
@@ -194,7 +196,7 @@ const UsuarioForm = () => {
           </span>
         )}
 
-        <button className="bg-purple-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button className="bg-primary-700 hover:bg-secondary-700 text-white font-bold py-2 px-4 rounded">
           Crear
         </button>
       </form>

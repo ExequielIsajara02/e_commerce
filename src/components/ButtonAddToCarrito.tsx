@@ -19,20 +19,22 @@ export const ButtonAddToCarrito = ({ producto, combo, cantidad }: Props) => {
     const existingItem = cartItems.find(item => item.producto?.id_producto === producto.id_producto);
 
     if (existingItem) {
-      setCartItems(prevItems =>
-        prevItems.map(item =>
-          item.producto?.id_producto === producto.id_producto
-            ? { ...item, cantidad: item.cantidad + cantidad }
-            : item
-        )
-      );
+        // Si el producto ya existe, actualiza la cantidad
+        setCartItems(prevItems =>
+            prevItems.map(item =>
+                item.producto?.id_producto === producto.id_producto
+                    ? { ...item, producto: { ...item.producto, cantidad: item.producto.cantidad + cantidad } } // Modifica la cantidad aquí
+                    : item
+            )
+        );
     } else {
-      setCartItems(prevItems => [
-        ...prevItems,
-        { producto, cantidad } // Agregar el producto individual
-      ]);
+        // Si no existe, agrega el producto al carrito
+        setCartItems(prevItems => [
+            ...prevItems,
+            { producto: { ...producto, cantidad }, cantidad } // Agregar el producto con la cantidad inicial
+        ]);
     }
-  };
+};
 
   // Función para calcular el precio total de un combo con el descuento aplicado
 const calculateComboPrice = (combo: ComboData): number => {

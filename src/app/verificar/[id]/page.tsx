@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
-import { useSession, signIn, signOut } from "next-auth/react";  // Importar hooks de next-auth
+import { useSession, signIn, signOut, getSession } from "next-auth/react";  // Importar hooks de next-auth
 
 const VerificarCuenta = ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -33,6 +33,15 @@ const VerificarCuenta = ({ params }: { params: { id: string } }) => {
 
     verificarCuenta();
   }, [id, session]);
+
+  useEffect(() => {
+    const refreshSession = async () => {
+      const updatedSession = await getSession();
+      console.log("Sesión actualizada: ", updatedSession);
+    };
+  
+    if (!loading) refreshSession();
+  }, [loading]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

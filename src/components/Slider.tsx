@@ -91,6 +91,17 @@ export const Slider = () => {
               </div>
             </div>
           ))}
+          {index === combos.length - 1 && (
+            <div
+              className="flex-none w-full sm:w-1/2 md:w-1/3 lg:w-3/4 p-4 flex items-center justify-center"
+              key="combos-message"
+            >
+              <p className="text-white text-2xl font-bold bg-gray-800 p-6 rounded-lg shadow-lg animate-fadeIn">
+                Aprovecha todos nuestros Combos <br></br>
+                y Ofertas de la semana!
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Botones de navegación */}
@@ -140,6 +151,7 @@ const CardImageSlider = ({ combo }: { combo: ComboData }) => {
             src={comboProducto.producto?.imagen}
           />
         ))}
+        
       </div>
 
       {/* Botones de navegación */}

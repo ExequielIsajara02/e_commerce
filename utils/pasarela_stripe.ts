@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
-export async function crearSesionStripe(cartItems: ProductoData[]) {
+export async function crearSesionStripe(cartItems: ProductoData[], totalAfterDiscount: number) {
     try {
         const lineItems = cartItems.map(item => ({
             price_data: {
@@ -15,7 +15,7 @@ export async function crearSesionStripe(cartItems: ProductoData[]) {
                         id_producto: item.id_producto,
                     },
                 },
-                unit_amount: item.precio * 100,
+                unit_amount: (totalAfterDiscount*100)/item.cantidad, // Usa el total después del descuento
             },
             quantity: item.cantidad,
         }));
