@@ -74,9 +74,9 @@ const NavBar = async () => {
                     <NavbarItem className="hover:text-secondary-700">
                       <Link href="/combos">Combos</Link>
                     </NavbarItem>
-                    <NavbarItem className="hover:text-secondary-700">
+                    {/* <NavbarItem className="hover:text-secondary-700">
                       <Link href="/usuario">Usuarios</Link>
-                    </NavbarItem>
+                    </NavbarItem> */}
                   <>
                   <NavbarItem className="hover:text-secondary-700">
                     <Link href="/dashboard">Dashboard</Link>

@@ -8,7 +8,7 @@ export async function crearSesionStripe(cartItems: ProductoData[], totalAfterDis
     try {
         const lineItems = cartItems.map(item => ({
             price_data: {
-                currency: 'ars',
+                currency: 'usd',
                 product_data: {
                     name: item.nombre,
                     metadata: {

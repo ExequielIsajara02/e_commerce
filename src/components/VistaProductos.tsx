@@ -192,12 +192,14 @@ const obtenerComboCantidad = (
                     <p className="text-red-500 font-semibold">SIN STOCK</p>
                   )}
                 </CardFooter>
+                {producto.cantidad > 0 && (
                 <div className="absolute bottom-[-20px] left-1/2 transform -translate-x-1/2">
                   <ButtonAddToCarrito
                     producto={producto}
                     cantidad={cantidades[producto.id_producto.toString()] || 1}
                   />
                 </div>
+                )}
               </Card>
             );
           })}
