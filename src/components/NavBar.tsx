@@ -13,21 +13,7 @@ const NavBar = async () => {
   const cuentaVerificada = session?.user?.cuentaVerificada;
 
   console.log("Session en NavBar: ", session);
-
-  const handleClick = async () => {
-      const session = await auth();
-
-      const correo = session?.user.email
-      const userId = session?.user.id;
-
-      const correoRes = await fetch('/api/enviarMail', {
-        method: 'POST',
-        body: JSON.stringify({ correo, userId }),
-        headers: {
-            'Content-Type': 'application/json',
-        },
-      });
-  }
+  console.log("CuentaVerificada en NavBar: ", cuentaVerificada);
 
   return (
     <>

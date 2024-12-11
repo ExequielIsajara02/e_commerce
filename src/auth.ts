@@ -14,6 +14,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user }) {
       if (user) { // El usuario estara disponible durante el login
         token.role = user.role;
+        token.cuentaVerificada = user.cuentaVerificada
         // token.id = user.id;
         token.sub = user.id;
       }
@@ -26,6 +27,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.role = token.role;
         // session.user.id = token.id || "";
         session.user.id = token?.sub?.toString() || '';
+        session.user.cuentaVerificada = token.cuentaVerificada as boolean | undefined;
       }
       return session
     },

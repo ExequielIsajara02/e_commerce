@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useState } from 'react';
+import { useSession, signIn, signOut } from "next-auth/react";  // Importar hooks de next-auth
 
 const VerificarCuenta = ({ params }: { params: { id: string } }) => {
   const { id } = params;
+  const { data: session, status } = useSession();  // Obtenemos la sesión actual
   const [mensaje, setMensaje] = useState('Verificando tu cuenta...');
   const [loading, setLoading] = useState(true);
 
@@ -14,6 +16,11 @@ const VerificarCuenta = ({ params }: { params: { id: string } }) => {
 
         if (res.ok) {
           setMensaje('¡Cuenta verificada con éxito!');
+
+          // Actualizamos el estado de la sesión si la cuenta fue verificada con éxito
+          if (session?.user) {
+            session.user.cuentaVerificada = true; // Actualizamos el valor de cuentaVerificada en la sesión
+          }
         } else {
           setMensaje(data.error || 'Error en la verificación.');
         }
@@ -25,7 +32,7 @@ const VerificarCuenta = ({ params }: { params: { id: string } }) => {
     };
 
     verificarCuenta();
-  }, [id]);
+  }, [id, session]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">

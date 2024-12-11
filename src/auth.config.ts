@@ -34,13 +34,15 @@ export default {
                     throw new Error("Contraseña incorrecta")
                 }
 
+                
                 const userAuth : User = {
+                    cuentaVerificada: user.cuentaVerificada,
                     id: user.id_usuario.toString(),
                     name: user.nombre,
                     email: user.correo,
                     role: user.role,
-                    cuentaVerificada: user.cuentaVerificada,
                 } 
+                console.log("Auth.config",userAuth)
                 return userAuth;
                 
             },
